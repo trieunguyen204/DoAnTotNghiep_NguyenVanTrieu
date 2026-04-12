@@ -1,6 +1,7 @@
 package com.adidos.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserProviderRepository providerRepository;
 
     public List<UserResponse> getAll() {
         return userRepository.findAll()
@@ -25,14 +28,24 @@ public class UserService {
     }
 
     public void create(UserRequest request) {
+        // 1. Lưu User chính
         User user = User.builder()
                 .email(request.getEmail())
-                .password(request.getPassword())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .fullName(request.getFullName())
-                .phone(request.getPhone())
+                .role("USER")
+                .status("ACTIVE")
                 .build();
+        user = userRepository.save(user);
 
-        userRepository.save(user);
+        // 2. Lưu định danh LOCAL vào user_provider
+        UserProvider localProvider = UserProvider.builder()
+                .user(user)
+                .provider("LOCAL")
+                .providerId(user.getEmail()) // Dùng email làm ID cho local
+                .email(user.getEmail())
+                .build();
+        providerRepository.save(localProvider);
     }
 
     public void update(Long id, UserRequest request) {
@@ -50,6 +63,10 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     private UserResponse toResponse(User user) {
         return UserResponse.builder()
                 .id(user.getId())
@@ -60,4 +77,6 @@ public class UserService {
                 .status(user.getStatus())
                 .build();
     }
+
+
 }
