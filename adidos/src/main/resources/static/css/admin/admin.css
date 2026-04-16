@@ -1,0 +1,168 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+
+/* RESET CƠ BẢN */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Đảm bảo không bị tràn màn hình */
+}
+
+:root {
+    --bg-sidebar: #0f172a;
+    --neon-accent: #00f2fe;
+    --neon-purple: #4facfe;
+    --text-glow: rgba(0, 242, 254, 0.5);
+    --logout-red: #ff4d4d;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: #f1f5f9;
+    min-height: 100vh;
+}
+
+/* SIDEBAR CORE */
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: var(--bg-sidebar) !important;
+    z-index: 9999;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Header Logo */
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    flex-shrink: 0; /* Giữ logo không bị co */
+}
+
+.brand-text {
+    font-size: 1.6rem;
+    font-weight: 800;
+    background: linear-gradient(to right, var(--neon-accent), var(--neon-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 8px var(--text-glow));
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin: 0;
+}
+
+/* Menu Navigation */
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1; /* Chiếm toàn bộ không gian ở giữa */
+    overflow-y: auto; /* Cuộn nếu menu quá dài */
+}
+
+/* Ẩn thanh cuộn để menu đẹp hơn */
+.sidebar-menu::-webkit-scrollbar {
+    display: none;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    border-radius: 14px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Icon Style - Khắc phục lỗi ô vuông */
+.menu-item i:first-child {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Solid" !important;
+    font-weight: 900;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin-right: 12px;
+    transition: 0.3s;
+    font-style: normal;
+}
+
+/* Hover Effect */
+.menu-item:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateX(8px);
+}
+
+.menu-item:hover i:first-child {
+    background: linear-gradient(135deg, var(--neon-accent), var(--neon-purple));
+    color: #000;
+    box-shadow: 0 0 15px var(--text-glow);
+}
+
+/* Submenu */
+.submenu {
+    list-style: none;
+    padding-left: 50px;
+    margin-bottom: 15px;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    margin-left: 34px;
+}
+
+.submenu a {
+    color: rgba(255, 255, 255, 0.4);
+    text-decoration: none;
+    font-size: 0.88rem;
+    display: block;
+    padding: 8px 0;
+    transition: 0.2s;
+}
+
+.submenu a:hover {
+    color: var(--neon-accent);
+}
+
+/* FOOTER & LOGOUT */
+.sidebar-footer {
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: auto; /* Đẩy xuống đáy */
+    flex-shrink: 0; /* Giữ nút logout không bị thụt */
+}
+
+.logout-link {
+    color: var(--logout-red) !important;
+}
+
+.logout-link i {
+    background: rgba(255, 77, 77, 0.1) !important;
+    color: var(--logout-red) !important;
+}
+
+.logout-link:hover i {
+    background: var(--logout-red) !important;
+    color: #fff !important;
+    box-shadow: 0 0 12px rgba(255, 77, 77, 0.4) !important;
+}
+
+/* MAIN CONTENT */
+main {
+    margin-left: 280px;
+    padding: 30px;
+    background: #f1f5f9;
+    min-height: 100vh;
+}
+
+/*================== Dashboard ============= */

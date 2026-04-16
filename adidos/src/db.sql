@@ -12,6 +12,27 @@ CREATE TABLE user (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE user_provider (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+
+    provider VARCHAR(50) NOT NULL,        -- LOCAL, GOOGLE, FACEBOOK
+    provider_id VARCHAR(255),             -- ID từ provider (Google/Facebook)
+    email VARCHAR(255),                  -- email từ provider (có thể null)
+    access_token TEXT,                   -- optional
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    -- Foreign key
+    CONSTRAINT fk_user_provider_user 
+        FOREIGN KEY (user_id)
+        REFERENCES user(id)
+        ON DELETE CASCADE,
+
+    -- Unique tránh trùng tài khoản từ provider
+    CONSTRAINT uk_provider UNIQUE (provider, provider_id)
+);
+
 CREATE TABLE address (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
@@ -67,6 +88,7 @@ CREATE TABLE product_variant (
     stock_quantity INT DEFAULT 0,
 	size_id BIGINT NOT NULL,
     color_id BIGINT NOT NULL,
+    price DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
 
     CONSTRAINT fk_variant_product FOREIGN KEY (product_id)
         REFERENCES product(id) ON DELETE CASCADE,
@@ -108,7 +130,7 @@ CREATE TABLE cart_item (
     CONSTRAINT uk_cart UNIQUE (user_id, product_variant_id)
 );
 
-CREATE TABLE `order` (
+CREATE TABLE order (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
     receiver_name VARCHAR(255),

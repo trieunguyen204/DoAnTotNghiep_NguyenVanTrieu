@@ -1,0 +1,118 @@
+:root {
+    --neon-cyan: #00f2fe;
+    --danger-red: #ef4444;
+    --warning-orange: #f59e0b;
+    --success-green: #10b981;
+}
+
+.user-container { animation: fadeIn 0.4s ease; }
+
+.user-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.page-title {
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0;
+}
+
+.page-subtitle { color: #64748b; margin-top: 5px; }
+
+/* Search Bar */
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-input {
+    padding: 10px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    width: 250px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.search-input:focus { border-color: var(--neon-cyan); box-shadow: 0 0 8px rgba(0, 242, 254, 0.3); }
+
+.btn-search {
+    padding: 10px 15px;
+    background: #1e293b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-clear-search {
+    font-size: 0.85rem;
+    color: var(--danger-red);
+    text-decoration: none;
+}
+
+/* Table Setup */
+.user-card-glass {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.user-table { width: 100%; border-collapse: collapse; }
+.user-table th { text-align: left; padding: 15px; color: #64748b; font-size: 0.85rem; border-bottom: 1px solid #f1f5f9; }
+.user-table td { padding: 15px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; }
+.text-center { text-align: center; color: #94a3b8; }
+
+.user-info { display: flex; align-items: center; gap: 12px; font-weight: 600;}
+.user-avatar {
+    width: 35px; height: 35px; background: linear-gradient(135deg, var(--neon-cyan), #4facfe);
+    color: white; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+}
+
+/* Status & Badges */
+.status-pill { padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+.status-active { background: rgba(16, 185, 129, 0.1); color: var(--success-green); }
+.status-locked { background: rgba(239, 68, 68, 0.1); color: var(--danger-red); }
+.badge-role { background: #f1f5f9; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold;}
+
+/* Action Buttons */
+.action-btns { display: flex; gap: 8px; }
+.btn-action { width: 32px; height: 32px; border-radius: 8px; border: none; cursor: pointer; transition: 0.2s; background: #f8fafc; color: #64748b;}
+.btn-action:hover { opacity: 0.8; transform: translateY(-2px); }
+
+.btn-primary { color: var(--neon-cyan); background: rgba(0, 242, 254, 0.1); }
+.btn-danger { color: var(--danger-red); background: rgba(239, 68, 68, 0.1); }
+.btn-warning { color: var(--warning-orange); background: rgba(245, 158, 11, 0.1); }
+.btn-success { color: var(--success-green); background: rgba(16, 185, 129, 0.1); }
+
+/* Modal Styles */
+.modal-overlay {
+    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;
+}
+
+.modal-content {
+    background: white; width: 400px; padding: 25px; border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: fadeIn 0.3s;
+}
+
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.modal-header h2 { font-size: 1.2rem; margin: 0; }
+.close-modal { font-size: 1.5rem; cursor: pointer; color: #64748b; }
+
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; font-weight: 600; }
+.form-group input, .form-group select {
+    width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; outline: none;
+}
+
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.btn-cancel { padding: 10px 15px; background: #f1f5f9; border: none; border-radius: 8px; cursor: pointer; }
+.btn-save { padding: 10px 15px; background: #1e293b; color: white; border: none; border-radius: 8px; cursor: pointer; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

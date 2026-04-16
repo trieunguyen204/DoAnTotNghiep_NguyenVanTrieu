@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/admin :: layout}"
+>
+
+    <head>
+
+        <th:block th:fragment="page_admin_css">
+            <link rel="stylesheet" th:href="@{/css/admin/user.css}">
+        </th:block>
+
+    </head>
+
+    <body>
+
+        <div th:fragment="content">
+            <div class="user-container">
+
+                <div class="user-header-flex">
+                    <div>
+                        <h1 class="page-title">User Identification</h1>
+                        <p class="page-subtitle">Quản lý định danh và trạng thái hệ thống</p>
+                    </div>
+
+                    <form class="search-form" th:action="@{/admin/users}" method="get">
+                        <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm tên hoặc email..." class="search-input">
+                        <button type="submit" class="btn-search"><i class="fas fa-search"></i></button>
+                        <a th:if="${keyword != null}" th:href="@{/admin/users}" class="btn-clear-search">Bỏ lọc</a>
+                    </form>
+                </div>
+
+                <div class="user-card-glass">
+                    <table class="user-table">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user : ${users}">
+                            <td th:text="${user.id}">1</td>
+                            <td>
+                                <div class="user-info">
+                                    <div class="user-avatar" th:text="${#strings.substring(user.fullName,0,1)}">A</div>
+                                    <span th:text="${user.fullName}">Name</span>
+                                </div>
+                            </td>
+                            <td th:text="${user.email}">email@example.com</td>
+                            <td th:text="${user.phone}">0123456789</td>
+                            <td>
+                                <span class="badge badge-role" th:text="${user.role}">ADMIN</span>
+                            </td>
+                            <td>
+                                        <span th:classappend="${user.status == 'ACTIVE' ? 'status-active' : 'status-locked'}"
+                                              class="status-pill"
+                                              th:text="${user.status}">ACTIVE</span>
+                            </td>
+                            <td>
+                                <div class="action-btns">
+                                    <form th:action="@{/admin/users/{id}/status(id=${user.id})}" method="post" class="form-status">
+                                        <input type="hidden" name="status" th:value="${user.status == 'ACTIVE' ? 'LOCKED' : 'ACTIVE'}">
+                                        <button type="submit" class="btn-action" th:classappend="${user.status == 'ACTIVE' ? 'btn-warning' : 'btn-success'}"
+                                                th:title="${user.status == 'ACTIVE' ? 'Khóa tài khoản' : 'Mở khóa'}">
+                                            <i th:class="${user.status == 'ACTIVE' ? 'fas fa-lock' : 'fas fa-lock-open'}"></i>
+                                        </button>
+                                    </form>
+
+                                    <button type="button"
+                                            class="btn-action btn-primary edit-btn"
+                                            th:data-id="${user.id}"
+                                            th:data-fullname="${user.fullName}"
+                                            th:data-phone="${user.phone}"
+                                            th:data-role="${user.role}"
+                                            title="Sửa tài khoản">
+                                        <i class="fas fa-pen"></i>
+                                    </button>
+
+                                    <form th:action="@{/admin/users/{id}/delete(id=${user.id})}" method="post" class="form-delete">
+                                        <button type="submit" class="btn-action btn-danger" title="Xóa tài khoản">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(users)}">
+                            <td colspan="7" class="text-center">Không tìm thấy người dùng nào.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="editUserModal" class="modal-overlay">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Sửa thông tin người dùng</h2>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <form id="editForm" method="post" action="">
+                        <div class="form-group">
+                            <label>Họ và Tên</label>
+                            <input type="text" name="fullName" id="editFullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Số điện thoại</label>
+                            <input type="text" name="phone" id="editPhone">
+                        </div>
+                        <div class="form-group">
+                            <label>Phân quyền (Role)</label>
+                            <select name="role" id="editRole">
+                                <option value="USER">USER</option>
+                                <option value="ADMIN">ADMIN</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-cancel close-modal-btn">Hủy</button>
+                            <button type="submit" class="btn-save">Lưu thay đổi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <th:block th:fragment="page_js">
+            <script th:src="@{/js/admin/user/user.js}"></script>
+        </th:block>
+
+    </body>
+</html>
+

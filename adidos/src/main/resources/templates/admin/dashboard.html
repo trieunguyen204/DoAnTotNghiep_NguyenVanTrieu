@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!-- gọi layout -->
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/admin :: layout}"
+>
+
+    <head>
+        <!-- CSS riêng -->
+        <th:block th:fragment="page_admin_css">
+            <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}">
+        </th:block>
+    </head>
+
+    <body>
+
+        <!-- content -->
+        <div th:fragment="content">
+            <h1>Dashboard</h1>
+        </div>
+
+        <!-- JS riêng -->
+        <th:block th:fragment="page_js">
+            <script th:src="@{/js/admin/dashboard.js}"></script>
+        </th:block>
+
+    </body>
+</html>

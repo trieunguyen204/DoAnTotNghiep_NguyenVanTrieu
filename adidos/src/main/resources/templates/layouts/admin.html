@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout">
+
+    <head>
+        <title>Admin Adidos</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+        <!--css chung-->
+        <link rel="stylesheet" th:href="@{/css/admin/admin.css}">
+
+        <!--css riêng-->
+        <th:block th:insert="~{::page_admin_css}"></th:block>
+
+    </head>
+
+    <body>
+
+        <div class="layout">
+            <!-- SIDEBAR -->
+            <div th:replace="fragments/sidebar :: sidebar"></div>
+
+            <!-- CONTENT -->
+            <main class="main-content">
+                <div th:insert="~{::content}"></div>
+            </main>
+
+        </div>
+
+        <!-- JS chung -->
+        <script th:src="@{/js/admin/admin.js}"></script>
+
+        <!-- JS riêng page -->
+        <th:block th:insert="~{::page_js}"></th:block>
+
+    </body>
+
+
+</html>

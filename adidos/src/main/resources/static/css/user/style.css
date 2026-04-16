@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+
+
+:root {
+    --adidos-black: #000000;
+    --adidos-white: #ffffff;
+    --adidos-gray: #f4f5f7;
+    --adidos-border: #e2e2e2;
+    --text-muted: #6a6a6a;
+    --font-main: 'Inter', sans-serif;
+    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Biến riêng cho khu vực Auth */
+    --color-bg: #f4f5f7;
+    --color-surface: #ffffff;
+    --color-text-main: #111111;
+    --color-text-muted: #6a6a6a;
+    --color-border: #e2e2e2;
+    --color-accent: #000000;
+}
+
+body {
+    background-color: #e6e9eb;
+    font-family: var(--font-main);
+    color: var(--adidos-black);
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+}
+
+.brand-adidos {
+    font-weight: 900;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--adidos-black) !important;
+}
+
+.btn-adidos {
+    background-color: #42c286;
+    color: var(--adidos-white);
+    border: none;
+    border-radius: 8px;
+    padding: 14px 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: var(--transition-smooth);
+}
+
+.btn-adidos:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    color: #000000;
+}
+
+.auth-card {
+    background: var(--color-surface);
+    padding: 48px 40px;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+}
+
+.form-floating > .form-control {
+    border-radius: 0;
+    border: none;
+    border-bottom: 1.5px solid var(--color-border);
+    padding-left: 0;
+    background-color: transparent;
+    transition: var(--transition-smooth);
+}
+
+.form-floating > .form-control:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 1px 0 0 var(--color-accent);
+    outline: none;
+}
+
+.social-login {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.btn-social {
+    background-color: #677ba3 !important;
+    color: #ffffff !important;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    text-decoration: none;
+    border: none !important;
+    position: relative;
+    transition: var(--transition-smooth);
+}
+
+.btn-social:hover {
+    background-color: #c1cfd9 !important;
+    color: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.fb-icon-wrapper, .gg-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.fb-icon-wrapper {
+    background-color: #1877F2;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fb-icon-wrapper i { color: white; font-size: 14px; }
+.gg-icon { width: 22px; height: 22px; }
+
+.divider {
+    text-align: center;
+    position: relative;
+    margin: 32px 0;
+}
+
+.divider::before {
+    content: ""; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: var(--color-border);
+}
+
+.divider span {
+    background: var(--color-surface); padding: 0 15px; color: var(--color-text-muted); font-size: 12px; font-weight: 600; position: relative; z-index: 2;
+}
+
+a.text-dark { text-decoration: none; }
+a.text-dark:hover { text-decoration: underline; }
+
+/* =============Kết thúc Css của Login và Register================ */
