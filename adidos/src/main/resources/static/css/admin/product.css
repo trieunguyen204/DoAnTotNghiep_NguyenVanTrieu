@@ -1,0 +1,211 @@
+/* --- PHẦN BẢNG VÀ DANH SÁCH --- */
+.product-container { padding: 20px; }
+.header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.card-glass { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th, .data-table td { padding: 15px 12px; border-bottom: 1px solid #eee; text-align: left; }
+.data-table th { background-color: #f8f9fa; font-weight: 600; }
+.product-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 5px; border: 1px solid #ddd; }
+.no-img { color: #999; font-size: 0.85em; font-style: italic; }
+
+/* Nút bấm chung */
+.btn-primary { background: #0d6efd; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: 500;}
+.btn-primary:hover { background: #0b5ed7; }
+.btn-save { background: #198754; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: 500;}
+.btn-cancel { background: #6c757d; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: 500;}
+.btn-action { padding: 8px 12px; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px; color: white; }
+.btn-warning { background: #ffc107; color: #000; }
+.btn-info { background: #0dcaf0; color: #000; }
+.btn-danger { background: #dc3545; }
+.d-inline { display: inline-block; }
+
+/* --- PHẦN MODAL (POPUP FORM TẠO/SỬA) --- */
+.modal-overlay {
+    display: none; /* Mặc định ẩn */
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Nền tối mờ */
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-lg { max-width: 800px; width: 90%; }
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.modal-header h2 { margin: 0; font-size: 1.5rem; color: #333; }
+
+/* Nút X to và dễ bấm */
+.close-modal {
+    font-size: 32px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 10px;
+    transition: color 0.2s;
+}
+.close-modal:hover { color: #dc3545; }
+
+/* --- TRÌNH BÀY FORM BÊN TRONG --- */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-group { display: flex; flex-direction: column; margin-bottom: 5px; }
+.form-group.full-width { grid-column: 1 / -1; }
+.form-group label { margin-bottom: 8px; font-weight: 600; color: #444; font-size: 0.95rem; }
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 10px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #86b7fe;
+    outline: none;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+/* --- TIÊU ĐỀ & SUBTITLE --- */
+.page-title {
+    margin-top: 0 !important;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #212529;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+.page-subtitle {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+/* Thanh tìm kiếm chính */
+.search-form {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 4px 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.search-input {
+    border: none;
+    outline: none;
+    padding: 8px;
+    width: 250px;
+    font-size: 0.95rem;
+}
+
+.btn-search {
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 8px;
+    transition: color 0.2s;
+}
+
+.btn-search:hover { color: #0d6efd; }
+
+.btn-clear-search {
+    font-size: 0.8rem;
+    color: #dc3545;
+    text-decoration: none;
+    margin-left: 8px;
+    padding: 4px 8px;
+    border-left: 1px solid #eee;
+}
+
+/* Tìm kiếm nhỏ trong Attribute */
+.search-form-sm {
+    display: flex;
+    margin-bottom: 10px;
+}
+.search-form-sm input {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+}
+.search-form-sm button {
+    border: 1px solid #ddd;
+    border-left: none;
+    background: #f8f9fa;
+    padding: 5px 10px;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+/* Tìm kiếm nhỏ trong Attribute */
+.search-form-sm {
+    display: flex;
+    margin-bottom: 15px;
+    max-width: 250px; /* Giới hạn độ dài thanh tìm kiếm */
+    /* margin-left: auto; */ /* Bỏ comment dòng này nếu mày muốn đẩy thanh tìm kiếm sang góc bên phải */
+}
+.search-form-sm input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px 0 0 4px;
+    font-size: 0.9rem;
+    outline: none;
+}
+.search-form-sm input:focus {
+    border-color: #86b7fe;
+}
+.search-form-sm button {
+    border: 1px solid #ced4da;
+    border-left: none;
+    background: #f8f9fa;
+    padding: 6px 12px;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    color: #495057;
+    transition: 0.2s;
+}
+.search-form-sm button:hover {
+    background: #e9ecef;
+    color: #0d6efd;
+}
+
+/* Gom nhóm các hành động bên phải header */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Khoảng cách giữa thanh tìm kiếm và nút Thêm */
+}

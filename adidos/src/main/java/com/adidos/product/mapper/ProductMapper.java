@@ -57,8 +57,16 @@ public class ProductMapper {
     private static ProductVariantResponse toVariantResponse(ProductVariant variant) {
         if (variant == null) return null;
 
+
         List<String> images = variant.getImages() != null ?
-                variant.getImages().stream().map(ProductImage::getImageUrl).collect(Collectors.toList()) :
+                variant.getImages().stream()
+                        .sorted((img1, img2) -> {
+                            boolean isP1 = Boolean.TRUE.equals(img1.getIsPrimary());
+                            boolean isP2 = Boolean.TRUE.equals(img2.getIsPrimary());
+                            return Boolean.compare(isP2, isP1); // Đưa true lên trước false
+                        })
+                        .map(ProductImage::getImageUrl)
+                        .collect(Collectors.toList()) :
                 Collections.emptyList();
 
         return ProductVariantResponse.builder()
@@ -67,7 +75,7 @@ public class ProductMapper {
                 .colorName(variant.getColor() != null ? variant.getColor().getColorName() : null)
                 .price(variant.getPrice())
                 .stockQuantity(variant.getStockQuantity())
-                .imageUrls(images)
+                .imageUrls(images) // Truyền list đã được sắp xếp vào đây
                 .build();
     }
 }

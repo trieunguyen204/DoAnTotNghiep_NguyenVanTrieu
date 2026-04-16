@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layouts/admin :: layout}">
+    <head>
+        <th:block th:fragment="page_admin_css">
+            <link rel="stylesheet" th:href="@{/css/admin/product.css}">
+            <link rel="stylesheet" th:href="@{/css/admin/variant.css}">
+        </th:block>
+    </head>
+    <body>
+        <div th:fragment="content">
+            <div class="product-container">
+                <div class="header-flex">
+                    <div>
+                        <a th:href="@{/admin/products}" class="btn-back"><i class="fas fa-arrow-left"></i> Quay lại</a>
+                        <h1 class="page-title mt-2">Quản lý Biến thể</h1>
+                        <p class="page-subtitle">Sản phẩm: <strong class="text-primary" th:text="${product.name}">Tên SP</strong></p>
+                    </div>
+                    <button class="btn-primary" id="btnAddVariant"><i class="fas fa-plus"></i> Thêm Biến Thể</button>
+                </div>
+
+                <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                <div class="card-glass">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>Ảnh</th>
+                            <th>Màu sắc</th>
+                            <th>Kích cỡ</th>
+                            <th>Giá bán</th>
+                            <th>Tồn kho</th>
+                            <th>Thao tác</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="var : ${product.variants}">
+                            <td>
+                                <div class="variant-img-stack">
+                                    <img th:if="${not #lists.isEmpty(var.imageUrls)}" th:src="${var.imageUrls[0]}" class="product-thumb">
+                                    <span th:if="${#lists.isEmpty(var.imageUrls)}" class="no-img">No Img</span>
+                                </div>
+                            </td>
+                            <td><span class="badge badge-color" th:text="${var.colorName}">Đen</span></td>
+                            <td><span class="badge badge-size" th:text="${var.sizeName}">XL</span></td>
+                            <td class="text-danger font-weight-bold" th:text="${#numbers.formatDecimal(var.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</td>
+                            <td th:text="${var.stockQuantity}">0</td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn-action btn-info btn-manage-images"
+                                            th:data-id="${var.id}" title="Quản lý Ảnh">
+                                        <i class="fas fa-images"></i>
+                                    </button>
+                                    <form th:action="@{/admin/products/{pId}/variants/{vId}/delete(pId=${product.id}, vId=${var.id})}" method="post" class="form-delete d-inline">
+                                        <button type="submit" class="btn-action btn-danger" title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(product.variants)}">
+                            <td colspan="6" class="text-center">Sản phẩm này chưa có biến thể nào.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="variantModal" class="modal-overlay">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>Thêm Biến Thể Mới</h2>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <form th:action="@{/admin/products/{id}/variants/save(id=${product.id})}" method="post">
+                        <input type="hidden" name="id" id="varId">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Màu sắc</label>
+                                <select name="colorId" required>
+                                    <option th:each="c : ${colors}" th:value="${c.id}" th:text="${c.colorName}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Kích cỡ (Size)</label>
+                                <select name="sizeId" required>
+                                    <option th:each="s : ${sizes}" th:value="${s.id}" th:text="${s.sizeName}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Giá bán (VNĐ)</label>
+                                <input type="number" name="price" required min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Số lượng tồn</label>
+                                <input type="number" name="stockQuantity" required min="0">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-cancel close-modal-btn">Hủy</button>
+                            <button type="submit" class="btn-save">Lưu Biến Thể</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="imageModal" class="modal-overlay">
+                <div class="modal-content modal-lg">
+                    <div class="modal-header">
+                        <h2>Quản lý Hình ảnh (<span id="imgModalVariantName"></span>)</h2>
+                        <span class="close-modal">&times;</span>
+                    </div>
+
+                    <form id="uploadImageForm" method="post" enctype="multipart/form-data" class="upload-section">
+                        <div class="form-group">
+                            <label>Thêm ảnh mới (Chọn nhiều ảnh)</label>
+                            <input type="file" name="files" multiple accept="image/*" required>
+                        </div>
+                        <button type="submit" class="btn-primary mt-2">Tải lên</button>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="image-gallery" id="imageGallery">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <th:block th:fragment="page_js">
+            <script th:inline="javascript">
+                const productId = /*[[${product.id}]]*/ null;
+            </script>
+            <script th:src="@{/js/admin/product/variant.js}"></script>
+        </th:block>
+    </body>
+</html>

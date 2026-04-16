@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layouts/admin :: layout}">
+<head>
+    <th:block th:fragment="page_admin_css">
+        <link rel="stylesheet" th:href="@{/css/admin/product.css}">
+    </th:block>
+</head>
+<body>
+<div th:fragment="content">
+    <div class="product-container">
+
+        <div class="header-flex">
+            <div>
+                <h1 class="page-title mt-2">Quản lý Danh mục</h1>
+                <p class="page-subtitle">Phân loại sản phẩm hệ thống</p>
+            </div>
+
+            <div class="header-actions">
+                <form class="search-form" th:action="@{/admin/categories}" method="get">
+                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm tên..." class="search-input">
+                    <button type="submit" class="btn-search"><i class="fas fa-search"></i></button>
+                    <a th:if="${keyword != null}" th:href="@{/admin/categories}" class="btn-clear-search">Bỏ lọc</a>
+                </form>
+
+                <button class="btn-primary" id="btnAddCategory"><i class="fas fa-plus"></i> Thêm Danh Mục</button>
+            </div>
+        </div>
+
+        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <div class="card-glass">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Danh Mục</th>
+                    <th>Danh Mục Cha</th>
+                    <th>Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="cat : ${categories}">
+                    <td th:text="${cat.id}">1</td>
+                    <td class="font-weight-bold" th:text="${cat.name}">Giày Nam</td>
+                    <td>
+                        <span th:if="${cat.parent != null}" class="badge badge-size" th:text="${cat.parent.name}">Giày</span>
+                        <span th:unless="${cat.parent != null}" class="text-muted">-- Danh mục gốc --</span>
+                    </td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn-action btn-warning edit-btn"
+                                    th:data-id="${cat.id}"
+                                    th:data-name="${cat.name}"
+                                    th:data-parent="${cat.parent != null ? cat.parent.id : ''}"
+                                    title="Sửa danh mục">
+                                <i class="fas fa-pen"></i>
+                            </button>
+
+                            <form th:action="@{/admin/categories/{id}/delete(id=${cat.id})}" method="post" class="form-delete d-inline">
+                                <button type="submit" class="btn-action btn-danger" title="Xóa">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="categoryModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Thêm Danh Mục Mới</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <form id="categoryForm" th:action="@{/admin/categories/save}" method="post">
+                <input type="hidden" name="id" id="catId">
+
+                <div class="form-group full-width">
+                    <label>Tên danh mục *</label>
+                    <input type="text" name="name" id="catName" required placeholder="Nhập tên danh mục...">
+                </div>
+
+                <div class="form-group full-width mt-3">
+                    <label>Danh mục cha (Trống nếu là danh mục gốc)</label>
+                    <select name="parentId" id="catParent">
+                        <option value="">-- Không có (Danh mục gốc) --</option>
+                        <option th:each="root : ${rootCategories}"
+                                th:value="${root.id}"
+                                th:text="${root.name}"></option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel close-modal-btn">Hủy</button>
+                    <button type="submit" class="btn-save">Lưu Danh Mục</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block th:fragment="page_js">
+    <script th:src="@{/js/admin/product/category.js}"></script>
+</th:block>
+</body>
+</html>

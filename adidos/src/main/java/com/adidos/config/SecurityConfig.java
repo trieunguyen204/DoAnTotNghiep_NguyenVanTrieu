@@ -1,6 +1,5 @@
 package com.adidos.config;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,29 +10,28 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor // Thêm annotation này của Lombok
+// ĐÃ XÓA @RequiredArgsConstructor ở đây
 public class SecurityConfig {
-
-    // Inject CustomOAuth2UserService vào đây
-    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // Tiêm CustomOAuth2UserService trực tiếp qua tham số của hàm để phá vòng lặp khởi tạo
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomOAuth2UserService customOAuth2UserService) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Các đường dẫn công khai
+                        // ĐÃ THÊM "/uploads/**" vào đây để hiển thị được ảnh sản phẩm ra ngoài web
                         .requestMatchers("/"
                                 , "/login"
                                 , "/register"
                                 , "/products/**"
                                 , "/css/**"
-                                , "/js/**")
+                                , "/js/**"
+                                , "/uploads/**")
                         .permitAll()
 
                         // CHỈ ADMIN MỚI ĐƯỢC VÀO CÁC ĐƯỜNG DẪN NÀY

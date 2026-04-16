@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layouts/admin :: layout}">
+<head>
+    <th:block th:fragment="page_admin_css">
+        <link rel="stylesheet" th:href="@{/css/admin/product.css}">
+        <style>
+            .attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+            .attr-card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+            .attr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;}
+        </style>
+    </th:block>
+</head>
+<body>
+<div th:fragment="content">
+    <div class="product-container">
+        <div class="header-flex">
+            <div>
+                <h1 class="page-title">Quản lý Thuộc tính</h1>
+                <p class="page-subtitle">Quản lý Kích cỡ và Màu sắc cho sản phẩm</p>
+            </div>
+        </div>
+
+        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <div class="attr-grid">
+            <div class="attr-card">
+                <div class="attr-header">
+                    <h3><i class="fas fa-palette"></i> Màu sắc</h3>
+                    <button class="btn-primary btn-sm" onclick="openModal('color')"><i class="fas fa-plus"></i></button>
+                </div>
+
+                <form class="search-form-sm" th:action="@{/admin/attributes}" method="get">
+                    <input type="text" name="colorKw" th:value="${colorKw}" placeholder="Tìm màu...">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+
+                <table class="data-table">
+                    <thead><tr><th>ID</th><th>Tên màu</th><th>Thao tác</th></tr></thead>
+                    <tbody>
+                    <tr th:each="c : ${colors}">
+                        <td th:text="${c.id}"></td>
+                        <td th:text="${c.colorName}"></td>
+                        <td>
+                            <button class="btn-action btn-warning btn-sm" th:onclick="editAttr('color', [[${c.id}]], [[${c.colorName}]])"><i class="fas fa-pen"></i></button>
+                            <form th:action="@{/admin/attributes/colors/{id}/delete(id=${c.id})}" method="post" class="d-inline form-delete">
+                                <button type="submit" class="btn-action btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="attr-card">
+                <div class="attr-header">
+                    <h3><i class="fas fa-ruler-combined"></i> Kích cỡ</h3>
+                    <button class="btn-primary btn-sm" onclick="openModal('size')"><i class="fas fa-plus"></i></button>
+                </div>
+                <form class="search-form-sm" th:action="@{/admin/attributes}" method="get">
+                    <input type="text" name="sizeKw" th:value="${sizeKw}" placeholder="Tìm size...">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+                <table class="data-table">
+                    <thead><tr><th>ID</th><th>Kích cỡ</th><th>Thao tác</th></tr></thead>
+                    <tbody>
+                    <tr th:each="s : ${sizes}">
+                        <td th:text="${s.id}"></td>
+                        <td th:text="${s.sizeName}"></td>
+                        <td>
+                            <button class="btn-action btn-warning btn-sm" th:onclick="editAttr('size', [[${s.id}]], [[${s.sizeName}]])"><i class="fas fa-pen"></i></button>
+                            <form th:action="@{/admin/attributes/sizes/{id}/delete(id=${s.id})}" method="post" class="d-inline form-delete">
+                                <button type="submit" class="btn-action btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="attrModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Thêm thuộc tính</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <form id="attrForm" method="post">
+                <input type="hidden" name="id" id="attrId">
+                <div class="form-group full-width">
+                    <label id="labelName">Tên thuộc tính</label>
+                    <input type="text" name="" id="attrInputName" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel close-modal-btn">Hủy</button>
+                    <button type="submit" class="btn-save">Lưu lại</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<th:block th:fragment="page_js">
+    <script th:src="@{/js/admin/product/attribute.js}"></script>
+</th:block>
+</body>
+</html>

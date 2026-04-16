@@ -24,4 +24,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     // Đếm tổng số Sản phẩm
     long count();
+
+    @Query("SELECT p FROM Product p WHERE p.name LIKE %:kw% OR p.brand LIKE %:kw%")
+    List<Product> searchProducts(@Param("kw") String keyword);
 }

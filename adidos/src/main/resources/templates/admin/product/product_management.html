@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/admin :: layout}">
+    <head>
+        <th:block th:fragment="page_admin_css">
+            <link rel="stylesheet" th:href="@{/css/admin/product.css}">
+        </th:block>
+    </head>
+
+    <body>
+
+        <div th:fragment="content">
+            <div class="product-container">
+                <div class="header-flex">
+                    <div>
+                        <h1 class="page-title mt-2">Quản lý Sản phẩm</h1>
+                        <p class="page-subtitle">Danh sách sản phẩm gốc</p>
+                    </div>
+
+                    <div class="header-actions">
+                        <form class="search-form" th:action="@{/admin/products}" method="get">
+                            <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm tên..." class="search-input">
+                            <button type="submit" class="btn-search"><i class="fas fa-search"></i></button>
+                            <a th:if="${keyword != null}" th:href="@{/admin/products}" class="btn-clear-search">Bỏ lọc</a>
+                        </form>
+
+                        <button class="btn-primary" id="btnAddProduct"><i class="fas fa-plus"></i> Thêm Sản Phẩm</button>
+                    </div>
+                </div>
+
+                <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                <div class="card-glass">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ảnh</th>
+                            <th>Tên Sản Phẩm</th>
+                            <th>Thương Hiệu</th>
+                            <th>Giá Gốc</th>
+                            <th>Thao tác</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="prod : ${products}">
+                            <td th:text="${prod.id}">1</td>
+                            <td>
+                                <img th:if="${prod.primaryImageUrl != null}" th:src="${prod.primaryImageUrl}" class="product-thumb" alt="img">
+                                <span th:unless="${prod.primaryImageUrl != null}" class="no-img">No Image</span>
+                            </td>
+                            <td th:text="${prod.name}">Tên SP</td>
+                            <td th:text="${prod.brand}">Thương hiệu</td>
+                            <td th:text="${prod.originalPrice}">0đ</td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn-action btn-warning edit-btn"
+                                            th:data-id="${prod.id}" th:data-name="${prod.name}"
+                                            th:data-brand="${prod.brand}" th:data-cat="${prod.categoryName}"
+                                            title="Sửa thông tin gốc">
+                                        <i class="fas fa-pen"></i>
+                                    </button>
+
+                                    <a th:href="@{/admin/products/{id}/variants(id=${prod.id})}" class="btn-action btn-info" title="Quản lý Biến thể (Màu, Size, Ảnh)">
+                                        <i class="fas fa-boxes"></i>
+                                    </a>
+
+                                    <form th:action="@{/admin/products/{id}/delete(id=${prod.id})}" method="post" class="form-delete d-inline">
+                                        <button type="submit" class="btn-action btn-danger" title="Xóa">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="productModal" class="modal-overlay">
+                <div class="modal-content modal-lg">
+                    <div class="modal-header">
+                        <h2 id="modalTitle">Thêm Sản Phẩm Mới</h2>
+                        <span class="close-modal">&times;</span>
+                    </div>
+                    <form id="productForm" th:action="@{/admin/products/save}" method="post">
+                        <input type="hidden" name="id" id="prodId">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Tên sản phẩm *</label>
+                                <input type="text" name="name" id="prodName" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Thương hiệu</label>
+                                <input type="text" name="brand" id="prodBrand">
+                            </div>
+                            <div class="form-group">
+                                <label>Chất liệu</label>
+                                <input type="text" name="material" id="prodMaterial">
+                            </div>
+                            <div class="form-group">
+                                <label>Giới tính</label>
+                                <select name="gender" id="prodGender">
+                                    <option value="UNISEX">Unisex</option>
+                                    <option value="MALE">Nam</option>
+                                    <option value="FEMALE">Nữ</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Danh mục</label>
+                                <select name="categoryId" id="prodCategory">
+                                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Trạng thái</label>
+                                <select name="status" id="prodStatus">
+                                    <option value="ACTIVE">Hoạt động</option>
+                                    <option value="INACTIVE">Ẩn</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Mô tả chi tiết</label>
+                            <textarea name="description" id="prodDesc" rows="4"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-cancel close-modal-btn">Hủy</button>
+                            <button type="submit" class="btn-save">Lưu Sản Phẩm</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <th:block th:fragment="page_js">
+            <script th:src="@{/js/admin/product/product.js}"></script>
+        </th:block>
+
+    </body>
+</html>
