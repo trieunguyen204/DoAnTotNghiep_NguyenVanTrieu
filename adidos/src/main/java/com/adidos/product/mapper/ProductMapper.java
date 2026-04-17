@@ -72,11 +72,13 @@ public class ProductMapper {
 
         return ProductVariantResponse.builder()
                 .id(variant.getId())
+                .sizeId(variant.getSize() != null ? variant.getSize().getId() : null)
                 .sizeName(variant.getSize() != null ? variant.getSize().getSizeName() : null)
+                .colorId(variant.getColor() != null ? variant.getColor().getId() : null)
                 .colorName(variant.getColor() != null ? variant.getColor().getColorName() : null)
                 .price(variant.getPrice())
                 .stockQuantity(variant.getStockQuantity())
-                .imageUrls(images) // Truyền list đã được sắp xếp vào đây
+                .imageUrls(images)
                 .build();
     }
 }

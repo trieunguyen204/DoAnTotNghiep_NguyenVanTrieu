@@ -1,9 +1,30 @@
 document.addEventListener('DOMContentLoaded', function() {
     // --- XỬ LÝ MODAL THÊM BIẾN THỂ ---
     const variantModal = document.getElementById('variantModal');
+    const variantForm = variantModal.querySelector('form');
+    const variantModalTitle = variantModal.querySelector('.modal-header h2');
 
     document.getElementById('btnAddVariant').addEventListener('click', () => {
+
+        variantForm.reset(); // Xóa dữ liệu cũ
+        document.getElementById('varId').value = ''; // Reset ID
+        variantModalTitle.textContent = 'Thêm Biến Thể Mới';
         variantModal.style.display = 'flex';
+    });
+
+    // Nút mở form Sửa
+    document.querySelectorAll('.edit-variant-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Đổ dữ liệu từ data-* vào form
+            document.getElementById('varId').value = this.dataset.id;
+            variantForm.querySelector('select[name="colorId"]').value = this.dataset.colorId;
+            variantForm.querySelector('select[name="sizeId"]').value = this.dataset.sizeId;
+            variantForm.querySelector('input[name="price"]').value = this.dataset.price;
+            variantForm.querySelector('input[name="stockQuantity"]').value = this.dataset.stock;
+
+            variantModalTitle.textContent = 'Cập Nhật Biến Thể';
+            variantModal.style.display = 'flex';
+        });
     });
 
     // --- XỬ LÝ MODAL HÌNH ẢNH ---

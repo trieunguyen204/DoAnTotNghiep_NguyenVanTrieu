@@ -1,6 +1,7 @@
 package com.adidos.product.dto;
 
 import lombok.*;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -12,4 +13,6 @@ public class ProductVariantResponse {
     private BigDecimal price;
     private Integer stockQuantity;
     private List<String> imageUrls;
+    private Long sizeId;
+    private Long colorId;
 }

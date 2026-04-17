@@ -47,6 +47,15 @@
                             <td th:text="${var.stockQuantity}">0</td>
                             <td>
                                 <div class="action-btns">
+                                    <button type="button" class="btn-action btn-warning edit-variant-btn"
+                                            th:data-id="${var.id}"
+                                            th:data-color-id="${var.colorId}"
+                                            th:data-size-id="${var.sizeId}"
+                                            th:data-price="${var.price}"
+                                            th:data-stock="${var.stockQuantity}"
+                                            title="Sửa biến thể">
+                                        <i class="fas fa-pen"></i>
+                                    </button>
                                     <button class="btn-action btn-info btn-manage-images"
                                             th:data-id="${var.id}" title="Quản lý Ảnh">
                                         <i class="fas fa-images"></i>
