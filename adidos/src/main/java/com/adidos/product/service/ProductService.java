@@ -243,4 +243,10 @@ public class ProductService {
         response.setDiscountedPrice(discountedPrice);
         response.setHasPromotion(discountedPrice.compareTo(originalPrice) < 0);
     }
+
+
+
+
+
+
 }

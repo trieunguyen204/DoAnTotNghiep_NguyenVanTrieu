@@ -39,9 +39,10 @@ public class ProductMapper {
         return ProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
+                .description(product.getDescription())
                 .brand(product.getBrand())
                 .categoryName(product.getCategory() != null ? product.getCategory().getName() : null)
-                .originalPrice(minPrice) // ĐÃ SỬA: Thay displayPrice thành originalPrice
+                .originalPrice(minPrice)
                 .primaryImageUrl(primaryImage)
                 .variants(toVariantResponseList(variants))
                 .build();

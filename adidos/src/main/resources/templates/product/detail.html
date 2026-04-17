@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" th:replace="~{layouts/main :: layout_user}">
+    <head>
+        <title th:fragment="page_title" th:text="${product.name} + ' | Adidos'">Chi tiết sản phẩm</title>
+        <th:block th:fragment="page_user_css">
+            <link rel="stylesheet" th:href="@{/css/user/product-detail.css}">
+        </th:block>
+    </head>
+    <body>
+
+    <div th:fragment="content_user" class="luxury-product-wrapper">
+        <div class="product-left-content">
+            <div class="product-gallery">
+                <div class="gallery-grid" id="gallery-container">
+                    <th:block th:each="variant : ${variants}">
+                        <div th:each="url, stat : ${variant.imageUrls}"
+                             class="img-wrapper"
+                             th:data-color-name="${variant.colorName}">
+                            <img th:src="${url}" class="gallery-img" alt="Ảnh quần áo">
+                        </div>
+                    </th:block>
+                </div>
+                <button id="btn-show-more" class="btn-outline">HIỂN THỊ THÊM</button>
+            </div>
+
+            <div class="product-section section-desc">
+                <h2 class="section-title">MÔ TẢ SẢN PHẨM</h2>
+                <div class="desc-content">
+                    <p th:text="${product.description} ?: 'Sản phẩm cao cấp với chất liệu bền bỉ, mang lại cảm giác thoải mái khi vận động.'"></p>
+                </div>
+            </div>
+
+            <div class="product-section section-reviews">
+                <h2 class="section-title">ĐÁNH GIÁ TỪ NGƯỜI MUA</h2>
+                <div class="review-box">
+                    <div th:if="${canReview}" class="review-form">
+                        <textarea placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..."></textarea>
+                        <button class="luxury-btn small-btn">GỬI ĐÁNH GIÁ</button>
+                    </div>
+                    <div th:unless="${canReview}" class="review-notice">
+                        <p>Chỉ những khách hàng đã mua sản phẩm này mới có thể để lại đánh giá.</p>
+                    </div>
+                    <div class="review-list">
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-section related-products-section">
+                <h2 class="section-title">CÓ THỂ BẠN SẼ THÍCH</h2>
+                <div class="related-grid">
+                    <div th:each="p : ${relatedProducts}" class="related-item">
+                        <a th:href="@{/product/{id}(id=${p.id})}">
+                            <img th:src="${p.primaryImageUrl}" alt="Related">
+                            <p class="related-name" th:text="${p.name}"></p>
+                            <p class="related-price" th:text="${#numbers.formatDecimal(p.originalPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"></p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-info-sidebar">
+
+
+            <div class="sticky-inner">
+
+
+                <div class="info-header">
+                    <span class="brand-label" th:text="${product.brand} ?: 'ADIDOS'">BRAND</span>
+                    <h1 class="pro-title" th:text="${product.name}">Tên sản phẩm</h1>
+                    <p class="pro-price" id="product-price" th:text="${#numbers.formatDecimal(product.originalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></p>
+                </div>
+
+
+                <div class="variant-section">
+                    <h3 class="variant-label">MÀU SẮC</h3>
+                    <div class="color-options" id="color-selector">
+                        <div th:each="variant : ${variants}" class="color-item" th:data-color-name="${variant.colorName}">
+                            <button class="color-btn img-color-btn"
+                                    th:data-color-name="${variant.colorName}"
+                                    th:title="${variant.colorName}">
+                                <img th:if="${!#lists.isEmpty(variant.imageUrls)}" th:src="${variant.imageUrls[0]}" alt="Màu">
+                            </button>
+                            <span class="color-name-text" th:text="${variant.colorName}">Tên màu</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="variant-section">
+                    <h3 class="variant-label">KÍCH CỠ</h3>
+
+
+                    <div class="size-options" id="size-container">
+                        <button th:each="variant : ${variants}"
+                                class="size-btn"
+                                th:data-color-name="${variant.colorName}"
+                                th:data-price="${variant.price}"
+                                th:data-stock="${variant.stockQuantity}"
+                                th:text="${variant.sizeName}">
+                        </button>
+                    </div>
+
+                    <div class="stock-info">
+                        <p class="pro-stock" id="product-stock">Số lượng trong kho: <span>--</span></p>
+                    </div>
+
+                    <div class="size-guide-trigger" id="open-size-guide">
+                        <span>📏 Hướng dẫn chọn size</span>
+                    </div>
+                </div>
+
+                <div class="action-area">
+                    <button class="btn-add-to-cart luxury-btn">
+                        <span>THÊM VÀO GIỎ HÀNG</span>
+                        <span class="arrow">→</span>
+                    </button>
+                </div>
+
+
+
+            </div>
+        </div>
+
+        <div class="size-guide-modal" id="size-modal">
+            <div class="modal-content">
+                <span class="close-modal" id="close-size-guide">&times;</span>
+                <h2>BẢNG HƯỚNG DẪN CHỌN SIZE</h2>
+
+                <h3>1. Bảng size Áo</h3>
+                <table class="size-table">
+                    <tr><th>Size</th><th>Cân nặng (kg)</th><th>Chiều cao (cm)</th></tr>
+                    <tr><td>S</td><td>45 - 53</td><td>150 - 160</td></tr>
+                    <tr><td>M</td><td>54 - 60</td><td>161 - 167</td></tr>
+                    <tr><td>L</td><td>61 - 68</td><td>168 - 174</td></tr>
+                    <tr><td>XL</td><td>69 - 76</td><td>175 - 180</td></tr>
+                    <tr><td>2XL</td><td>77 - 85</td><td>180 - 185</td></tr>
+                </table>
+
+                <h3>2. Bảng size Quần</h3>
+                <table class="size-table">
+                    <tr><th>Size</th><th>Cân nặng (kg)</th><th>Vòng bụng (cm)</th></tr>
+                    <tr><td>28</td><td>45 - 52</td><td>70 - 72</td></tr>
+                    <tr><td>29</td><td>53 - 57</td><td>73 - 75</td></tr>
+                    <tr><td>30</td><td>58 - 62</td><td>76 - 78</td></tr>
+                    <tr><td>31</td><td>63 - 68</td><td>79 - 81</td></tr>
+                    <tr><td>32</td><td>69 - 74</td><td>82 - 84</td></tr>
+                    <tr><td>33</td><td>75 - 80</td><td>85 - 87</td></tr>
+                    <tr><td>34</td><td>81 - 86</td><td>88 - 90</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:fragment="page_user_js">
+        <script th:src="@{/js/user/product-detail.js}"></script>
+    </th:block>
+
+
+
+</body>
+</html>

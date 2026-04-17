@@ -1,0 +1,286 @@
+/* Padding cho header */
+.main-content {
+    padding-top: 80px;
+}
+
+.luxury-product-wrapper {
+    display: flex;
+    max-width: 1400px;
+    margin: 0 auto;
+    background-color: #fff;
+    font-family: 'AdihausDIN', Helvetica, Arial, sans-serif;
+}
+
+/* CỘT TRÁI */
+.product-left-content {
+    flex: 1;
+    max-width: 65%;
+    padding-bottom: 100px;
+}
+
+.product-gallery {
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+    width: 100%;
+}
+
+.img-wrapper {
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.gallery-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.img-wrapper:hover .gallery-img {
+    transform: scale(1.05);
+}
+
+.btn-outline {
+    margin-top: 20px;
+    padding: 10px 30px;
+    border: 1px solid #000;
+    background: none;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.product-section {
+    padding: 40px 20px;
+    border-top: 1px solid #ebedee;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+/* Related Products Grid */
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+.related-item {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ép các ô cao bằng nhau */
+}
+
+.related-item a {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: #000;
+}
+.related-item img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    background: #f5f5f5;
+}
+.related-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 10px 0 5px 0;
+
+    /* Ép tên sản phẩm luôn hiển thị đúng 2 dòng, nếu dài quá thì thêm dấu ... */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    flex-grow: 1; /* Đẩy giá sản phẩm xuống sát đáy cho đều nhau */
+}
+
+.related-price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 0;
+}
+
+/* CỘT PHẢI - STICKY */
+.product-info-sidebar {
+    width: 35%;
+    min-width: 350px;
+    padding: 20px 40px;
+}
+
+.sticky-inner {
+    position: sticky;
+    top: 100px; /* Cách header 20px */
+}
+
+.brand-label { font-size: 0.8rem; letter-spacing: 2px; text-decoration: underline; }
+.pro-title { font-size: 2rem; font-weight: 900; font-style: italic; margin: 10px 0; }
+.pro-price { font-size: 1.1rem; font-weight: 600; margin-bottom: 30px; }
+
+.variant-label { font-size: 0.9rem; font-weight: 700; margin-bottom: 15px; }
+
+/* Nút Màu Sắc */
+
+.color-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px; /* Khoảng cách giữa ảnh và chữ */
+    width: 65px; /* Chiều rộng cố định để căn lề đều */
+}
+.color-options { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 30px; }
+.img-color-btn {
+    width: 55px;
+    height: 70px;
+    border: 1px solid #ddd;
+    padding: 0;
+    cursor: pointer;
+    background: #fff;
+    transition: all 0.2s;
+}
+.img-color-btn img { width: 100%; height: 100%; object-fit: cover; }
+.img-color-btn.active {
+    border: 2px solid #000;
+}
+
+/* Style cho tên màu bên dưới */
+.color-name-text {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+    text-transform: capitalize; /* Viết hoa chữ cái đầu */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+/* Nút Size */
+.size-options { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+.size-btn {
+    min-width: 70px;
+    padding: 12px;
+    border: 1px solid #ebedee;
+    background: #fff;
+    cursor: pointer;
+}
+.size-btn:hover { border-color: #000; }
+.size-btn.active { background: #000; color: #fff; border-color: #000; }
+.size-btn.hidden { display: none; }
+
+/* Nút Mua Hàng */
+.btn-add-to-cart {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    padding: 18px 25px;
+    border: none;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.btn-add-to-cart:hover { opacity: 0.8; }
+
+/* --- Hướng dẫn chọn size --- */
+.size-guide-trigger {
+    margin-top: 15px;
+    margin-bottom: 30px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: inline-block;
+}
+.size-guide-trigger span {
+    text-decoration: underline;
+}
+.size-guide-trigger:hover {
+    color: #555;
+}
+
+/* Modal Popup */
+.size-guide-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    align-items: center;
+    justify-content: center;
+}
+.size-guide-modal.show {
+    display: flex;
+}
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+}
+.close-modal:hover { color: #888; }
+.modal-content h2 { text-align: center; margin-bottom: 20px; font-size: 1.4rem; font-weight: bold; }
+.modal-content h3 { font-size: 1.1rem; margin-top: 20px; margin-bottom: 10px; font-weight: bold; }
+.size-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+.size-table th, .size-table td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+.size-table th { background-color: #f5f5f5; font-weight: bold; }
+
+
+
+/* Style cho phần hiển thị số lượng tồn kho */
+.stock-info {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.pro-stock {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.pro-stock span {
+    color: #000;
+    font-weight: 700;
+}
+
+/* Hiệu ứng khi hết hàng (tùy chọn) */
+.size-btn.out-of-stock {
+    opacity: 0.5;
+    text-decoration: line-through;
+    cursor: not-allowed;
+    pointer-events: none;
+}

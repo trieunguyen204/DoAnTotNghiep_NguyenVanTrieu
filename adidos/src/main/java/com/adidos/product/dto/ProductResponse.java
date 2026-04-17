@@ -1,6 +1,7 @@
 package com.adidos.product.dto;
 
 import lombok.*;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -10,6 +11,7 @@ public class ProductResponse {
     private String name;
     private String categoryName;
     private String brand;
+    private String description;
 
 
     private BigDecimal originalPrice;

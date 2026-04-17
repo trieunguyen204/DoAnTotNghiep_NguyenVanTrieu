@@ -31,7 +31,9 @@ public class SecurityConfig {
                                 , "/products/**"
                                 , "/css/**"
                                 , "/js/**"
-                                , "/uploads/**")
+                                ,"/product/{id}"
+                                , "/uploads/**"
+                        )
                         .permitAll()
 
                         // CHỈ ADMIN MỚI ĐƯỢC VÀO CÁC ĐƯỜNG DẪN NÀY
