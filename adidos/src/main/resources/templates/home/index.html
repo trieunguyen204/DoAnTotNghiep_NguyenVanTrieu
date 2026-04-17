@@ -1,17 +1,39 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layouts/main}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layouts/main :: layout_user}">
+    <head>
+        <title th:fragment="page_title">Adidos | Cửa Hàng qua Cao Cấp</title>
+        <th:block th:fragment="page_user_css">
+            <link rel="stylesheet" th:href="@{/css/user/index.css}">
+        </th:block>
+    </head>
+    <body>
+        <th:block th:fragment="content_user">
 
-<head>
-    <title>Trang chủ</title>
-</head>
+            <section class="hero-light">
+                <div class="hero-content-light">
 
-<body>
+                </div>
+            </section>
 
-<div layout:fragment="content">
-    <h2>Trang chủ user</h2>
-</div>
+            <section class="promo-banner">
+                <h2>CLEARANCE SALE - UP TO 50% OFF</h2> <p>Ưu đãi giới hạn cho các mẫu áo thun và áo khoác.</p>
+            </section>
 
-</body>
+            <section class="featured-luxury">
+                <div class="section-header">
+                    <a th:href="@{/products}" class="view-all">XEM TẤT CẢ</a>
+                </div>
+                <div class="product-grid">
+                    <th:block th:each="prod : ${featuredProducts}">
+                        <div th:replace="~{fragments/components :: product_card(${prod})}"></div>
+                    </th:block>
+                </div>
+            </section>
+
+        </th:block>
+
+        <th:block th:fragment="page_user_js">
+            <script th:src="@{/js/user/index.js}"></script>
+        </th:block>
+    </body>
 </html>

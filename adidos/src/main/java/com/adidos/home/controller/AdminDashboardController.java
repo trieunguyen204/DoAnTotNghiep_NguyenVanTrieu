@@ -1,4 +1,4 @@
-package com.adidos.dashboard.controller;
+package com.adidos.home.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

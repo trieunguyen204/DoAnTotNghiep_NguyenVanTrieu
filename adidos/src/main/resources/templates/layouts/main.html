@@ -1,16 +1,44 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      th:fragment="layout_user">
 
-<head>
-    <title layout:title-pattern="$CONTENT_TITLE - MyApp">MyApp</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<body>
+        <title th:replace="~{::page_title ?: _}">Adidos</title>
 
-    <div th:replace="fragments/header :: header"></div>
+        <!--css chung-->
+        <link rel="stylesheet" th:href="@{/css/user/style.css}">
 
-    <div th:replace="fragments/footer :: footer"></div>
+        <!--css riêng-->
+        <th:block th:insert="~{::page_user_css}"></th:block>
 
-</body>
+    </head>
+
+    <body>
+
+        <div th:replace="~{fragments/header :: header}"></div>
+
+
+
+        <!-- CONTENT -->
+        <main class="main-content">
+            <div th:insert="~{::content_user}"></div>
+        </main>
+
+
+        <div th:replace="~{fragments/footer :: footer}"></div>
+
+
+        <!-- JS chung -->
+        <script th:src="@{/js/user/main.js}"></script>
+
+        <!-- JS riêng page -->
+        <th:block th:insert="~{::page_user_js}"></th:block>
+
+
+    </body>
 </html>
+
+

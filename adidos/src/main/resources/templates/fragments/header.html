@@ -1,3 +1,42 @@
-<div th:fragment="header" xmlns:th="http://www.w3.org/1999/xhtml">
-    <h1>Header</h1>
-</div>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+    <header th:fragment="header" class="site-header" id="main-header">
+        <div class="container header-inner">
+            <a th:href="@{/}" class="logo">ADIDOS</a>
+
+            <nav class="main-nav">
+                <ul>
+                    <li><a th:href="@{/}">TRANG CHỦ</a></li>
+                    <li class="has-dropdown" th:each="cat, iterStat : ${rootCategories}" th:if="${iterStat.index < 5}">
+                        <a th:href="@{/category/{id}(id=${cat.id})}" th:text="${cat.name}">DANH MỤC</a>
+                        <ul class="dropdown">
+                            <li th:each="sub : ${cat.subCategories}">
+                                <a th:href="@{/category/{id}(id=${sub.id})}" th:text="${sub.name}">Menu con</a>
+                            </li>
+                            <li class="view-all-item">
+                                <a th:href="@{/category/{id}(id=${cat.id})}">Xem tất cả →</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="user-actions">
+                <form th:action="@{/search}" method="GET" class="luxury-search">
+                    <input type="text" name="kw" placeholder="Tìm kiếm ...">
+                    <button type="submit">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                </form>
+
+                <a th:href="@{/profile}"><i class="icon-user"></i> Tài khoản</a>
+                <a th:href="@{/cart}"><i class="icon-cart"></i> Giỏ hàng</a>
+            </div>
+        </div>
+    </header>
+    </body>
+</html>

@@ -12,6 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class VoucherService {
 
     private final VoucherRepository voucherRepository;

@@ -1,0 +1,201 @@
+/* Hero Banner Light */
+
+.hero-light {
+    height: 65vh;
+    background: url('https://i.pinimg.com/1200x/f5/bf/35/f5bf35dc3b635bc57fdea3f1f35bdcdc.jpg') center/contain no-repeat; /* Đổi cover thành contain */
+    background-color: #f0f0f0; /* Thay mã màu này cho trùng với màu nền của bức ảnh */
+    display: flex;
+    align-items: center;
+    padding-left: 8%;
+}
+.hero-content-light { max-width: 500px; }
+.hero-content-light h1 { font-size: 4rem; font-weight: 900; line-height: 1; margin-bottom: 15px; }
+.hero-content-light p { font-size: 1.2rem; margin-bottom: 30px; }
+.btn-dark { background: #000; color: #fff; padding: 15px 40px; font-weight: bold; display: inline-block; transition: 0.3s; border: 1px solid #000; letter-spacing: 2px;}
+.btn-dark:hover { background: transparent; color: #000; }
+
+/* Promo Banner (Black Friday) */
+
+/*.promo-banner {
+    background: #f4f4f0; *//* Tông kem/beige thanh lịch *//*
+    color: #000; *//* Chữ đen *//*
+    text-align: center;
+    padding: 15px 20px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.promo-banner h2 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 4px;
+    margin-bottom: 5px;
+}
+
+.promo-banner p {
+    font-size: 0.8rem;
+    color: #555; *//* Xám đậm cho chữ phụ *//*
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    margin: 0;
+}*/
+
+/* Promo Banner - Editorial Luxury Style */
+.promo-banner {
+    background: #ffffff;
+    color: #000000;
+    text-align: center;
+    padding: 25px 20px;
+    text-transform: uppercase;
+    border-top: 1px solid #e5e5e5; /* Viền mỏng trên */
+    border-bottom: 1px solid #e5e5e5; /* Viền mỏng dưới */
+    margin: 40px 5%; /* Đẩy lùi vào so với mép màn hình một chút */
+}
+
+.promo-banner h2 {
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: 6px; /* Giãn chữ cực rộng để tạo độ sang */
+    margin-bottom: 10px;
+    position: relative;
+    display: inline-block;
+}
+
+/* Thêm 2 đường line nghệ thuật 2 bên tiêu đề */
+.promo-banner h2::before,
+.promo-banner h2::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 40px;
+    height: 1px;
+    background-color: #000;
+}
+
+.promo-banner h2::before {
+    right: 100%;
+    margin-right: 20px;
+}
+.promo-banner h2::after {
+    left: 100%;
+    margin-left: 20px;
+}
+
+.promo-banner p {
+    font-size: 0.75rem;
+    color: #767677; /* Màu xám đặc trưng của Apple/Adidas */
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+/* Product Section */
+/*.section-header { display: flex; justify-content: space-between; align-items: flex-end; padding: 60px 5% 30px; }
+.section-header h2 { font-size: 2rem; font-weight: 900; }
+.view-all { font-weight: bold; text-decoration: underline; }
+
+.product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: #e5e5e5; border: 1px solid #e5e5e5; }
+.product-card-premium { background: #fff; padding: 20px; transition: 0.3s; position: relative; }
+.product-card-premium:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.08); z-index: 1; }
+
+.img-wrapper { position: relative; height: 300px; margin-bottom: 15px; }
+.img-wrapper img { width: 100%; height: 100%; object-fit: contain; transition: 0.5s; }
+.product-card-premium:hover img { transform: scale(1.05); }*/
+
+
+/* Product Section */
+.section-header { display: flex; justify-content: space-between; align-items: flex-end; padding: 60px 5% 30px; }
+.section-header h2 { font-size: 2rem; font-weight: 900; }
+.view-all { font-weight: bold; text-decoration: underline; text-transform: uppercase; }
+
+/* Bỏ background xám của toàn bộ khu vực, dùng gap để tạo khoảng cách */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    padding: 0 5%;
+    background: transparent;
+    border: none;
+}
+
+/* Thẻ sản phẩm */
+.product-card-premium {
+    background: #fff;
+    position: relative;
+    border: 1px solid transparent; /* Viền trong suốt để chống giật khi hover */
+    transition: border 0.2s ease; /* Hover hiện viền dứt khoát */
+}
+
+/* Hover: Xuất hiện viền đen bao quanh */
+.product-card-premium:hover {
+    border: 1px solid #000;
+    z-index: 1;
+}
+
+/* Khung ảnh: Đổ nền xám nhạt như Adidas */
+.img-wrapper {
+    position: relative;
+    height: 380px;
+    background-color: #f0f1f2; /* Mã xám nhạt chuẩn */
+    margin-bottom: 0;
+}
+
+.img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: multiply; /* Hòa trộn ảnh có viền trắng vào nền xám */
+    transition: none; /* Bỏ hiệu ứng zoom ảnh rườm rà */
+}
+
+/* Badges (Nhãn Mới/Giảm Giá) */
+.badge-group { position: absolute; top: 15px; left: 15px; display: flex; flex-direction: column; gap: 5px; z-index: 2;}
+.badge { padding: 4px 10px; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; background: #fff; color: #000; border: 1px solid #000;}
+.badge.sale { background: #000; color: #fff; }
+
+/* Khu vực Text */
+.info {
+    padding: 20px 15px;
+}
+
+/* Tên sản phẩm */
+.info h3 {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: #000;
+    margin-bottom: 5px;
+    text-transform: none;
+}
+
+/* Thương hiệu */
+.info .category {
+    color: #767677; /* Xám đặc trưng */
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+/* Giá bán */
+.price {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #000;
+}
+.discount-price { color: #d32f2f; margin-right: 8px; }
+del { color: #767677; font-size: 0.9rem; font-weight: 400; text-decoration: line-through;}
+
+
+
+
+
+/* Badges */
+.badge-group { position: absolute; top: 0; left: 0; display: flex; flex-direction: column; gap: 5px; }
+.badge { padding: 4px 10px; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; }
+.badge.new { background: #000; color: #fff; }
+.badge.sale { background: #d32f2f; color: #fff; }
+
+/* Info */
+.info h3 { font-size: 1rem; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+.info .category { color: #888; font-size: 0.85rem; margin-bottom: 10px; }
+.price { font-weight: 700; font-size: 1rem; }
+.discount-price { color: #d32f2f; margin-right: 5px; }
+del { color: #888; font-size: 0.85rem; }

@@ -1,4 +1,4 @@
-package com.adidos.dashboard.service;
+package com.adidos.home.service;
 
 import com.adidos.order.enums.OrderStatus;
 import com.adidos.order.repository.OrderRepository;
@@ -6,12 +6,14 @@ import com.adidos.product.repository.ProductRepository;
 import com.adidos.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class DashboardService {
 
     private final OrderRepository orderRepository;

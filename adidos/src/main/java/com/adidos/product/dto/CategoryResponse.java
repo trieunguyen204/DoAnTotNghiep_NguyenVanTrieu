@@ -1,10 +1,8 @@
 package com.adidos.product.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.List;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class CategoryResponse {
@@ -12,4 +10,5 @@ public class CategoryResponse {
     private String name;
     private Long parentId;
     private String parentName;
+    private List<CategoryResponse> subCategories;
 }

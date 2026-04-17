@@ -1,3 +1,44 @@
-<div th:fragment="footer" xmlns:th="http://www.w3.org/1999/xhtml">
-    <p>Footer</p>
-</div>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<footer th:fragment="footer" class="site-footer">
+    <div class="container footer-grid">
+        <div class="footer-col">
+            <h3>SẢN PHẨM</h3>
+            <ul>
+                <li><a href="#">Giày Nam</a></li>
+                <li><a href="#">Giày Nữ</a></li>
+                <li><a href="#">Hàng Mới Về</a></li>
+                <li class="sale-link"><a href="#">Giảm Giá</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h3>HỖ TRỢ</h3>
+            <ul>
+                <li><a href="#">Tra cứu đơn hàng</a></li>
+                <li><a href="#">Chính sách đổi trả</a></li>
+                <li><a href="#">Bảng kích cỡ</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h3>VỀ ADIDOS</h3>
+            <ul>
+                <li><a href="#">Câu chuyện thương hiệu</a></li>
+                <li><a href="#">Cửa hàng</a></li>
+            </ul>
+        </div>
+        <div class="footer-col newsletter">
+            <h3>ĐĂNG KÝ NHẬN TIN</h3>
+            <p>Nhận thông tin ưu đãi mới nhất.</p>
+            <div class="email-form">
+                <input type="email" placeholder="Email của bạn...">
+                <button>→</button>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 Adidos Store. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

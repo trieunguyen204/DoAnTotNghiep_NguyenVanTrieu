@@ -4,6 +4,7 @@ import com.adidos.promotion.entity.Promotion;
 import com.adidos.promotion.repository.PromotionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PromotionService {
 
     private final PromotionRepository promotionRepository;
