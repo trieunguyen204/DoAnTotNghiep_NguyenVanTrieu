@@ -32,6 +32,7 @@ public class SecurityConfig {
                                 , "/css/**"
                                 , "/js/**"
                                 ,"/product/{id}"
+                                ,"/category/{id}"
                                 , "/uploads/**"
                         )
                         .permitAll()

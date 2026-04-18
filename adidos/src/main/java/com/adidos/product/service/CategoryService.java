@@ -53,4 +53,12 @@ public class CategoryService {
                 .subCategories(subs) // TRUYỀN VÀO ĐÂY
                 .build();
     }
+
+
+    @Transactional(readOnly = true)
+    public CategoryResponse getById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy danh mục"));
+        return toResponse(category);
+    }
 }

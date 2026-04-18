@@ -1,9 +1,7 @@
 package com.adidos.product.service;
 
 import com.adidos.product.dto.*;
-import com.adidos.product.entity.Product;
-import com.adidos.product.entity.ProductImage;
-import com.adidos.product.entity.ProductVariant;
+import com.adidos.product.entity.*;
 import com.adidos.product.mapper.ProductMapper;
 import com.adidos.product.repository.*;
 import com.adidos.promotion.service.PromotionService;
@@ -114,7 +112,12 @@ public class ProductService {
 
     @Transactional
     public void deleteVariant(Long id) {
-        productVariantRepository.deleteById(id);
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
+
+        product.setStatus("INACTIVE");
+        productRepository.save(product);
     }
 
     private final ProductImageRepository productImageRepository;
@@ -207,20 +210,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Lấy sản phẩm theo Danh mục
-     */
-    @Transactional(readOnly = true)
-    public List<ProductResponse> getProductsByCategory(Long categoryId) {
-        List<Product> products = productRepository.findByCategoryId(categoryId);
-        return products.stream()
-                .map(p -> {
-                    ProductResponse res = ProductMapper.toProductResponse(p);
-                    applyPromotionData(res, p);
-                    return res;
-                })
-                .collect(Collectors.toList());
-    }
+
 
 
 
@@ -243,6 +233,33 @@ public class ProductService {
         response.setDiscountedPrice(discountedPrice);
         response.setHasPromotion(discountedPrice.compareTo(originalPrice) < 0);
     }
+
+
+    public List<Color> getAllColors() {
+        return colorRepository.findAll();
+    }
+
+    public List<Size> getAllSizes() {
+        return sizeRepository.findAll();
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> getProductsByCategoryId(Long categoryId) {
+
+        List<Product> products = productRepository.findProductsByCategoryAndSub(categoryId);
+
+        return products.stream()
+                .filter(p -> "ACTIVE".equals(p.getStatus()))
+                .map(p -> {
+                    ProductResponse res = ProductMapper.toProductResponse(p);
+                    applyPromotionData(res, p);
+                    return res;
+                })
+                .collect(Collectors.toList());
+    }
+
+
 
 
 

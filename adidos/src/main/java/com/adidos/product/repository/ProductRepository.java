@@ -15,10 +15,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // Lấy danh sách sản phẩm đang hoạt động (ACTIVE)
     List<Product> findByStatus(String status);
 
-    // Lấy sản phẩm theo danh mục
-    List<Product> findByCategoryId(Long categoryId);
-
-
     @Query("SELECT p FROM Product p LEFT JOIN FETCH p.variants v WHERE p.id = :id")
     Optional<Product> findByIdWithVariants(@Param("id") Long id);
 
@@ -27,4 +23,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p WHERE p.name LIKE %:kw% OR p.brand LIKE %:kw%")
     List<Product> searchProducts(@Param("kw") String keyword);
+
+    List<Product> findByCategoryId(Long categoryId);
+
+    @Query("SELECT p FROM Product p WHERE p.category.id = :id OR p.category.parent.id = :id OR p.category.id = (SELECT c.parent.id FROM Category c WHERE c.id = :id)")
+    List<Product> findProductsByCategoryAndSub(@Param("id") Long id);
+
 }

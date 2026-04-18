@@ -1,6 +1,7 @@
 package com.adidos.product.controller;
 
 import com.adidos.product.dto.ProductResponse;
+import com.adidos.product.service.CategoryService;
 import com.adidos.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    private final CategoryService categoryService;
 
 
     @GetMapping("/product/{id}")
@@ -38,4 +40,17 @@ public class ProductController {
 
         return "product/detail";
     }
+
+    @GetMapping("/category/{id}")
+    public String getProductsByCategory(@PathVariable Long id, Model model) {
+        model.addAttribute("category", categoryService.getById(id));
+        model.addAttribute("products", productService.getProductsByCategoryId(id));
+        return "product/category";
+    }
+
+
+
+
+
+
 }
