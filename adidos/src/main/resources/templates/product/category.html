@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layouts/main :: layout_user}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layouts/main :: layout_user}">
     <head>
         <title th:fragment="page_title">Danh mục sản phẩm</title>
         <th:block th:fragment="page_user_css">
@@ -9,23 +8,62 @@
         </th:block>
     </head>
     <body>
+    <div th:fragment="content_user" class="category-container">
+        <h2 class="category-title" th:text="${category.name}">Tên Danh Mục</h2>
 
-        <div th:fragment="content_user" class="category-container">
-            <h2 class="category-title" th:text="${category.name}">Tên Danh Mục</h2>
+        <div class="category-layout">
+            <aside class="sidebar-filter">
+                <form th:action="@{/category/{id}(id=${category.id})}" method="GET">
+                    <h3>LỌC SẢN PHẨM</h3>
 
-            <div class="product-grid" th:if="${not #lists.isEmpty(products)}">
-                <th:block th:each="product : ${products}">
-                    <div th:replace="~{fragments/components :: product_card(${product})}"></div>
-                </th:block>
-            </div>
+                    <div class="filter-group">
+                        <label>KHOẢNG GIÁ (VNĐ)</label>
+                        <div class="price-range">
+                            <input type="number" name="minPrice" th:value="${minPrice}" placeholder="Từ"
+                                   min="0" oninput="validity.valid||(value='');">
 
-            <div th:if="${#lists.isEmpty(products)}" class="empty-msg">
-                <p>Không có sản phẩm nào trong danh mục này.</p>
+                            <input type="number" name="maxPrice" th:value="${maxPrice}" placeholder="Đến"
+                                   min="0" oninput="validity.valid||(value='');">
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>THƯƠNG HIỆU</label>
+                        <select name="brand">
+                            <option value="">TẤT CẢ THƯƠNG HIỆU</option>
+                            <option th:each="b : ${brands}" th:value="${b}" th:text="${b}" th:selected="${b == selectedBrand}"></option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label>CHẤT LIỆU</label>
+                        <select name="material">
+                            <option value="">TẤT CẢ CHẤT LIỆU</option>
+                            <option th:each="m : ${materials}" th:value="${m}" th:text="${m}" th:selected="${m == selectedMaterial}"></option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-filter">ÁP DỤNG</button>
+                    <a th:href="@{/category/{id}(id=${category.id})}" class="btn-clear">LÀM MỚI BỘ LỌC</a>
+                </form>
+            </aside>
+
+            <div class="main-content">
+                <div class="product-grid" th:if="${not #lists.isEmpty(products)}">
+                    <th:block th:each="product : ${products}">
+                        <div th:replace="~{fragments/components :: product_card(${product})}"></div>
+                    </th:block>
+                </div>
+
+                <div th:if="${#lists.isEmpty(products)}" class="empty-msg">
+                    <p>Không tìm thấy sản phẩm nào phù hợp.</p>
+                </div>
             </div>
         </div>
+    </div>
 
-        <th:block th:fragment="page_user_js">
-            <script th:src="@{/js/user/category.js}"></script>
-        </th:block>
+    <th:block th:fragment="page_user_js">
+        <script th:src="@{/js/user/category.js}"></script>
+    </th:block>
 </body>
 </html>

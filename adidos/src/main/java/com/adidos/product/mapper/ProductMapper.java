@@ -39,6 +39,10 @@ public class ProductMapper {
         return ProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
+                .material(product.getMaterial())
+                .gender(product.getGender())
+                .status(product.getStatus())
+                .categoryId(product.getCategory() != null ? product.getCategory().getId() : null)
                 .description(product.getDescription())
                 .brand(product.getBrand())
                 .categoryName(product.getCategory() != null ?

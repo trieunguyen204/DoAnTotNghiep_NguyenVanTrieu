@@ -245,17 +245,40 @@ public class ProductService {
 
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getProductsByCategoryId(Long categoryId) {
-
+    public List<ProductResponse> getProductsByCategoryId(Long categoryId, BigDecimal minPrice, BigDecimal maxPrice, String brand, String material) {
         List<Product> products = productRepository.findProductsByCategoryAndSub(categoryId);
-
         return products.stream()
-                .filter(p -> "ACTIVE".equals(p.getStatus()))
+                .filter(p -> "ACTIVE".equalsIgnoreCase(p.getStatus()))
+                // Lọc theo Brand (nếu có)
+                .filter(p -> brand == null || brand.isEmpty() || brand.equalsIgnoreCase(p.getBrand()))
+                // Lọc theo Material (nếu có)
+                .filter(p -> material == null || material.isEmpty() || material.equalsIgnoreCase(p.getMaterial()))
                 .map(p -> {
                     ProductResponse res = ProductMapper.toProductResponse(p);
                     applyPromotionData(res, p);
                     return res;
                 })
+                // Lọc theo khoảng giá (Lọc trên giá đã giảm)
+                .filter(res -> minPrice == null || res.getDiscountedPrice().compareTo(minPrice) >= 0)
+                .filter(res -> maxPrice == null || res.getDiscountedPrice().compareTo(maxPrice) <= 0)
+                .collect(Collectors.toList());
+    }
+
+    // Lấy danh sách thương hiệu không trùng lặp của danh mục này
+    public List<String> getBrandsByCategory(Long categoryId) {
+        return productRepository.findProductsByCategoryAndSub(categoryId).stream()
+                .filter(p -> "ACTIVE".equalsIgnoreCase(p.getStatus()) && p.getBrand() != null && !p.getBrand().isEmpty())
+                .map(Product::getBrand)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    // Lấy danh sách chất liệu không trùng lặp của danh mục này
+    public List<String> getMaterialsByCategory(Long categoryId) {
+        return productRepository.findProductsByCategoryAndSub(categoryId).stream()
+                .filter(p -> "ACTIVE".equalsIgnoreCase(p.getStatus()) && p.getMaterial() != null && !p.getMaterial().isEmpty())
+                .map(Product::getMaterial)
+                .distinct()
                 .collect(Collectors.toList());
     }
 

@@ -12,6 +12,10 @@ public class ProductResponse {
     private String categoryName;
     private String brand;
     private String description;
+    private String material;
+    private String gender;
+    private String status;
+    private Long categoryId;
 
 
     private BigDecimal originalPrice;

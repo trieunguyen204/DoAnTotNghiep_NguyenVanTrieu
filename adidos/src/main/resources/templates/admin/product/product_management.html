@@ -62,8 +62,14 @@
                             <td>
                                 <div class="action-btns">
                                     <button class="btn-action btn-warning edit-btn"
-                                            th:data-id="${prod.id}" th:data-name="${prod.name}"
-                                            th:data-brand="${prod.brand}" th:data-cat="${prod.categoryName}"
+                                            th:data-id="${prod.id}"
+                                            th:data-name="${prod.name}"
+                                            th:data-brand="${prod.brand}"
+                                            th:data-material="${prod.material}"
+                                            th:data-description="${prod.description}"
+                                            th:data-gender="${prod.gender}"
+                                            th:data-status="${prod.status}"
+                                            th:data-category="${prod.categoryId}"
                                             title="Sửa thông tin gốc">
                                         <i class="fas fa-pen"></i>
                                     </button>

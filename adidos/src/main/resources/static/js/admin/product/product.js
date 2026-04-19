@@ -13,17 +13,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Mở modal Sửa
-    document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.getElementById('prodId').value = this.dataset.id;
-            document.getElementById('prodName').value = this.dataset.name;
-            document.getElementById('prodBrand').value = this.dataset.brand;
-            // Map thêm các field khác tương tự dataset nếu cần
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Tất cả gán giá trị phải nằm TRONG NÀY
+                document.getElementById('prodId').value = this.dataset.id || '';
+                document.getElementById('prodName').value = this.dataset.name || '';
+                document.getElementById('prodBrand').value = this.dataset.brand || '';
 
-            modalTitle.textContent = 'Cập Nhật Sản Phẩm';
-            modal.style.display = 'flex';
+                document.getElementById('prodMaterial').value = this.dataset.material || '';
+                document.getElementById('prodDesc').value = this.dataset.description || '';
+
+                if(this.dataset.gender) {
+                    document.getElementById('prodGender').value = this.dataset.gender;
+                }
+
+                // Chuyển 2 dòng này vào đây:
+                document.getElementById('prodStatus').value = this.dataset.status || 'ACTIVE';
+                if(this.dataset.category) {
+                    document.getElementById('prodCategory').value = this.dataset.category;
+                }
+
+                modalTitle.textContent = 'Cập Nhật Sản Phẩm';
+                modal.style.display = 'flex';
+            });
         });
-    });
 
     // Đóng Modal
     closeBtns.forEach(btn => {

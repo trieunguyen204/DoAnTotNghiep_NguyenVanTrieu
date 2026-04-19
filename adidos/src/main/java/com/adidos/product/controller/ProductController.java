@@ -8,7 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -42,9 +44,27 @@ public class ProductController {
     }
 
     @GetMapping("/category/{id}")
-    public String getProductsByCategory(@PathVariable Long id, Model model) {
+    public String getProductsByCategory(
+            @PathVariable Long id,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) String material,
+            Model model) {
+
         model.addAttribute("category", categoryService.getById(id));
-        model.addAttribute("products", productService.getProductsByCategoryId(id));
+
+        model.addAttribute("products", productService.getProductsByCategoryId(id, minPrice, maxPrice, brand, material));
+
+        model.addAttribute("brands", productService.getBrandsByCategory(id));
+        model.addAttribute("materials", productService.getMaterialsByCategory(id));
+
+
+        model.addAttribute("minPrice", minPrice);
+        model.addAttribute("maxPrice", maxPrice);
+        model.addAttribute("selectedBrand", brand);
+        model.addAttribute("selectedMaterial", material);
+
         return "product/category";
     }
 

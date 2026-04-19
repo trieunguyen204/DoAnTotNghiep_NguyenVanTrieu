@@ -1,14 +1,18 @@
 .category-container {
-    max-width: 1200px;
+    max-width: 1500px; /* Mở rộng container để chứa card to hơn */
     margin: 0 auto;
-    padding: 20px;
+    padding: 40px 20px;
 }
 
 .category-title {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 24px;
+    font-size: 36px;
+    font-weight: 900;
     text-transform: uppercase;
+    letter-spacing: -1px;
+    margin-bottom: 50px;
+    color: #000;
+    border-left: 10px solid #000;
+    padding-left: 20px;
 }
 
 .product-grid {
@@ -22,4 +26,165 @@
     color: #888;
     margin-top: 50px;
     font-size: 16px;
+}
+
+
+.category-layout {
+    display: flex;
+    gap: 50px;
+    align-items: flex-start; /* Bắt buộc để Sticky hoạt động */
+}
+/* Sidebar bộ lọc */
+.sidebar-filter {
+    width: 320px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 110px; /* Khoảng cách cách top khi cuộn trang */
+    background: #fff;
+    padding: 35px;
+    border: 2px solid #000;
+    /* Hiệu ứng Luxury Shadow sắc nét */
+    box-shadow: 12px 12px 0px #000;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 10;
+}
+.sidebar-filter:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 18px 18px 0px #000;
+}
+
+.sidebar-filter h3 {
+    font-size: 22px;
+    font-weight: 900;
+    margin-bottom: 35px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-filter h3::after {
+    content: '';
+    flex-grow: 1;
+    height: 3px;
+    background: #000;
+}
+
+.filter-group {
+    margin-bottom: 35px;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 800;
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #000;
+}
+
+.price-range {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.price-range input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e5e5e5;
+    font-family: inherit;
+    font-weight: 600;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.price-range input:focus {
+    border-color: #000;
+    background: #f9f9f9;
+}
+
+.sidebar-filter select {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #e5e5e5;
+    background: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 15px;
+}
+
+.sidebar-filter select:focus {
+    border-color: #000;
+}
+
+.btn-filter {
+    width: 100%;
+    padding: 18px;
+    background: #000;
+    color: #fff;
+    border: none;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-filter:hover {
+    background: #333;
+    letter-spacing: 4px;
+}
+
+.btn-clear {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #999;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+}
+
+.btn-clear:hover {
+    color: #000;
+}
+
+
+
+/* PRODUCT CONTENT (BÊN PHẢI) */
+.main-content {
+    flex-grow: 1;
+}
+
+.product-grid {
+    display: grid;
+    /* Tăng min-width từ 250px lên 350px để card to ra */
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 40px;
+}
+
+/* Điều chỉnh lại ảnh trong product_card để cân xứng với size mới */
+.product-card-premium .img-wrapper img {
+    height: 450px; /* Tăng chiều cao ảnh tương ứng */
+}
+
+@media (max-width: 1100px) {
+    .category-layout {
+        flex-direction: column;
+    }
+    .sidebar-filter {
+        position: static;
+        width: 100%;
+        box-shadow: none;
+        border-width: 4px;
+    }
 }
