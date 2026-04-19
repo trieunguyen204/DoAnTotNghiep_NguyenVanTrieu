@@ -31,6 +31,15 @@ public class AdminCategoryController {
                                @RequestParam(required = false) Long parentId,
                                RedirectAttributes ra) {
         try {
+            String cleanName = name.trim();
+
+            // KIỂM TRA TRÙNG TÊN
+            var existing = categoryRepository.findByName(cleanName);
+            if (existing.isPresent() && (id == null || !existing.get().getId().equals(id))) {
+                ra.addFlashAttribute("error", "Tên danh mục '" + cleanName + "' đã tồn tại!");
+                return "redirect:/admin/categories";
+            }
+
             Category category;
             if (id != null) {
                 category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Không tìm thấy danh mục"));
@@ -38,7 +47,7 @@ public class AdminCategoryController {
                 category = new Category();
             }
 
-            category.setName(name);
+            category.setName(cleanName);
 
             // Xử lý danh mục cha
             if (parentId != null && parentId > 0) {

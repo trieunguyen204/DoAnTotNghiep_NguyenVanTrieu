@@ -9,7 +9,18 @@
     </head>
     <body>
     <div th:fragment="content_user" class="category-container">
-        <h2 class="category-title" th:text="${category.name}">Tên Danh Mục</h2>
+
+        <div class="breadcrumb">
+            <a th:href="@{/}">Trang chủ</a>
+            <span class="separator">/</span>
+
+            <th:block th:if="${category.parentId != null}">
+                <a th:href="@{/category/{id}(id=${category.parentId})}" th:text="${category.parentName}">Danh mục cha</a>
+                <span class="separator">/</span>
+            </th:block>
+
+            <span class="current" th:text="${category.name}">Tên Danh Mục</span>
+        </div>
 
         <div class="category-layout">
             <aside class="sidebar-filter">

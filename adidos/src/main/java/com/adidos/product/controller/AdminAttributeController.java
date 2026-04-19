@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/admin/attributes")
 @RequiredArgsConstructor
@@ -22,8 +24,17 @@ public class AdminAttributeController {
     // --- XỬ LÝ SIZE ---
     @PostMapping("/sizes/save")
     public String saveSize(@RequestParam(required = false) Long id, @RequestParam String sizeName, RedirectAttributes ra) {
+        String cleanName = sizeName.trim();
+
+        // Kiểm tra trùng lặp
+        Optional<Size> existing = sizeRepository.findBySizeName(cleanName);
+        if (existing.isPresent() && (id == null || !existing.get().getId().equals(id))) {
+            ra.addFlashAttribute("error", "Kích cỡ '" + cleanName + "' đã tồn tại!");
+            return "redirect:/admin/attributes";
+        }
+
         Size size = (id != null) ? sizeRepository.findById(id).orElse(new Size()) : new Size();
-        size.setSizeName(sizeName);
+        size.setSizeName(cleanName);
         sizeRepository.save(size);
         ra.addFlashAttribute("message", "Lưu kích cỡ thành công!");
         return "redirect:/admin/attributes";
@@ -43,8 +54,17 @@ public class AdminAttributeController {
     // --- XỬ LÝ COLOR ---
     @PostMapping("/colors/save")
     public String saveColor(@RequestParam(required = false) Long id, @RequestParam String colorName, RedirectAttributes ra) {
+        String cleanName = colorName.trim();
+
+        // Kiểm tra trùng lặp
+        Optional<Color> existing = colorRepository.findByColorName(cleanName);
+        if (existing.isPresent() && (id == null || !existing.get().getId().equals(id))) {
+            ra.addFlashAttribute("error", "Màu sắc '" + cleanName + "' đã tồn tại!");
+            return "redirect:/admin/attributes";
+        }
+
         Color color = (id != null) ? colorRepository.findById(id).orElse(new Color()) : new Color();
-        color.setColorName(colorName);
+        color.setColorName(cleanName);
         colorRepository.save(color);
         ra.addFlashAttribute("message", "Lưu màu sắc thành công!");
         return "redirect:/admin/attributes";

@@ -1,7 +1,7 @@
 .category-container {
     max-width: 1500px; /* Mở rộng container để chứa card to hơn */
     margin: 0 auto;
-    padding: 40px 20px;
+    padding: 0px 20px;
 }
 
 .category-title {
@@ -187,4 +187,41 @@
         box-shadow: none;
         border-width: 4px;
     }
+}
+
+
+/* =========================================
+   BREADCRUMB (THANH ĐIỀU HƯỚNG)
+   ========================================= */
+.breadcrumb {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.breadcrumb a {
+    color: #888;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.breadcrumb a:hover {
+    color: #000;
+}
+
+.breadcrumb .separator {
+    color: #ccc;
+    font-weight: 400;
+}
+
+.breadcrumb .current {
+    color: #000;
+    border-bottom: 1px solid #000; /* Gạch chân nhẹ để nhấn mạnh trang hiện tại */
+    padding-bottom: 2px;
 }

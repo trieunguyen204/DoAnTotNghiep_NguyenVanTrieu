@@ -48,6 +48,16 @@ public class AdminProductController {
     @PostMapping("/save")
     public String saveProduct(@ModelAttribute ProductRequest request, RedirectAttributes ra) {
         try {
+            String cleanName = request.getName().trim();
+
+            // KIỂM TRA TRÙNG TÊN SẢN PHẨM
+            var existing = productRepository.findByName(cleanName);
+            if (existing.isPresent() && (request.getId() == null || !existing.get().getId().equals(request.getId()))) {
+                ra.addFlashAttribute("error", "Tên sản phẩm '" + cleanName + "' đã tồn tại!");
+                return "redirect:/admin/products";
+            }
+
+            request.setName(cleanName);
             productService.saveProduct(request);
             ra.addFlashAttribute("message", "Lưu sản phẩm thành công!");
         } catch (Exception e) {
