@@ -61,4 +61,24 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy danh mục"));
         return toResponse(category);
     }
+
+
+
+
+
+
+    @Transactional(readOnly = true)
+    public List<CategoryResponse> getSubCategoriesForForm() {
+        // Lấy tất cả danh mục
+        return categoryRepository.findAll().stream()
+                // Chỉ lọc lấy các danh mục CON (có parent khác null)
+                .filter(c -> c.getParent() != null)
+                .map(c -> {
+                    CategoryResponse res = toResponse(c);
+                    // Format lại tên hiển thị cho Admin dễ nhìn: "Tên Cha -> Tên Con"
+                    res.setName(c.getParent().getName() + " -> " + c.getName());
+                    return res;
+                })
+                .collect(Collectors.toList());
+    }
 }

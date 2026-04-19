@@ -28,7 +28,7 @@ public class AdminProductController {
     public String listProducts(@RequestParam(required = false) String keyword, Model model) {
         List<ProductResponse> products;
         if (keyword != null && !keyword.isEmpty()) {
-            // Mày có thể viết thêm hàm search trong ProductService hoặc gọi thẳng Repo nếu lười
+
             products = productRepository.searchProducts(keyword).stream()
                     .map(ProductMapper::toProductResponse).collect(Collectors.toList());
             model.addAttribute("keyword", keyword);
@@ -36,9 +36,14 @@ public class AdminProductController {
             products = productService.getAllActiveProducts();
         }
         model.addAttribute("products", products);
-        model.addAttribute("categories", categoryService.getRootCategories());
+
+        model.addAttribute("categories", categoryService.getSubCategoriesForForm());
         return "admin/product/product_management";
     }
+
+
+
+
 
     @PostMapping("/save")
     public String saveProduct(@ModelAttribute ProductRequest request, RedirectAttributes ra) {
@@ -61,4 +66,7 @@ public class AdminProductController {
         }
         return "redirect:/admin/products";
     }
+
+
+
 }

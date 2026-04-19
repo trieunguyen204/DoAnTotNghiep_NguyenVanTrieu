@@ -5,6 +5,7 @@
         <title th:fragment="page_title">Danh mục sản phẩm</title>
         <th:block th:fragment="page_user_css">
             <link rel="stylesheet" th:href="@{/css/user/category.css}">
+            <link rel="stylesheet" th:href="@{/css/user/index.css}">
         </th:block>
     </head>
     <body>
@@ -13,16 +14,11 @@
             <h2 class="category-title" th:text="${category.name}">Tên Danh Mục</h2>
 
             <div class="product-grid" th:if="${not #lists.isEmpty(products)}">
-                <div class="product-card" th:each="product : ${products}">
-                    <a th:href="@{'/product/' + ${product.id}}">
-                        <img th:src="${product.primaryImageUrl}" alt="Product Image">
-                        <div class="product-info">
-                            <h3 th:text="${product.name}">Tên sản phẩm</h3>
-                            <p class="price" th:text="${#numbers.formatDecimal(product.discountedPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">Giá</p>
-                        </div>
-                    </a>
-                </div>
+                <th:block th:each="product : ${products}">
+                    <div th:replace="~{fragments/components :: product_card(${product})}"></div>
+                </th:block>
             </div>
+
             <div th:if="${#lists.isEmpty(products)}" class="empty-msg">
                 <p>Không có sản phẩm nào trong danh mục này.</p>
             </div>
@@ -31,5 +27,5 @@
         <th:block th:fragment="page_user_js">
             <script th:src="@{/js/user/category.js}"></script>
         </th:block>
-    </body>
+</body>
 </html>

@@ -41,7 +41,9 @@ public class ProductMapper {
                 .name(product.getName())
                 .description(product.getDescription())
                 .brand(product.getBrand())
-                .categoryName(product.getCategory() != null ? product.getCategory().getName() : null)
+                .categoryName(product.getCategory() != null ?
+                        (product.getCategory().getParent() != null ? product.getCategory().getParent().getName() + " -> " : "") + product.getCategory().getName()
+                        : null)
                 .originalPrice(minPrice)
                 .primaryImageUrl(primaryImage)
                 .variants(toVariantResponseList(variants))
