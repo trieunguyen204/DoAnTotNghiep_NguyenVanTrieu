@@ -73,16 +73,15 @@
 
 
                 <div class="variant-section">
-                    <h3 class="variant-label">MÀU SẮC</h3>
+                    <h3 class="variant-label">MÀU SẮC: <span id="selected-color-name" style="font-weight: 500; color: #666; text-transform: capitalize; margin-left: 5px;"></span></h3>
+
                     <div class="color-options" id="color-selector">
-                        <div th:each="variant : ${variants}" class="color-item" th:data-color-name="${variant.colorName}">
-                            <button class="color-btn img-color-btn"
-                                    th:data-color-name="${variant.colorName}"
-                                    th:title="${variant.colorName}">
-                                <img th:if="${!#lists.isEmpty(variant.imageUrls)}" th:src="${variant.imageUrls[0]}" alt="Màu">
-                            </button>
-                            <span class="color-name-text" th:text="${variant.colorName}">Tên màu</span>
-                        </div>
+                        <button th:each="variant : ${variants}"
+                                class="color-btn img-color-btn"
+                                th:data-color-name="${variant.colorName}"
+                                th:title="${variant.colorName}">
+                            <img th:if="${!#lists.isEmpty(variant.imageUrls)}" th:src="${variant.imageUrls[0]}" alt="Màu">
+                        </button>
                     </div>
                 </div>
 

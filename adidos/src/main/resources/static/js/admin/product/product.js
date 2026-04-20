@@ -8,35 +8,40 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('btnAddProduct').addEventListener('click', () => {
         form.reset();
         document.getElementById('prodId').value = '';
+
+        // RESET UI CỦA SELECT2
+        $('#productCategory').val(null).trigger('change');
+
         modalTitle.textContent = 'Thêm Sản Phẩm Mới';
         modal.style.display = 'flex';
     });
 
     // Mở modal Sửa
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                // Tất cả gán giá trị phải nằm TRONG NÀY
-                document.getElementById('prodId').value = this.dataset.id || '';
-                document.getElementById('prodName').value = this.dataset.name || '';
-                document.getElementById('prodBrand').value = this.dataset.brand || '';
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.getElementById('prodId').value = this.dataset.id || '';
+            document.getElementById('prodName').value = this.dataset.name || '';
+            document.getElementById('prodBrand').value = this.dataset.brand || '';
+            document.getElementById('prodMaterial').value = this.dataset.material || '';
+            document.getElementById('prodDesc').value = this.dataset.description || '';
 
-                document.getElementById('prodMaterial').value = this.dataset.material || '';
-                document.getElementById('prodDesc').value = this.dataset.description || '';
+            if(this.dataset.gender) {
+                document.getElementById('prodGender').value = this.dataset.gender;
+            }
 
-                if(this.dataset.gender) {
-                    document.getElementById('prodGender').value = this.dataset.gender;
-                }
+            document.getElementById('prodStatus').value = this.dataset.status || 'ACTIVE';
 
-                // Chuyển 2 dòng này vào đây:
-                document.getElementById('prodStatus').value = this.dataset.status || 'ACTIVE';
-                if(this.dataset.category) {
-                    document.getElementById('prodCategory').value = this.dataset.category;
-                }
+            // ĐỔ DỮ LIỆU VÀ UPDATE UI CHO SELECT2 (Sửa lại ID cho đúng)
+            if(this.dataset.category) {
+                $('#productCategory').val(this.dataset.category).trigger('change');
+            } else {
+                $('#productCategory').val(null).trigger('change');
+            }
 
-                modalTitle.textContent = 'Cập Nhật Sản Phẩm';
-                modal.style.display = 'flex';
-            });
+            modalTitle.textContent = 'Cập Nhật Sản Phẩm';
+            modal.style.display = 'flex';
         });
+    });
 
     // Đóng Modal
     closeBtns.forEach(btn => {
@@ -57,11 +62,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Tự động submit khi xóa hết chữ trong ô search (tiện cho người dùng)
-document.querySelectorAll('.search-input').forEach(input => {
-    input.addEventListener('input', function() {
-        if (this.value === '') {
-            this.closest('form').submit();
-        }
+
+let searchTimeout;
+
+
+document.querySelectorAll('input.search-input').forEach(input => {
+    input.addEventListener('input', function(e) {
+
+        clearTimeout(searchTimeout);
+
+
+        searchTimeout = setTimeout(() => {
+
+            if (this.value === '') {
+                this.closest('form').submit();
+            }
+        }, 300);
+    });
+});
+// Khởi tạo Select2
+$(document).ready(function() {
+    $('.select-search').select2({
+        placeholder: "-- Tìm kiếm danh mục --",
+        allowClear: true,
+        width: '100%',
+        dropdownParent: $('#productModal')
     });
 });

@@ -4,6 +4,7 @@
     <head>
         <th:block th:fragment="page_admin_css">
             <link rel="stylesheet" th:href="@{/css/admin/product.css}">
+            <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         </th:block>
     </head>
 
@@ -18,17 +19,11 @@
                     </div>
 
                     <div class="header-actions">
-
-
-
                         <form class="search-form" th:action="@{/admin/products}" method="get">
                             <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm tên..." class="search-input">
                             <button type="submit" class="btn-search"><i class="fas fa-search"></i></button>
-                            <a th:if="${keyword != null}" th:href="@{/admin/products}" class="btn-clear-search">Bỏ lọc</a>
+                            <a th:if="${keyword != null or categoryId != null}" th:href="@{/admin/products}" class="btn-clear-search">Bỏ lọc</a>
                         </form>
-
-
-
 
                         <button class="btn-primary" id="btnAddProduct"><i class="fas fa-plus"></i> Thêm Sản Phẩm</button>
                     </div>
@@ -124,7 +119,8 @@
 
                             <div class="form-group">
                                 <label>Danh mục</label>
-                                <select name="categoryId" id="prodCategory">
+                                <select name="categoryId" id="productCategory" class="form-control select-search" required>
+                                    <option value="">-- Chọn danh mục --</option>
                                     <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
                                 </select>
                             </div>
@@ -153,6 +149,8 @@
         </div>
 
         <th:block th:fragment="page_js">
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
             <script th:src="@{/js/admin/product/product.js}"></script>
         </th:block>
 

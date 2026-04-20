@@ -1,12 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
-    // 1. Xử lý hiển thị duy nhất 1 khối cho mỗi màu sắc (Lọc theo color-item)
-    const colorItems = document.querySelectorAll('.color-item');
+    // 1. Xử lý hiển thị duy nhất 1 nút cho mỗi màu sắc
+    const colorBtns = document.querySelectorAll('.color-btn');
     const uniqueColors = new Set();
 
-    colorItems.forEach(item => {
-        const colorName = item.getAttribute('data-color-name');
+    colorBtns.forEach(btn => {
+        const colorName = btn.getAttribute('data-color-name');
         if (uniqueColors.has(colorName)) {
-            item.remove();
+            btn.remove(); // Xóa bỏ nút màu trùng lặp
         } else {
             uniqueColors.add(colorName);
         }
@@ -17,6 +17,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const btnShowMore = document.getElementById('btn-show-more');
     const priceDisplay = document.getElementById('product-price');
     const stockDisplay = document.querySelector('#product-stock span');
+
+    // THẺ HIỂN THỊ TÊN MÀU
+    const selectedColorDisplay = document.getElementById('selected-color-name');
 
     // Hàm định dạng tiền tệ
     function formatCurrency(amount) {
@@ -29,6 +32,11 @@ document.addEventListener("DOMContentLoaded", function() {
             this.classList.add('active');
 
             const selectedColor = this.getAttribute('data-color-name');
+
+            // ---> IN TÊN MÀU LÊN MÀN HÌNH <---
+            if (selectedColorDisplay) {
+                selectedColorDisplay.innerText = selectedColor;
+            }
 
             // 2. Xử lý hiển thị Ảnh (Tối đa 4 ảnh đầu)
             const allWrappers = document.querySelectorAll('.img-wrapper');
@@ -70,6 +78,8 @@ document.addEventListener("DOMContentLoaded", function() {
             // Tự động click size đầu tiên để cập nhật giá/số lượng
             if (firstVisibleSize) {
                 firstVisibleSize.click();
+            } else if (stockDisplay) {
+                stockDisplay.innerText = "Hết hàng";
             }
         });
     });

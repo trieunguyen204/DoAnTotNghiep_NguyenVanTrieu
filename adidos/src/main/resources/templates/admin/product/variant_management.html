@@ -121,12 +121,17 @@
                         <span class="close-modal">&times;</span>
                     </div>
 
-                    <form id="uploadImageForm" method="post" enctype="multipart/form-data" class="upload-section">
-                        <div class="form-group">
-                            <label>Thêm ảnh mới (Chọn nhiều ảnh)</label>
-                            <input type="file" name="files" multiple accept="image/*" required>
+                    <form id="uploadImageForm" th:action="@{...}" method="post" enctype="multipart/form-data">
+                        <input type="file" name="files" multiple accept="image/*" required>
+
+                        <div style="margin-top: 15px; margin-bottom: 15px;">
+                            <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" name="applyToSameColor" value="true" style="width: 18px; height: 18px;">
+                                <span style="font-weight: 500; color: #0d6efd;">Áp dụng ảnh này cho tất cả các Size khác cùng Màu</span>
+                            </label>
                         </div>
-                        <button type="submit" class="btn-primary mt-2">Tải lên</button>
+
+                        <button type="submit" class="btn-save">Tải Ảnh Lên</button>
                     </form>
 
                     <hr class="my-4">

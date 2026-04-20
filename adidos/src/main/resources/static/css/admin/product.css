@@ -209,3 +209,44 @@
     align-items: center;
     gap: 15px; /* Khoảng cách giữa thanh tìm kiếm và nút Thêm */
 }
+
+
+
+/* --- ÉP KIỂU CHO SELECT2 TRONG FORM --- */
+/* Ép chiều rộng full 100% */
+.select2-container {
+    width: 100% !important;
+    z-index: 9999 !important;
+}
+
+/* Chỉnh khung ngoài cao bằng ô input thường */
+.select2-container .select2-selection--single {
+    height: 40px !important;
+    border: 1px solid #ced4da !important;
+    border-radius: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding-left: 5px !important;
+}
+
+/* Đổi màu viền khi bấm vào */
+.select2-container--focus .select2-selection--single,
+.select2-container--open .select2-selection--single {
+    border-color: #86b7fe !important;
+}
+
+/* Chỉnh chữ bên trong ô */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #444 !important;
+    font-size: 1rem !important;
+    line-height: normal !important;
+}
+
+/* Chỉnh lại vị trí mũi tên bên phải */
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 38px !important;
+    right: 5px !important;
+}
+
+
+

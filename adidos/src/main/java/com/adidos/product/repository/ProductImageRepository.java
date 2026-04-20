@@ -15,4 +15,6 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
 
     // Lấy ảnh chính (primary) của một biến thể
     Optional<ProductImage> findByProductVariantIdAndIsPrimaryTrue(Long variantId);
+
+    long countByProductVariantId(Long variantId);
 }

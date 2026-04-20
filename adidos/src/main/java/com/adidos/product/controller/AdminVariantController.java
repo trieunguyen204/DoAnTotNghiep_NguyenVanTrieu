@@ -67,9 +67,13 @@ public class AdminVariantController {
     // 5. Upload ảnh mới
     @PostMapping("/{variantId}/images/upload")
     public String uploadImages(@PathVariable Long productId, @PathVariable Long variantId,
-                               @RequestParam("files") MultipartFile[] files, RedirectAttributes ra) {
+                               @RequestParam("files") MultipartFile[] files,
+
+                               @RequestParam(required = false, defaultValue = "false") boolean applyToSameColor,
+                               RedirectAttributes ra) {
         try {
-            productService.uploadImages(variantId, files);
+            // Nhớ truyền thêm biến applyToSameColor vào Service
+            productService.uploadImages(variantId, files, applyToSameColor);
             ra.addFlashAttribute("message", "Tải ảnh lên thành công!");
         } catch (Exception e) {
             ra.addFlashAttribute("error", "Lỗi upload ảnh: " + e.getMessage());
@@ -79,8 +83,13 @@ public class AdminVariantController {
 
     // 6. Đặt ảnh làm đại diện (Primary)
     @PostMapping("/{variantId}/images/{imageId}/primary")
-    public String setPrimaryImage(@PathVariable Long productId, @PathVariable Long variantId, @PathVariable Long imageId) {
-        productService.setPrimaryImage(imageId, variantId);
+    public String setPrimaryImage(@PathVariable Long productId, @PathVariable Long variantId, @PathVariable Long imageId, RedirectAttributes ra) {
+        try {
+            productService.setPrimaryImage(imageId, variantId);
+            ra.addFlashAttribute("message", "Đã cập nhật ảnh đại diện thành công!");
+        } catch (Exception e) {
+            ra.addFlashAttribute("error", "Lỗi: " + e.getMessage());
+        }
         return "redirect:/admin/products/" + productId + "/variants";
     }
 

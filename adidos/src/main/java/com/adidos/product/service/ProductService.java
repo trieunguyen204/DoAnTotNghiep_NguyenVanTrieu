@@ -11,13 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -68,7 +62,7 @@ public class ProductService {
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setBrand(request.getBrand());
-        product.setMaterial(request.getMaterial());
+        product.setMaterial(request.getMaterial().trim().toLowerCase());
         product.setGender(request.getGender());
         product.setStatus(request.getStatus());
 
@@ -81,7 +75,14 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(Long id) {
-        productRepository.deleteById(id);
+
+      Product product = productRepository.findById(id)
+              .orElseThrow(()-> new RuntimeException("Không tìm thấy sản phẩm để xoá"));
+
+      product.setStatus("INACTIVE");
+
+      productRepository.save(product);
+
     }
 
     @Transactional
@@ -113,11 +114,10 @@ public class ProductService {
     @Transactional
     public void deleteVariant(Long id) {
 
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
+        ProductVariant variant = productVariantRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy biến thể"));
 
-        product.setStatus("INACTIVE");
-        productRepository.save(product);
+        productVariantRepository.deleteById(id);
     }
 
     private final ProductImageRepository productImageRepository;
@@ -125,29 +125,43 @@ public class ProductService {
     private String uploadPath;
 
     @Transactional
-    public void uploadImages(Long variantId, MultipartFile[] files) throws IOException {
-        ProductVariant variant = productVariantRepository.findById(variantId)
+    public void uploadImages(Long variantId, MultipartFile[] files, boolean applyToSameColor) {
+        ProductVariant currentVariant = productVariantRepository.findById(variantId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy biến thể"));
 
-        File uploadDir = new File(uploadPath);
-        if (!uploadDir.exists()) uploadDir.mkdirs();
+        List<ProductVariant> targetVariants = applyToSameColor && currentVariant.getColor() != null
+                ? productVariantRepository.findByProductIdAndColorId(currentVariant.getProduct().getId(), currentVariant.getColor().getId())
+                : List.of(currentVariant);
 
-        for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
-                // Tạo tên file duy nhất để tránh trùng lặp
-                String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-                Path path = Paths.get(uploadPath + fileName);
-                Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
-                // Lưu vào DB
-                ProductImage image = ProductImage.builder()
-                        .productVariant(variant)
-                        .imageUrl("/uploads/" + fileName)
-                        .isPrimary(false)
-                        .sortOrder(0)
-                        .build();
-                productImageRepository.save(image);
+        try {
+            // 1. Tạo thư mục uploads nếu chưa có
+            String UPLOAD_DIR = "uploads/";
+            java.nio.file.Path uploadPath = java.nio.file.Paths.get(UPLOAD_DIR);
+            if (!java.nio.file.Files.exists(uploadPath)) {
+                java.nio.file.Files.createDirectories(uploadPath);
             }
+
+            for (int i = 0; i < files.length; i++) {
+                // 2. Code lưu file vật lý thật sự
+                String fileName = System.currentTimeMillis() + "_" + files[i].getOriginalFilename();
+                java.nio.file.Path filePath = uploadPath.resolve(fileName);
+                java.nio.file.Files.copy(files[i].getInputStream(), filePath, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+
+                // 3. Lưu data vào DB
+                for (ProductVariant variant : targetVariants) {
+                    ProductImage image = new ProductImage();
+                    image.setProductVariant(variant);
+                    image.setImageUrl(fileName); // Chỉ lưu tên file
+
+                    // Chỉ set ảnh đầu tiên làm chính nếu chưa có ảnh nào
+                    boolean hasNoImages = productImageRepository.countByProductVariantId(variant.getId()) == 0;
+                    image.setIsPrimary(i == 0 && hasNoImages);
+
+                    productImageRepository.save(image);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Lỗi khi lưu file: " + e.getMessage());
         }
     }
 
@@ -264,20 +278,23 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    // Lấy danh sách thương hiệu không trùng lặp của danh mục này
+    // Lấy danh sách thương hiệu không trùng lặp (Viết hoa toàn bộ cho đẹp: NIKE, ADIDAS)
     public List<String> getBrandsByCategory(Long categoryId) {
         return productRepository.findProductsByCategoryAndSub(categoryId).stream()
-                .filter(p -> "ACTIVE".equalsIgnoreCase(p.getStatus()) && p.getBrand() != null && !p.getBrand().isEmpty())
-                .map(Product::getBrand)
+                .filter(p -> "ACTIVE".equalsIgnoreCase(p.getStatus()) && p.getBrand() != null && !p.getBrand().trim().isEmpty())
+                .map(p -> p.getBrand().trim().toUpperCase()) // Chuẩn hóa in hoa
                 .distinct()
                 .collect(Collectors.toList());
     }
 
-    // Lấy danh sách chất liệu không trùng lặp của danh mục này
+    // Lấy danh sách chất liệu không trùng lặp (Viết hoa chữ cái đầu: Cotton, Polyester)
     public List<String> getMaterialsByCategory(Long categoryId) {
         return productRepository.findProductsByCategoryAndSub(categoryId).stream()
-                .filter(p -> "ACTIVE".equalsIgnoreCase(p.getStatus()) && p.getMaterial() != null && !p.getMaterial().isEmpty())
-                .map(Product::getMaterial)
+                .filter(p -> "ACTIVE".equalsIgnoreCase(p.getStatus()) && p.getMaterial() != null && !p.getMaterial().trim().isEmpty())
+                .map(p -> {
+                    String m = p.getMaterial().trim();
+                    return m.substring(0, 1).toUpperCase() + m.substring(1).toLowerCase(); // Chuẩn hóa chữ đầu
+                })
                 .distinct()
                 .collect(Collectors.toList());
     }

@@ -3,7 +3,6 @@ package com.adidos.product.mapper;
 import com.adidos.product.dto.ProductResponse;
 import com.adidos.product.dto.ProductVariantResponse;
 import com.adidos.product.entity.Product;
-import com.adidos.product.entity.ProductImage;
 import com.adidos.product.entity.ProductVariant;
 
 import java.math.BigDecimal;
@@ -13,6 +12,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ProductMapper {
+
+
+    private static String formatImageUrl(String url) {
+        if (url == null || url.trim().isEmpty()) return null;
+        if (url.startsWith("http") || url.startsWith("/")) {
+            return url;
+        }
+        return "/uploads/" + url;
+    }
 
     public static ProductResponse toProductResponse(Product product) {
         if (product == null) return null;
@@ -32,7 +40,7 @@ public class ProductMapper {
                 variants.stream()
                         .flatMap(v -> v.getImages().stream())
                         .filter(img -> Boolean.TRUE.equals(img.getIsPrimary()))
-                        .map(ProductImage::getImageUrl)
+                        .map(img -> formatImageUrl(img.getImageUrl())) // SỬA Ở ĐÂY
                         .findFirst()
                         .orElse(null) : null;
 
@@ -64,15 +72,14 @@ public class ProductMapper {
     private static ProductVariantResponse toVariantResponse(ProductVariant variant) {
         if (variant == null) return null;
 
-
         List<String> images = variant.getImages() != null ?
                 variant.getImages().stream()
                         .sorted((img1, img2) -> {
                             boolean isP1 = Boolean.TRUE.equals(img1.getIsPrimary());
                             boolean isP2 = Boolean.TRUE.equals(img2.getIsPrimary());
-                            return Boolean.compare(isP2, isP1); // Đưa true lên trước false
+                            return Boolean.compare(isP2, isP1);
                         })
-                        .map(ProductImage::getImageUrl)
+                        .map(img -> formatImageUrl(img.getImageUrl()))
                         .collect(Collectors.toList()) :
                 Collections.emptyList();
 
