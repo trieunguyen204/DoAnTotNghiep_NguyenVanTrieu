@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/admin :: layout}">
+    <head>
+        <th:block th:fragment="page_admin_css">
+            <link rel="stylesheet" th:href="@{/css/admin/voucher.css}">
+        </th:block>
+    </head>
+    <body>
+        <div th:fragment="content">
+            <div class="admin-header">
+                <h2>Quản lý Voucher Đơn Hàng</h2>
+                <button class="btn-add" id="btn-add-voucher"><i class="fas fa-plus"></i> Thêm Voucher</button>
+            </div>
+
+            <div class="admin-table-container">
+                <table class="admin-table">
+                    <thead>
+                    <tr>
+                        <th>Mã Code</th>
+                        <th>Loại giảm</th>
+                        <th>Mức giảm</th>
+                        <th>Đơn tối thiểu</th>
+                        <th>Giảm tối đa</th>
+                        <th>SL</th>
+                        <th>Đã dùng</th>
+                        <th>Thời hạn</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                    </thead>
+                    <tbody id="voucher-table-body">
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="voucher-modal" class="modal">
+                <div class="modal-content modal-lg">
+                    <span class="close-modal" id="close-voucher-modal">&times;</span>
+                    <h3 id="modal-title">Thêm Voucher</h3>
+                    <form id="voucher-form">
+                        <input type="hidden" id="voucher-id">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Mã Voucher (Code) *</label>
+                                <input type="text" id="voucher-code" required placeholder="VD: SALE50K" style="text-transform: uppercase;">
+                            </div>
+                            <div class="form-group">
+                                <label>Số lượng mã *</label>
+                                <input type="number" id="voucher-limit" required min="1">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Loại giảm giá *</label>
+                                <select id="discount-type" required>
+                                    <option value="FIXED">Trừ tiền trực tiếp</option>
+                                    <option value="PERCENT">Giảm theo %</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Giá trị giảm *</label>
+                                <input type="number" id="discount-value" required min="0">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Đơn tối thiểu (Min Order) *</label>
+                                <input type="number" id="min-order-value" required min="0">
+                            </div>
+                            <div class="form-group">
+                                <label>Giảm tối đa (Chỉ dùng khi giảm %)</label>
+                                <input type="number" id="max-discount-value" min="0">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Ngày bắt đầu *</label>
+                                <input type="datetime-local" id="start-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Ngày kết thúc *</label>
+                                <input type="datetime-local" id="end-date" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Trạng thái</label>
+                            <select id="voucher-status">
+                                <option value="ACTIVE">Hoạt động</option>
+                                <option value="INACTIVE">Tạm dừng</option>
+                            </select>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-save">Lưu Voucher</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <th:block th:fragment="page_js">
+            <script th:src="@{/js/admin/discount/voucher.js}"></script>
+        </th:block>
+    </body>
+</html>

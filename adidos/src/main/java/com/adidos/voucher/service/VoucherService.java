@@ -22,15 +22,13 @@ public class VoucherService {
     }
 
     @Transactional
-    public void saveVoucher(Voucher voucher) {
+    public Voucher saveVoucher(Voucher voucher) {
         voucher.setCode(voucher.getCode().toUpperCase().trim());
         if (voucher.getStatus() == null) voucher.setStatus("ACTIVE");
-        voucherRepository.save(voucher);
+        if (voucher.getUsedCount() == null) voucher.setUsedCount(0);
+        return voucherRepository.save(voucher);
     }
 
-    /**
-     * Logic tính toán số tiền giảm giá thực tế
-     */
     public BigDecimal calculateDiscount(String code, BigDecimal orderTotal) {
         if (code == null || code.isEmpty()) return BigDecimal.ZERO;
 
@@ -43,7 +41,7 @@ public class VoucherService {
         }
 
         // 2. Kiểm tra số lượng
-        if (voucher.getQuantity() <= 0) {
+        if (voucher.getUsageLimit() != null && voucher.getUsedCount() >= voucher.getUsageLimit()) {
             throw new RuntimeException("Mã giảm giá này đã hết lượt sử dụng");
         }
 
@@ -66,11 +64,25 @@ public class VoucherService {
         if ("FIXED".equalsIgnoreCase(voucher.getDiscountType())) {
             discount = voucher.getDiscountValue();
         } else if ("PERCENT".equalsIgnoreCase(voucher.getDiscountType())) {
-            // Giảm theo % (Ví dụ: 10% của 1,000,000 là 100,000)
             discount = orderTotal.multiply(voucher.getDiscountValue().divide(new BigDecimal(100)));
+            // Áp dụng giới hạn giảm tối đa
+            if (voucher.getMaxDiscountValue() != null && voucher.getMaxDiscountValue().compareTo(BigDecimal.ZERO) > 0) {
+                if (discount.compareTo(voucher.getMaxDiscountValue()) > 0) {
+                    discount = voucher.getMaxDiscountValue();
+                }
+            }
         }
 
-        // Đảm bảo tiền giảm không vượt quá giá trị đơn hàng
         return discount.compareTo(orderTotal) > 0 ? orderTotal : discount;
+    }
+
+    public Voucher getVoucherById(Long id) {
+        return voucherRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy Voucher"));
+    }
+
+    @Transactional
+    public void deleteVoucher(Long id) {
+        voucherRepository.deleteById(id);
     }
 }

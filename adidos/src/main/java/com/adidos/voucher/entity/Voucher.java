@@ -2,6 +2,7 @@ package com.adidos.voucher.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -18,7 +19,7 @@ public class Voucher {
     private String code;
 
     @Column(name = "discount_type", length = 20)
-    private String discountType; // "FIXED" (Tiền mặt) hoặc "PERCENT" (Phần trăm)
+    private String discountType; // FIXED hoặc PERCENT
 
     @Column(name = "discount_value", precision = 10, scale = 2)
     private BigDecimal discountValue;
@@ -26,7 +27,14 @@ public class Voucher {
     @Column(name = "min_order_value", precision = 10, scale = 2)
     private BigDecimal minOrderValue;
 
-    private Integer quantity;
+    @Column(name = "max_discount_value", precision = 10, scale = 2)
+    private BigDecimal maxDiscountValue;
+
+    @Column(name = "usage_limit")
+    private Integer usageLimit;
+
+    @Column(name = "used_count")
+    private Integer usedCount;
 
     @Column(name = "start_date")
     private LocalDateTime startDate;
