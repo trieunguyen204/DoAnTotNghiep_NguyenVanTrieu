@@ -68,7 +68,23 @@
                 <div class="info-header">
                     <span class="brand-label" th:text="${product.brand} ?: 'ADIDOS'">BRAND</span>
                     <h1 class="pro-title" th:text="${product.name}">Tên sản phẩm</h1>
-                    <p class="pro-price" id="product-price" th:text="${#numbers.formatDecimal(product.originalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></p>
+
+                    <div class="pro-price-container" id="product-price-container">
+                        <th:block th:if="${product.hasPromotion}">
+                            <span class="pro-price-discounted" th:text="${#numbers.formatDecimal(product.discountedPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                            <del class="pro-price-original" th:text="${#numbers.formatDecimal(product.originalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></del>
+
+                            <span class="badge sale" style="padding: 4px 8px; font-size: 14px; border-radius: 4px; margin-left: 10px; background-color: #d32f2f; color: white;"
+                                  th:if="${product.discountType == 'PERCENT'}"
+                                  th:text="'-' + ${#numbers.formatDecimal(product.promotionDiscountValue, 0, 0)} + '%'"></span>
+                            <span class="badge sale" style="padding: 4px 8px; font-size: 14px; border-radius: 4px; margin-left: 10px; background-color: #d32f2f; color: white;"
+                                  th:if="${product.discountType != null and product.discountType != 'PERCENT'}"
+                                  th:text="'-' + ${#numbers.formatDecimal(product.promotionDiscountValue, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span>
+                        </th:block>
+                        <th:block th:unless="${product.hasPromotion}">
+                            <span class="pro-price-regular" th:text="${#numbers.formatDecimal(product.originalPrice, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                        </th:block>
+                    </div>
                 </div>
 
 
@@ -94,8 +110,11 @@
                                 class="size-btn"
                                 th:data-color-name="${variant.colorName}"
                                 th:data-price="${variant.price}"
+                                th:data-discounted-price="${variant.discountedPrice}"
                                 th:data-stock="${variant.stockQuantity}"
-                                th:text="${variant.sizeName}">
+                                th:text="${variant.sizeName}"
+                                th:data-promo-type="${product.discountType}"
+                                th:data-promo-val="${product.promotionDiscountValue}">
                         </button>
                     </div>
 
@@ -115,46 +134,70 @@
                     </button>
                 </div>
 
-
-
             </div>
         </div>
 
         <div class="size-guide-modal" id="size-modal">
-            <div class="modal-content">
+            <div class="modal-content" style="max-height: 85vh; overflow-y: auto;">
                 <span class="close-modal" id="close-size-guide">&times;</span>
-                <h2>BẢNG HƯỚNG DẪN CHỌN SIZE</h2>
+                <h2 style="text-align: center; margin-bottom: 25px; font-size: 1.5rem;">BẢNG HƯỚNG DẪN CHỌN SIZE</h2>
 
-                <h3>1. Bảng size Áo</h3>
-                <table class="size-table">
-                    <tr><th>Size</th><th>Cân nặng (kg)</th><th>Chiều cao (cm)</th></tr>
-                    <tr><td>S</td><td>45 - 53</td><td>150 - 160</td></tr>
-                    <tr><td>M</td><td>54 - 60</td><td>161 - 167</td></tr>
-                    <tr><td>L</td><td>61 - 68</td><td>168 - 174</td></tr>
-                    <tr><td>XL</td><td>69 - 76</td><td>175 - 180</td></tr>
-                    <tr><td>2XL</td><td>77 - 85</td><td>180 - 185</td></tr>
-                </table>
+                <div class="size-gender-section" style="margin-bottom: 35px;">
+                    <h3 style="color: #0f172a; border-bottom: 2px solid #0f172a; padding-bottom: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-male" style="font-size: 1.2em;"></i> DÀNH CHO NAM
+                    </h3>
 
-                <h3>2. Bảng size Quần</h3>
-                <table class="size-table">
-                    <tr><th>Size</th><th>Cân nặng (kg)</th><th>Vòng bụng (cm)</th></tr>
-                    <tr><td>28</td><td>45 - 52</td><td>70 - 72</td></tr>
-                    <tr><td>29</td><td>53 - 57</td><td>73 - 75</td></tr>
-                    <tr><td>30</td><td>58 - 62</td><td>76 - 78</td></tr>
-                    <tr><td>31</td><td>63 - 68</td><td>79 - 81</td></tr>
-                    <tr><td>32</td><td>69 - 74</td><td>82 - 84</td></tr>
-                    <tr><td>33</td><td>75 - 80</td><td>85 - 87</td></tr>
-                    <tr><td>34</td><td>81 - 86</td><td>88 - 90</td></tr>
-                </table>
+                    <h4 style="margin: 10px 0; color: #475569;">1. Bảng size Áo Nam</h4>
+                    <table class="size-table">
+                        <tr><th>Size</th><th>Cân nặng (kg)</th><th>Chiều cao (cm)</th></tr>
+                        <tr><td>S</td><td>50 - 58</td><td>160 - 165</td></tr>
+                        <tr><td>M</td><td>59 - 68</td><td>166 - 172</td></tr>
+                        <tr><td>L</td><td>69 - 76</td><td>173 - 178</td></tr>
+                        <tr><td>XL</td><td>77 - 85</td><td>179 - 185</td></tr>
+                        <tr><td>2XL</td><td>86 - 95</td><td>185 - 190</td></tr>
+                    </table>
+
+                    <h4 style="margin: 15px 0 10px; color: #475569;">2. Bảng size Quần Nam</h4>
+                    <table class="size-table">
+                        <tr><th>Size</th><th>Cân nặng (kg)</th><th>Vòng bụng (cm)</th></tr>
+                        <tr><td>29</td><td>50 - 58</td><td>73 - 75</td></tr>
+                        <tr><td>30</td><td>59 - 65</td><td>76 - 78</td></tr>
+                        <tr><td>31</td><td>66 - 72</td><td>79 - 81</td></tr>
+                        <tr><td>32</td><td>73 - 80</td><td>82 - 84</td></tr>
+                        <tr><td>33</td><td>81 - 88</td><td>85 - 87</td></tr>
+                        <tr><td>34</td><td>89 - 95</td><td>88 - 90</td></tr>
+                    </table>
+                </div>
+
+                <div class="size-gender-section">
+                    <h3 style="color: #e11d48; border-bottom: 2px solid #e11d48; padding-bottom: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-female" style="font-size: 1.2em;"></i> DÀNH CHO NỮ
+                    </h3>
+
+                    <h4 style="margin: 10px 0; color: #475569;">1. Bảng size Áo Nữ</h4>
+                    <table class="size-table">
+                        <tr><th>Size</th><th>Cân nặng (kg)</th><th>Chiều cao (cm)</th></tr>
+                        <tr><td>S</td><td>40 - 47</td><td>150 - 155</td></tr>
+                        <tr><td>M</td><td>48 - 54</td><td>156 - 160</td></tr>
+                        <tr><td>L</td><td>55 - 59</td><td>161 - 165</td></tr>
+                        <tr><td>XL</td><td>60 - 65</td><td>166 - 170</td></tr>
+                    </table>
+
+                    <h4 style="margin: 15px 0 10px; color: #475569;">2. Bảng size Quần Nữ</h4>
+                    <table class="size-table">
+                        <tr><th>Size</th><th>Cân nặng (kg)</th><th>Vòng eo (cm)</th></tr>
+                        <tr><td>26 (S)</td><td>40 - 45</td><td>64 - 66</td></tr>
+                        <tr><td>27 (M)</td><td>46 - 50</td><td>67 - 69</td></tr>
+                        <tr><td>28 (L)</td><td>51 - 55</td><td>70 - 72</td></tr>
+                        <tr><td>29 (XL)</td><td>56 - 60</td><td>73 - 75</td></tr>
+                        <tr><td>30 (2XL)</td><td>61 - 65</td><td>76 - 78</td></tr>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
 
     <th:block th:fragment="page_user_js">
         <script th:src="@{/js/user/product-detail.js}"></script>
     </th:block>
-
-
-
 </body>
 </html>

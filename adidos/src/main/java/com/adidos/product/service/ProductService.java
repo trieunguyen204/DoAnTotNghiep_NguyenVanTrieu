@@ -4,6 +4,7 @@ import com.adidos.product.dto.*;
 import com.adidos.product.entity.*;
 import com.adidos.product.mapper.ProductMapper;
 import com.adidos.product.repository.*;
+import com.adidos.promotion.entity.Promotion;
 import com.adidos.promotion.service.PromotionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,8 +42,11 @@ public class ProductService {
         Product product = productRepository.findByIdWithVariants(productId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm với ID: " + productId));
 
-        // Mapper sẽ tự động lo việc bóc tách Variant, Ảnh và tìm giá thấp nhất
-        return ProductMapper.toProductResponse(product);
+
+
+        ProductResponse response = ProductMapper.toProductResponse(product);
+        applyPromotionData(response, product);
+        return response;
     }
 
 
@@ -228,25 +232,8 @@ public class ProductService {
 
 
 
-    /**
-     * HÀM PHỤ TRỢ: Tính toán và nhồi dữ liệu Promotion vào ProductResponse
-     */
-    private void applyPromotionData(ProductResponse response, Product product) {
-        // Lấy giá gốc từ Variant đầu tiên (hoặc 0 nếu chưa có Variant)
-        BigDecimal originalPrice = product.getVariants().isEmpty() ? BigDecimal.ZERO : product.getVariants().get(0).getPrice();
 
-        Long categoryId = product.getCategory() != null ? product.getCategory().getId() : null;
-        BigDecimal discountedPrice = originalPrice;
 
-        // Tính giá sau khuyến mãi
-        if (categoryId != null && originalPrice.compareTo(BigDecimal.ZERO) > 0) {
-            discountedPrice = promotionService.calculateDiscountedPrice(categoryId, originalPrice);
-        }
-
-        response.setOriginalPrice(originalPrice);
-        response.setDiscountedPrice(discountedPrice);
-        response.setHasPromotion(discountedPrice.compareTo(originalPrice) < 0);
-    }
 
 
     public List<Color> getAllColors() {
@@ -297,6 +284,50 @@ public class ProductService {
                 })
                 .distinct()
                 .collect(Collectors.toList());
+    }
+
+
+
+    private void applyPromotionData(ProductResponse response, Product product) {
+        BigDecimal originalPrice = product.getVariants().isEmpty() ? BigDecimal.ZERO : product.getVariants().get(0).getPrice();
+        Long categoryId = product.getCategory() != null ? product.getCategory().getId() : null;
+
+        // 1. Lấy khuyến mãi để gắn tên
+        Promotion promo = promotionService.getBestPromotionForCategory(categoryId);
+        if (promo != null) {
+            response.setPromotionName(promo.getPromotionName());
+
+            response.setDiscountType(promo.getDiscountType());
+            response.setPromotionDiscountValue(promo.getDiscountValue());
+        }
+
+        // 2. Tính giá giảm cho sản phẩm gốc
+        BigDecimal discountedPrice = promotionService.calculateDiscountedPrice(categoryId, originalPrice);
+        response.setOriginalPrice(originalPrice);
+        response.setDiscountedPrice(discountedPrice);
+        response.setHasPromotion(discountedPrice.compareTo(originalPrice) < 0);
+
+        // 3. Tính giá giảm cho TỪNG BIẾN THỂ để gửi ra HTML
+        if (response.getVariants() != null) {
+            response.getVariants().forEach(variant -> {
+                BigDecimal vDiscounted = promotionService.calculateDiscountedPrice(categoryId, variant.getPrice());
+                variant.setDiscountedPrice(vDiscounted);
+            });
+        }
+
+        // 4. Logic 7 ngày cho hàng mới
+        response.setIsNew(product.getCreatedAt() != null && product.getCreatedAt().isAfter(java.time.LocalDateTime.now().minusDays(7)));
+    }
+
+    public List<ProductResponse> getProductsForPromotion(Promotion promo) {
+        if (promo == null || promo.getCategories().isEmpty()) return List.of();
+        List<Long> catIds = promo.getCategories().stream().map(Category::getId).toList();
+        return productRepository.findTop4ByCategoryIdInAndStatus(catIds, "ACTIVE")
+                .stream().map(p -> {
+                    ProductResponse res = ProductMapper.toProductResponse(p);
+                    applyPromotionData(res, p);
+                    return res;
+                }).toList();
     }
 
 

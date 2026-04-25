@@ -31,4 +31,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Optional<Product> findByName(String name);
 
+    List<Product> findTop4ByCategoryIdInAndStatus(List<Long> categoryIds, String status);
+
 }

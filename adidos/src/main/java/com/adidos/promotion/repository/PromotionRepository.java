@@ -17,4 +17,10 @@ public interface PromotionRepository extends JpaRepository<Promotion, Long> {
             "ORDER BY p.priority DESC")
     List<Promotion> findActivePromotionsByCategory(@Param("categoryId") Long categoryId,
                                                    @Param("now") LocalDateTime now);
+
+    // Lấy KM giảm sâu nhất
+    Promotion findTopByStatusAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByDiscountValueDesc(String status, LocalDateTime now1, LocalDateTime now2);
+
+    // Lấy KM sắp hết hạn
+    Promotion findTopByStatusAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByEndDateAsc(String status, LocalDateTime now1, LocalDateTime now2);
 }

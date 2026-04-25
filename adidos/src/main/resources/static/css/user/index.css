@@ -1,201 +1,170 @@
-/* Hero Banner Light */
-
+/* ==============================================================
+   1. HERO BANNER LIGHT
+============================================================== */
 .hero-light {
     height: 65vh;
-    background: url('https://i.pinimg.com/1200x/f5/bf/35/f5bf35dc3b635bc57fdea3f1f35bdcdc.jpg') center/contain no-repeat; /* Đổi cover thành contain */
-    background-color: #f0f0f0; /* Thay mã màu này cho trùng với màu nền của bức ảnh */
+    background: url('https://i.pinimg.com/1200x/f5/bf/35/f5bf35dc3b635bc57fdea3f1f35bdcdc.jpg') center/contain no-repeat;
+    background-color: #f0f0f0;
     display: flex;
     align-items: center;
     padding-left: 8%;
 }
+
 .hero-content-light { max-width: 500px; }
 .hero-content-light h1 { font-size: 4rem; font-weight: 900; line-height: 1; margin-bottom: 15px; }
 .hero-content-light p { font-size: 1.2rem; margin-bottom: 30px; }
-.btn-dark { background: #000; color: #fff; padding: 15px 40px; font-weight: bold; display: inline-block; transition: 0.3s; border: 1px solid #000; letter-spacing: 2px;}
+
+.btn-dark {
+    background: #000; color: #fff; padding: 15px 40px;
+    font-weight: bold; display: inline-block; transition: 0.3s;
+    border: 1px solid #000; letter-spacing: 2px;
+}
 .btn-dark:hover { background: transparent; color: #000; }
 
-/* Promo Banner (Black Friday) */
-
-/*.promo-banner {
-    background: #f4f4f0; *//* Tông kem/beige thanh lịch *//*
-    color: #000; *//* Chữ đen *//*
-    text-align: center;
-    padding: 15px 20px;
-    text-transform: uppercase;
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.promo-banner h2 {
-    font-size: 1.1rem;
-    font-weight: 800;
-    letter-spacing: 4px;
-    margin-bottom: 5px;
-}
-
-.promo-banner p {
-    font-size: 0.8rem;
-    color: #555; *//* Xám đậm cho chữ phụ *//*
-    font-weight: 500;
-    letter-spacing: 1.5px;
-    margin: 0;
-}*/
-
-/* Promo Banner - Editorial Luxury Style */
+/* ==============================================================
+   2. PROMO BANNER (EDITORIAL LUXURY STYLE)
+============================================================== */
 .promo-banner {
-    background: #ffffff;
-    color: #000000;
-    text-align: center;
-    padding: 25px 20px;
-    text-transform: uppercase;
-    border-top: 1px solid #e5e5e5; /* Viền mỏng trên */
-    border-bottom: 1px solid #e5e5e5; /* Viền mỏng dưới */
-    margin: 40px 5%; /* Đẩy lùi vào so với mép màn hình một chút */
+    background: #ffffff; color: #000000; text-align: center;
+    padding: 25px 20px; text-transform: uppercase;
+    border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5;
+    margin: 40px 5%;
 }
 
 .promo-banner h2 {
-    font-size: 1rem;
-    font-weight: 900;
-    letter-spacing: 6px; /* Giãn chữ cực rộng để tạo độ sang */
-    margin-bottom: 10px;
-    position: relative;
-    display: inline-block;
+    font-size: 1rem; font-weight: 900; letter-spacing: 6px;
+    margin-bottom: 10px; position: relative; display: inline-block;
 }
 
-/* Thêm 2 đường line nghệ thuật 2 bên tiêu đề */
 .promo-banner h2::before,
 .promo-banner h2::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    width: 40px;
-    height: 1px;
-    background-color: #000;
+    content: ""; position: absolute; top: 50%;
+    width: 40px; height: 1px; background-color: #000;
 }
-
-.promo-banner h2::before {
-    right: 100%;
-    margin-right: 20px;
-}
-.promo-banner h2::after {
-    left: 100%;
-    margin-left: 20px;
-}
+.promo-banner h2::before { right: 100%; margin-right: 20px; }
+.promo-banner h2::after { left: 100%; margin-left: 20px; }
 
 .promo-banner p {
-    font-size: 0.75rem;
-    color: #767677; /* Màu xám đặc trưng của Apple/Adidas */
-    font-weight: 600;
-    letter-spacing: 2px;
-    margin: 0;
+    font-size: 0.75rem; color: #767677; font-weight: 600;
+    letter-spacing: 2px; margin: 0;
 }
 
-/* Product Section */
-/*.section-header { display: flex; justify-content: space-between; align-items: flex-end; padding: 60px 5% 30px; }
-.section-header h2 { font-size: 2rem; font-weight: 900; }
-.view-all { font-weight: bold; text-decoration: underline; }
+/* ==============================================================
+   3. HOME SECTIONS (KHỐI KHUYẾN MÃI & SẢN PHẨM)
+============================================================== */
+.home-section {
+    margin: 60px 5%; /* Căn lề 5% cho đồng bộ với header/footer */
+    display: flex;
+    flex-direction: column;
+}
 
-.product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: #e5e5e5; border: 1px solid #e5e5e5; }
-.product-card-premium { background: #fff; padding: 20px; transition: 0.3s; position: relative; }
-.product-card-premium:hover { box-shadow: 0 10px 20px rgba(0,0,0,0.08); z-index: 1; }
+.home-section h2 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #000;
+    margin-bottom: 25px;
+    letter-spacing: 0.5px;
+}
 
-.img-wrapper { position: relative; height: 300px; margin-bottom: 15px; }
-.img-wrapper img { width: 100%; height: 100%; object-fit: contain; transition: 0.5s; }
-.product-card-premium:hover img { transform: scale(1.05); }*/
+/* Tên Khuyến mãi màu đỏ */
+.home-section h2 span {
+    color: #d32f2f;
+    font-weight: 900;
+}
 
+/* Nút Xem tất cả (Ghost Button) */
+.btn-view-all {
+    display: table;
+    margin: 30px auto 0;
+    padding: 12px 40px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #000;
+    background-color: transparent;
+    border: 1px solid #000;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+}
 
-/* Product Section */
-.section-header { display: flex; justify-content: space-between; align-items: flex-end; padding: 60px 5% 30px; }
-.section-header h2 { font-size: 2rem; font-weight: 900; }
-.view-all { font-weight: bold; text-decoration: underline; text-transform: uppercase; }
+.btn-view-all:hover {
+    background-color: #000;
+    color: #fff;
+}
 
-/* Bỏ background xám của toàn bộ khu vực, dùng gap để tạo khoảng cách */
+/* ==============================================================
+   4. PRODUCT GRID & CARD (LƯỚI SẢN PHẨM)
+============================================================== */
 .product-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 15px;
-    padding: 0 5%;
     background: transparent;
     border: none;
 }
 
-/* Thẻ sản phẩm */
 .product-card-premium {
     background: #fff;
     position: relative;
-    border: 1px solid transparent; /* Viền trong suốt để chống giật khi hover */
-    transition: border 0.2s ease; /* Hover hiện viền dứt khoát */
+    border: 1px solid transparent;
+    transition: border 0.2s ease;
 }
 
-/* Hover: Xuất hiện viền đen bao quanh */
 .product-card-premium:hover {
     border: 1px solid #000;
     z-index: 1;
 }
 
-/* Khung ảnh: Đổ nền xám nhạt như Adidas */
 .img-wrapper {
     position: relative;
     height: 380px;
-    background-color: #f0f1f2; /* Mã xám nhạt chuẩn */
+    background-color: #f0f1f2;
     margin-bottom: 0;
 }
 
 .img-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    mix-blend-mode: multiply; /* Hòa trộn ảnh có viền trắng vào nền xám */
-    transition: none; /* Bỏ hiệu ứng zoom ảnh rườm rà */
+    width: 100%; height: 100%; object-fit: contain;
+    mix-blend-mode: multiply;
 }
 
-/* Badges (Nhãn Mới/Giảm Giá) */
-.badge-group { position: absolute; top: 15px; left: 15px; display: flex; flex-direction: column; gap: 5px; z-index: 2;}
-.badge { padding: 4px 10px; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; background: #fff; color: #000; border: 1px solid #000;}
-.badge.sale { background: #000; color: #fff; }
-
-/* Khu vực Text */
-.info {
-    padding: 20px 15px;
+/* ==============================================================
+   5. BADGES & INFO (NHÃN & THÔNG TIN SẢN PHẨM)
+============================================================== */
+.badge-group {
+    position: absolute; top: 15px; left: 15px;
+    display: flex; flex-direction: column; gap: 5px; z-index: 2;
 }
 
-/* Tên sản phẩm */
-.info h3 {
-    font-size: 1.05rem;
-    font-weight: 500;
-    color: #000;
-    margin-bottom: 5px;
-    text-transform: none;
+.badge {
+    padding: 4px 10px; font-size: 0.75rem; font-weight: bold;
+    letter-spacing: 1px; background: #fff; color: #000;
+    border: 1px solid #000;
 }
-
-/* Thương hiệu */
-.info .category {
-    color: #767677; /* Xám đặc trưng */
-    font-size: 0.9rem;
-    margin-bottom: 15px;
-}
-
-/* Giá bán */
-.price {
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: #000;
-}
-.discount-price { color: #d32f2f; margin-right: 8px; }
-del { color: #767677; font-size: 0.9rem; font-weight: 400; text-decoration: line-through;}
-
-
-
-
-
-/* Badges */
-.badge-group { position: absolute; top: 0; left: 0; display: flex; flex-direction: column; gap: 5px; }
-.badge { padding: 4px 10px; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; }
 .badge.new { background: #000; color: #fff; }
-.badge.sale { background: #d32f2f; color: #fff; }
+.badge.sale { background: #d32f2f; color: #fff; border-color: #d32f2f; }
 
-/* Info */
-.info h3 { font-size: 1rem; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
-.info .category { color: #888; font-size: 0.85rem; margin-bottom: 10px; }
-.price { font-weight: 700; font-size: 1rem; }
-.discount-price { color: #d32f2f; margin-right: 5px; }
-del { color: #888; font-size: 0.85rem; }
+.info { padding: 20px 15px; }
+.info h3 { font-size: 1.05rem; font-weight: 700; color: #000; margin-bottom: 5px; text-transform: uppercase;}
+.info .category { color: #767677; font-size: 0.9rem; margin-bottom: 15px; }
+
+/* ==============================================================
+   6. PRICING (HIỂN THỊ GIÁ TIỀN)
+============================================================== */
+.price-box {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.regular-price { font-weight: 700; color: #000; font-size: 1.1rem; }
+.discount-price { font-weight: 700; color: #d32f2f; font-size: 1.1rem; }
+.original-price-strike { color: #767677; font-size: 0.9rem; font-weight: 400; text-decoration: line-through; }
+
+/* Styling cho giá trên Trang chi tiết (detail.html) */
+.pro-price-container { margin-top: 10px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+.pro-price-discounted { font-size: 24px; font-weight: 800; color: #d32f2f; letter-spacing: -0.5px; }
+.pro-price-original { font-size: 18px; color: #999; text-decoration: line-through; font-weight: 500; }
+.pro-price-regular { font-size: 24px; font-weight: 800; color: #000; letter-spacing: -0.5px; }
+

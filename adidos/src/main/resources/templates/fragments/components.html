@@ -1,3 +1,4 @@
+<!--
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
@@ -17,6 +18,46 @@
                 <span class="discount-price" th:if="${product.hasPromotion}" th:text="${#numbers.formatDecimal(product.discountedPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span>
                 <del th:if="${product.hasPromotion}" th:text="${#numbers.formatDecimal(product.originalPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"></del>
                 <span class="regular-price" th:unless="${product.hasPromotion}" th:text="${#numbers.formatDecimal(product.originalPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span>
+            </p>
+        </div>
+    </a>
+</div>
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="product_card(product)" class="product-card-premium">
+    <a th:href="@{/product/{id}(id=${product.id})}">
+        <div class="img-wrapper">
+            <img th:src="${product.primaryImageUrl != null ? product.primaryImageUrl : '/images/default.jpg'}" th:alt="${product.name}">
+            <div class="badge-group">
+                <span class="badge sale" th:if="${product.hasPromotion}">Sale</span>
+
+                <span class="badge new" th:if="${product.isNew and !product.hasPromotion}">MỚI</span>
+
+                <span class="badge sale"
+                      th:if="${product.discountType == 'PERCENT'}"
+                      th:text="'-' + ${#numbers.formatDecimal(product.promotionDiscountValue, 0, 0)} + '%'"></span>
+
+                <span class="badge sale"
+                      th:if="${product.discountType != null and product.discountType != 'PERCENT'}"
+                      th:text="'-' + ${#numbers.formatDecimal(product.promotionDiscountValue, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span>
+            </div>
+        </div>
+        <div class="info">
+            <h3 th:text="${product.name}">TÊN SẢN PHẨM</h3>
+            <p class="category" th:text="${product.brand}">Thương hiệu</p>
+
+            <p class="price-box">
+                <th:block th:if="${product.hasPromotion}">
+                    <span class="discount-price" th:text="${#numbers.formatDecimal(product.discountedPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span>
+                    <del class="original-price-strike" th:text="${#numbers.formatDecimal(product.originalPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"></del>
+                </th:block>
+                <th:block th:unless="${product.hasPromotion}">
+                    <span class="regular-price" th:text="${#numbers.formatDecimal(product.originalPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span>
+                </th:block>
             </p>
         </div>
     </a>

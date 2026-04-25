@@ -7,30 +7,44 @@
         </th:block>
     </head>
     <body>
-        <th:block th:fragment="content_user">
+            <th:block th:fragment="content_user">
 
-            <section class="hero-light">
-                <div class="hero-content-light">
+                <section class="hero-light">
+                    <div class="hero-content-light">
 
+                    </div>
+                </section>
+
+                <div class="home-section" th:if="${topPromo != null and !topPromoProducts.isEmpty()}">
+                    <h2>SALE KHỦNG: <span th:text="${topPromo.promotionName}"></span></h2>
+                    <div class="product-grid">
+                        <th:block th:each="product : ${topPromoProducts}">
+                            <div th:replace="~{fragments/components :: product_card(${product})}"></div>
+                        </th:block>
+                    </div>
+                    <a href="/khuyen-mai" class="btn-view-all">Xem tất cả</a>
                 </div>
-            </section>
 
-            <section class="promo-banner">
-                <h2>CLEARANCE SALE - UP TO 50% OFF</h2> <p>Ưu đãi giới hạn cho các mẫu áo thun và áo khoác.</p>
-            </section>
-
-            <section class="featured-luxury">
-                <div class="section-header">
-                    <a th:href="@{/products}" class="view-all">XEM TẤT CẢ</a>
+                <div class="home-section" th:if="${soonPromo != null and topPromo != null and soonPromo.id != topPromo.id and !soonPromoProducts.isEmpty()}">
+                    <h2>SẮP KẾT THÚC: <span th:text="${soonPromo.promotionName}"></span></h2>
+                    <div class="product-grid">
+                        <th:block th:each="product : ${soonPromoProducts}">
+                            <div th:replace="~{fragments/components :: product_card(${product})}"></div>
+                        </th:block>
+                    </div>
+                    <a href="/khuyen-mai" class="btn-view-all">Xem tất cả</a>
                 </div>
-                <div class="product-grid">
-                    <th:block th:each="prod : ${featuredProducts}">
-                        <div th:replace="~{fragments/components :: product_card(${prod})}"></div>
-                    </th:block>
-                </div>
-            </section>
 
-        </th:block>
+                <div class="home-section">
+                    <h2>Toàn bộ sản phẩm</h2>
+                    <div class="product-grid">
+                        <th:block th:each="product : ${allProducts}">
+                            <div th:replace="~{fragments/components :: product_card(${product})}"></div>
+                        </th:block>
+                    </div>
+                </div>
+
+            </th:block>
 
         <th:block th:fragment="page_user_js">
             <script th:src="@{/js/user/index.js}"></script>

@@ -25,4 +25,10 @@ public class ProductResponse {
 
     private String primaryImageUrl;
     private List<ProductVariantResponse> variants;
+
+    private Boolean isNew;
+    private String promotionName;
+
+    private String discountType;
+    private java.math.BigDecimal promotionDiscountValue;
 }

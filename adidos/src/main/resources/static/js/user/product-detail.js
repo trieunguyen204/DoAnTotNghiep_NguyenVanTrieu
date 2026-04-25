@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const finalColorBtns = document.querySelectorAll('.color-btn');
     const sizeBtns = document.querySelectorAll('.size-btn');
     const btnShowMore = document.getElementById('btn-show-more');
-    const priceDisplay = document.getElementById('product-price');
+    const priceContainer = document.getElementById('product-price-container');
     const stockDisplay = document.querySelector('#product-stock span');
 
     // THẺ HIỂN THỊ TÊN MÀU
@@ -86,23 +86,50 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 4. Xử lý khi chọn size: Cập nhật giá và SỐ LƯỢNG
     sizeBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            sizeBtns.forEach(s => s.classList.remove('active'));
-            this.classList.add('active');
+            btn.addEventListener('click', function() {
+                sizeBtns.forEach(s => s.classList.remove('active'));
+                this.classList.add('active');
 
-            // Cập nhật giá
-            const price = this.getAttribute('data-price');
-            if (price && priceDisplay) {
-                priceDisplay.innerText = formatCurrency(price);
-            }
+                // Lấy cả giá gốc và giá khuyến mãi từ data attribute
+                const price = parseFloat(this.getAttribute('data-price'));
+                const discountedPrice = parseFloat(this.getAttribute('data-discounted-price'));
 
-            // CẬP NHẬT SỐ LƯỢNG TỒN KHO
-            const stock = this.getAttribute('data-stock');
-            if (stockDisplay) {
-                stockDisplay.innerText = (stock > 0) ? stock : "Hết hàng";
-            }
+                // Đọc loại khuyến mãi và giá trị từ thẻ bọc
+                const promoType = this.getAttribute('data-promo-type');
+                const promoValStr = this.getAttribute('data-promo-val');
+                const promoVal = promoValStr ? parseFloat(promoValStr) : null;
+
+                // Cập nhật giao diện Giá
+                if (priceContainer) {
+                    if (discountedPrice && discountedPrice < price) {
+
+                        // Tạo text cho Badge dựa vào loại KM
+                        let badgeText = '';
+                        if (promoType === 'PERCENT') {
+                            badgeText = `-${promoVal}%`;
+                        } else if (promoVal) {
+                            badgeText = `-${new Intl.NumberFormat('vi-VN').format(promoVal)}đ`;
+                        }
+
+                        priceContainer.innerHTML = `
+                            <span class="pro-price-discounted">${formatCurrency(discountedPrice)}</span>
+                            <del class="pro-price-original">${formatCurrency(price)}</del>
+                            <span class="badge sale" style="padding: 4px 8px; font-size: 14px; border-radius: 4px; margin-left: 10px; background-color: #d32f2f; color: white;">${badgeText}</span>
+                        `;
+                    } else {
+                        priceContainer.innerHTML = `
+                            <span class="pro-price-regular">${formatCurrency(price)}</span>
+                        `;
+                    }
+                }
+
+                // CẬP NHẬT SỐ LƯỢNG TỒN KHO
+                const stock = this.getAttribute('data-stock');
+                if (stockDisplay) {
+                    stockDisplay.innerText = (stock > 0) ? stock : "Hết hàng";
+                }
+            });
         });
-    });
 
     // Tự động kích hoạt màu đầu tiên khi load trang
     if(finalColorBtns.length > 0) finalColorBtns[0].click();

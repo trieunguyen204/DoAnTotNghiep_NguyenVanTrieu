@@ -15,4 +15,5 @@ public class ProductVariantResponse {
     private List<String> imageUrls;
     private Long sizeId;
     private Long colorId;
+    private BigDecimal discountedPrice;
 }

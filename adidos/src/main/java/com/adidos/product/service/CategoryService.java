@@ -81,4 +81,11 @@ public class CategoryService {
                 })
                 .collect(Collectors.toList());
     }
+
+
+    public List<CategoryResponse> findAll() {
+        return categoryRepository.findAll().stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+    }
 }
