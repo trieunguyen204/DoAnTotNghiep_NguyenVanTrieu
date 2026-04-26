@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main :: layout_user}">
+    <head>
+        <title th:fragment="page_title">Giỏ hàng | Adidos</title>
+        <th:block th:fragment="page_user_css">
+            <link rel="stylesheet" th:href="@{/css/user/cart.css}">
+        </th:block>
+    </head>
+    <body>
+        <div th:fragment="content_user" class="container cart-page">
+            <h2 class="cart-title">GIỎ HÀNG CỦA BẠN</h2>
+
+            <div th:if="${#lists.isEmpty(cartItems)}">
+                <p>Giỏ hàng trống. <a th:href="@{/}" class="empty-cart-link">Mua sắm ngay</a></p>
+            </div>
+
+            <table th:unless="${#lists.isEmpty(cartItems)}" class="cart-table">
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Phân loại</th>
+                    <th>Đơn giá</th>
+                    <th>Số lượng</th>
+                    <th>Thao tác</th>
+                </tr>
+                <tr th:each="item : ${cartItems}" th:id="'cart-item-' + ${item.id}">
+                    <td class="product-col">
+                        <img th:src="${item.imageUrl}" class="cart-item-img" alt="Product Image">
+                        <div class="product-info">
+                            <span class="product-name" th:text="${item.productName}">Tên SP</span>
+                        </div>
+                    </td>
+
+                    <td th:text="${item.colorName + ' - ' + item.sizeName}">Màu - Size</td>
+
+                    <td class="price-col">
+                        <div th:if="${item.price < item.originalPrice}">
+                            <span class="price-discount" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span>
+                            <br>
+                            <del class="price-original" th:text="${#numbers.formatDecimal(item.originalPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"></del>
+                        </div>
+                        <div th:unless="${item.price < item.originalPrice}">
+                            <span class="price-regular" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + 'đ'"></span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="qty-control">
+                            <button class="btn-qty btn-minus" th:data-id="${item.id}">-</button>
+                            <input type="number" class="qty-input" th:id="'qty-' + ${item.id}" th:value="${item.quantity}" readonly>
+                            <button class="btn-qty btn-plus" th:data-id="${item.id}">+</button>
+                        </div>
+                    </td>
+
+                    <td>
+                        <button class="btn-remove-item" th:data-id="${item.id}">Xóa</button>
+                    </td>
+                </tr>
+            </table>
+
+            <div th:unless="${#lists.isEmpty(cartItems)}" style="text-align: right; margin-top: 20px;">
+                <a th:href="@{/checkout}" class="luxury-btn">ĐẾN TRANG THANH TOÁN</a>
+            </div>
+        </div>
+
+        <th:block th:fragment="page_user_js">
+            <script th:src="@{/js/user/cart.js}"></script>
+        </th:block>
+    </body>
+</html>

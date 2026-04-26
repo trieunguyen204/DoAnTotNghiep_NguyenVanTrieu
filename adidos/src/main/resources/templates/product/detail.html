@@ -108,6 +108,7 @@
                     <div class="size-options" id="size-container">
                         <button th:each="variant : ${variants}"
                                 class="size-btn"
+                                th:data-variant-id="${variant.id}"
                                 th:data-color-name="${variant.colorName}"
                                 th:data-price="${variant.price}"
                                 th:data-discounted-price="${variant.discountedPrice}"

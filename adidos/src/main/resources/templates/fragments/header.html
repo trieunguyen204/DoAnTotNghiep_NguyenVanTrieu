@@ -33,12 +33,29 @@
                     </button>
                 </form>
 
-                <a th:href="@{/profile}" class="action-icon">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                </a>
+                <div class="user-actions">
+                    <div class="action-icon profile-dropdown-container">
+                        <a th:href="@{/profile}" class="action-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li><a th:href="@{/profile}">Thông tin tài khoản</a></li>
+                            <li><a th:href="@{/profile/addresses}">Quản lý địa chỉ</a></li>
+                            <li><a th:href="@{/profile/orders}">Đơn hàng</a></li>
+                            <li class="divider"></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+                                    <button type="submit" class="btn-logout">Đăng xuất</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
 
                 <a th:href="@{/cart}" class="action-icon cart-wrap">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -46,7 +63,7 @@
                         <circle cx="20" cy="21" r="1"></circle>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
-                    <span class="cart-badge">10</span>
+                    <span class="cart-badge" >0</span>
                 </a>
             </div>
         </div>

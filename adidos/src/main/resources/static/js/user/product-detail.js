@@ -156,4 +156,62 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
+
+
+    const btnAddToCart = document.querySelector('.btn-add-to-cart');
+
+    if (btnAddToCart) {
+        if (btnAddToCart.dataset.listenerAttached) return;
+        btnAddToCart.dataset.listenerAttached = 'true';
+
+
+        btnAddToCart.addEventListener('click', function() {
+            const activeSizeBtn = document.querySelector('.size-btn.active');
+
+            if (!activeSizeBtn) {
+                alert('Vui lòng chọn kích cỡ!');
+                return;
+            }
+
+            const variantId = activeSizeBtn.getAttribute('data-variant-id');
+            const requestData = {
+                productVariantId: parseInt(variantId),
+                quantity: 1
+            };
+
+            // 1. Khóa nút ngay khi vừa click để chống click đúp
+            btnAddToCart.disabled = true;
+            btnAddToCart.style.opacity = '0.7'; // Làm mờ nút đi một chút
+            btnAddToCart.innerText = "Đang xử lý..."; // Đổi text để người dùng biết
+
+            fetch('/api/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify(requestData)
+            })
+            .then(async response => {
+                const data = await response.text();
+
+                if (data.includes('<!DOCTYPE html>')) throw new Error('API bị chặn bởi SecurityConfig');
+                if (!response.ok) throw new Error(data);
+                return data;
+            })
+            .then(data => {
+                alert(data);
+                if (window.updateCartBadge) window.updateCartBadge();
+            })
+            .catch(error => {
+                alert('Lỗi: ' + error.message);
+            })
+            .finally(() => {
+                // 2. Mở khóa lại nút sau khi API chạy xong (dù thành công hay thất bại)
+                btnAddToCart.disabled = false;
+                btnAddToCart.style.opacity = '1';
+                btnAddToCart.innerText = "THÊM VÀO GIỎ HÀNG"; // Trả lại text ban đầu
+            });
+        });
+    }
 });

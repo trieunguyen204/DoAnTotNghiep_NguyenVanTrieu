@@ -24,7 +24,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // ĐÃ THÊM "/uploads/**" vào đây để hiển thị được ảnh sản phẩm ra ngoài web
+                       // public
                         .requestMatchers("/"
                                 , "/login"
                                 , "/register"
@@ -34,6 +34,8 @@ public class SecurityConfig {
                                 ,"/product/{id}"
                                 ,"/category/{id}"
                                 , "/uploads/**"
+                                ,"/cart"
+                                ,"/api/cart/**"
                         )
                         .permitAll()
 

@@ -35,6 +35,6 @@ public class Category {
 
     @ManyToMany(mappedBy = "categories")
     @JsonIgnore
-    private Set<Promotion> promotions;
+    private Set<Promotion> promotions ;
 
 }
