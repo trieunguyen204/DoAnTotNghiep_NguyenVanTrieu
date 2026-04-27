@@ -1,0 +1,13 @@
+<div th:fragment="sidebar" class="profile-sidebar" xmlns:th="http://www.thymeleaf.org">
+    <h3>Tài khoản của tôi</h3>
+    <ul>
+        <li><a th:href="@{/profile}" th:classappend="${activeMenu == 'info' ? 'active' : ''}">Thông tin cá nhân</a></li>
+        <li><a th:href="@{/profile/addresses}" th:classappend="${activeMenu == 'addresses' ? 'active' : ''}">Quản lý địa chỉ</a></li>
+        <li><a th:href="@{/profile/orders}" th:classappend="${activeMenu == 'orders' ? 'active' : ''}">Lịch sử mua hàng</a></li>
+        <li>
+            <form th:action="@{/logout}" method="post" class="confirm-action" data-message="Bạn muốn đăng xuất?">
+                <button type="submit" class="btn-sidebar-logout">Đăng xuất</button>
+            </form>
+        </li>
+    </ul>
+</div>

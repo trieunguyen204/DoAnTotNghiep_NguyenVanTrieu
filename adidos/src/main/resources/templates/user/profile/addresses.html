@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main :: layout_user}">
+
+<head>
+    <title th:fragment="page_title">Địa chỉ của tôi | Adidos</title>
+    <th:block th:fragment="page_user_css">
+        <link rel="stylesheet" th:href="@{/css/user/profile.css}">
+    </th:block>
+</head>
+
+<body>
+<th:block th:fragment="content_user">
+    <div class="profile-container">
+        <div th:replace="~{user/profile/sidebar :: sidebar}"></div>
+
+        <div class="profile-content">
+            <div class="address-header">
+                <h2>Địa chỉ của tôi</h2>
+                <button type="button" class="btn-add" onclick="openAddressModal()">+ Thêm địa chỉ</button>
+            </div>
+
+            <div th:if="${#lists.isEmpty(addresses)}" class="empty-box">
+                Bạn chưa có địa chỉ nào.
+            </div>
+
+            <div th:each="addr : ${addresses}" class="address-card">
+                <div class="address-main">
+                    <p>
+                        <strong th:text="${addr.receiverName}"></strong>
+                        <span>|</span>
+                        <span th:text="${addr.phone}"></span>
+                    </p>
+
+                    <p th:text="${addr.fullAddress}"></p>
+
+                    <span th:if="${addr.isDefault}" class="badge-default">Mặc định</span>
+                </div>
+
+                <div class="address-actions">
+                    <button type="button"
+                            class="btn-link"
+                            th:attr="onclick=|openEditAddressModal(
+                                '${addr.id}',
+                                '${addr.receiverName}',
+                                '${addr.phone}',
+                                '${addr.province}',
+                                '${addr.district}',
+                                '${addr.ward}',
+                                '${addr.addressDetail}',
+                                '${addr.isDefault}'
+                            )|">
+                        Sửa
+                    </button>
+
+                    <form th:if="${!addr.isDefault}"
+                          th:action="@{/profile/addresses/default/{id}(id=${addr.id})}"
+                          method="post">
+
+                        <button type="submit" class="btn-link">
+                            Đặt mặc định
+                        </button>
+                    </form>
+
+                    <form th:action="@{/profile/addresses/delete/{id}(id=${addr.id})}"
+                          method="post"
+                          class="confirm-action"
+                          data-message="Xóa địa chỉ này?">
+                        <button type="submit" class="btn-link text-danger">Xóa</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal thêm/sửa địa chỉ -->
+    <div class="address-modal" id="addressModal">
+        <div class="address-modal-content">
+            <div class="modal-header">
+                <h3 id="addressModalTitle">Thêm địa chỉ mới</h3>
+                <button type="button" onclick="closeAddressModal()">×</button>
+            </div>
+
+            <form id="addressForm" th:action="@{/profile/addresses/add}" method="post">
+                <div class="form-group">
+                    <label>Họ tên người nhận</label>
+                    <input type="text" name="receiverName" id="receiverName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Số điện thoại</label>
+                    <input type="text" name="phone" id="addressPhone" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Tỉnh / Thành phố</label>
+                    <input type="text" name="province" id="province" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Quận / Huyện</label>
+                    <input type="text" name="district" id="district" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phường / Xã</label>
+                    <input type="text" name="ward" id="ward" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Địa chỉ cụ thể</label>
+                    <input type="text" name="addressDetail" id="addressDetail" required>
+                </div>
+
+                <label class="checkbox-row">
+                    <input type="checkbox" id="isDefault" name="isDefault" value="true">
+                    Đặt làm địa chỉ mặc định
+                </label>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel-modal" onclick="closeAddressModal()">Hủy</button>
+                    <button type="submit" class="btn-save">Lưu địa chỉ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="page_user_js">
+    <script th:src="@{/js/user/profile.js}"></script>
+</th:block>
+</body>
+</html>

@@ -1,0 +1,450 @@
+/* =========================
+   PROFILE LAYOUT
+========================= */
+.profile-container {
+    display: flex;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 15px;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+.profile-sidebar {
+    width: 250px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 20px;
+    height: fit-content;
+}
+
+.profile-sidebar h3 {
+    margin: 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #000;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.profile-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 0;
+}
+
+.profile-sidebar ul li {
+    margin-bottom: 8px;
+}
+
+.profile-sidebar ul li a {
+    display: block;
+    padding: 12px;
+    color: #333;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+.profile-sidebar ul li a:hover {
+    background: #f5f5f5;
+}
+
+.profile-sidebar ul li a.active {
+    background: black;
+    color: white;
+    font-weight: 600;
+}
+
+/* logout */
+.btn-sidebar-logout {
+    width: 100%;
+    text-align: left;
+    padding: 12px;
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.btn-sidebar-logout:hover {
+    background: #fff2f2;
+}
+
+/* =========================
+   CONTENT
+========================= */
+.profile-content {
+    flex: 1;
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 30px;
+}
+
+.profile-content h2 {
+    margin-top: 0;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.profile-content p {
+    color: #666;
+}
+
+/* =========================
+   PROFILE FORM
+========================= */
+.profile-form-layout {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.profile-info-section {
+    flex: 1;
+}
+
+.profile-avatar-section {
+    width: 250px;
+    text-align: center;
+    border-left: 1px solid #eee;
+    padding-left: 30px;
+}
+
+/* avatar */
+.avatar-preview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    margin-bottom: 20px;
+}
+
+/* upload button */
+.btn-upload {
+    display: inline-block;
+    background: black;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-upload input {
+    display: none;
+}
+
+/* =========================
+   FORM
+========================= */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="date"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: black;
+}
+
+/* gender */
+.gender-group {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.gender-group label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: normal;
+}
+
+/* buttons */
+.btn-save,
+.btn-add {
+    background: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-save:hover,
+.btn-add:hover {
+    opacity: 0.85;
+}
+
+/* =========================
+   ADDRESS
+========================= */
+.address-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.address-actions {
+    display: flex;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.address-actions a,
+.address-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #007bff;
+    padding: 0;
+    font-size: 14px;
+}
+
+.text-danger {
+    color: red;
+}
+
+/* =========================
+   ORDER TABLE
+========================= */
+.table-orders {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table-orders th {
+    background: #f8f8f8;
+    padding: 14px;
+    text-align: left;
+}
+
+.table-orders td {
+    padding: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+/* order detail */
+.order-info-box {
+    background: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+/* cancel */
+.btn-cancel {
+    background: white;
+    color: red;
+    border: 1px solid red;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-cancel:hover {
+    background: red;
+    color: white;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 992px) {
+    .profile-container {
+        flex-direction: column;
+    }
+
+    .profile-sidebar {
+        width: 100%;
+    }
+
+    .profile-form-layout {
+        flex-direction: column;
+    }
+
+    .profile-avatar-section {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid #eee;
+        padding-left: 0;
+        padding-top: 20px;
+    }
+}
+
+
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+}
+
+.form-group input[type="password"]:focus {
+    border-color: black;
+}
+
+.doipass{
+    padding-top:10px;
+    padding-bottom:10px;
+}
+
+
+.address-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.empty-box {
+    padding: 30px;
+    text-align: center;
+    color: #777;
+    background: #f8f8f8;
+    border-radius: 8px;
+}
+
+.address-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+    background: #fff;
+}
+
+.address-main p {
+    margin: 0 0 8px;
+}
+
+.badge-default {
+    display: inline-block;
+    color: #ee4d2d;
+    border: 1px solid #ee4d2d;
+    padding: 3px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+}
+
+.address-actions {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    white-space: nowrap;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    padding: 0;
+    font-size: 14px;
+}
+
+.text-danger {
+    color: #dc3545 !important;
+}
+
+.address-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+.address-modal.show {
+    display: flex;
+}
+
+.address-modal-content {
+    width: 520px;
+    max-width: calc(100% - 30px);
+    background: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    animation: modalFade 0.2s ease;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-header h3 {
+    margin: 0;
+}
+
+.modal-header button {
+    border: none;
+    background: none;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.btn-cancel-modal {
+    background: #f1f1f1;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+@keyframes modalFade {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main :: layout_user}">
+
+<head>
+    <title th:fragment="page_title">Đơn hàng của tôi | Adidos</title>
+
+    <th:block th:fragment="page_user_css">
+        <link rel="stylesheet" th:href="@{/css/user/profile.css}">
+    </th:block>
+</head>
+
+<body>
+
+<th:block th:fragment="content_user">
+    <div class="profile-container">
+
+        <div th:replace="~{user/profile/sidebar :: sidebar}"></div>
+
+        <div class="profile-content">
+            <h2>Đơn hàng của tôi</h2>
+
+            <table class="table-orders">
+                <thead>
+                <tr>
+                    <th>Mã đơn</th>
+                    <th>Ngày đặt</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td th:text="${'#' + order.orderCode}"></td>
+
+                    <td th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy')}"></td>
+
+                    <td th:text="${#numbers.formatDecimal(order.totalAmount,0,'COMMA',0,'POINT') + ' ₫'}"></td>
+
+                    <td th:text="${order.status}"></td>
+
+                    <td>
+                        <a th:href="@{/profile/orders/{id}(id=${order.id})}">
+                            Chi tiết
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</th:block>
+<th:block th:fragment="page_user_js">
+    <script th:src="@{/js/user/profile.js}"></script>
+</th:block>
+
+</body>
+</html>

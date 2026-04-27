@@ -12,6 +12,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,6 +87,9 @@ public class UserService {
                 .email(user.getEmail())
                 .fullName(user.getFullName())
                 .phone(user.getPhone())
+                .avatarUrl(user.getAvatarUrl())
+                .gender(user.getGender())
+                .dob(user.getDob())
                 .role(user.getRole())
                 .status(user.getStatus())
                 .build();
@@ -95,8 +103,46 @@ public class UserService {
     public void updateProfile(String email, ProfileUpdateRequest request) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
         user.setFullName(request.getFullName());
         user.setPhone(request.getPhone());
+        user.setGender(request.getGender());
+        user.setDob(request.getDob());
+
+        if (request.getAvatarFile() != null && !request.getAvatarFile().isEmpty()) {
+            try {
+                String fileName = System.currentTimeMillis() + "_" + request.getAvatarFile().getOriginalFilename();
+
+                Path uploadPath = Paths.get("uploads/avatars");
+
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(request.getAvatarFile().getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                user.setAvatarUrl("/uploads/avatars/" + fileName);
+
+            } catch (IOException e) {
+                throw new RuntimeException("Lỗi upload avatar: " + e.getMessage());
+            }
+        }
+
+        if (request.getOldPassword() != null && !request.getOldPassword().isBlank()
+                && request.getNewPassword() != null && !request.getNewPassword().isBlank()) {
+
+            if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+                throw new RuntimeException("Mật khẩu hiện tại không đúng");
+            }
+
+            if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+                throw new RuntimeException("Mật khẩu xác nhận không khớp");
+            }
+
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        }
+
         userRepository.save(user);
     }
 

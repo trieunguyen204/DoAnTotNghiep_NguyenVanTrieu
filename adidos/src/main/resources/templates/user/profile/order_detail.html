@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main :: layout_user}">
+
+<head>
+    <title th:fragment="page_title">Chi tiết đơn hàng | Adidos</title>
+
+    <th:block th:fragment="page_user_css">
+        <link rel="stylesheet" th:href="@{/css/user/profile.css}">
+    </th:block>
+</head>
+
+<body>
+
+<th:block th:fragment="content_user">
+    <div class="profile-container">
+
+        <div th:replace="~{user/profile/sidebar :: sidebar}"></div>
+
+        <div class="profile-content">
+
+            <div>
+                <h2>
+                    Chi tiết đơn #
+                    <span th:text="${order.orderCode}"></span>
+                </h2>
+
+                <a th:href="@{/profile/orders}">
+                    ← Quay lại
+                </a>
+            </div>
+
+            <div class="order-info-box">
+                <p>
+                    <strong>Ngày đặt:</strong>
+                    <span th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                </p>
+
+                <p>
+                    <strong>Trạng thái:</strong>
+                    <span th:text="${order.status}"></span>
+                </p>
+
+                <p>
+                    <strong>Thanh toán:</strong>
+                    <span th:text="${order.paymentMethod}"></span>
+                </p>
+            </div>
+
+            <table class="table-orders">
+                <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Giá</th>
+                    <th>SL</th>
+                    <th>Tổng</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="item : ${order.orderItems}">
+                    <td th:text="${item.productName}"></td>
+
+                    <td th:text="${#numbers.formatDecimal(item.price,0,'COMMA',0,'POINT') + ' ₫'}"></td>
+
+                    <td th:text="${item.quantity}"></td>
+
+                    <td th:text="${#numbers.formatDecimal(item.price * item.quantity,0,'COMMA',0,'POINT') + ' ₫'}"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p>
+                <strong>
+                    Tổng cộng:
+                    <span th:text="${#numbers.formatDecimal(order.totalAmount,0,'COMMA',0,'POINT') + ' ₫'}"></span>
+                </strong>
+            </p>
+
+            <form th:if="${order.status == 'PENDING'}"
+                  th:action="@{/profile/orders/{id}/cancel(id=${order.id})}"
+                  method="post">
+
+                <button type="submit" class="btn-cancel">
+                    Hủy đơn hàng
+                </button>
+            </form>
+
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="page_user_js">
+    <script th:src="@{/js/user/profile.js}"></script>
+</th:block>
+
+</body>
+</html>

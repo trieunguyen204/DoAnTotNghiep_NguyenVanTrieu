@@ -65,13 +65,64 @@ public class AddressService {
 
     private AddressResponse toResponse(Address address) {
         String fullAddress = String.format("%s, %s, %s, %s",
-                address.getAddressDetail(), address.getWard(), address.getDistrict(), address.getProvince());
+                address.getAddressDetail(),
+                address.getWard(),
+                address.getDistrict(),
+                address.getProvince());
+
         return AddressResponse.builder()
                 .id(address.getId())
                 .receiverName(address.getReceiverName())
                 .phone(address.getPhone())
+                .province(address.getProvince())
+                .district(address.getDistrict())
+                .ward(address.getWard())
+                .addressDetail(address.getAddressDetail())
                 .fullAddress(fullAddress)
                 .isDefault(address.getIsDefault())
                 .build();
+    }
+
+    @Transactional
+    public void updateAddress(Long addressId, String email, AddressRequest request) {
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy địa chỉ"));
+
+        if (!address.getUser().getEmail().equals(email)) {
+            throw new RuntimeException("Không có quyền sửa địa chỉ này!");
+        }
+
+        if (request.getIsDefault() != null && request.getIsDefault()) {
+            List<Address> addresses = addressRepository.findByUserIdOrderByIsDefaultDescIdDesc(address.getUser().getId());
+            addresses.forEach(a -> a.setIsDefault(false));
+            addressRepository.saveAll(addresses);
+            address.setIsDefault(true);
+        }
+
+        address.setReceiverName(request.getReceiverName());
+        address.setPhone(request.getPhone());
+        address.setProvince(request.getProvince());
+        address.setDistrict(request.getDistrict());
+        address.setWard(request.getWard());
+        address.setAddressDetail(request.getAddressDetail());
+
+        addressRepository.save(address);
+    }
+
+    @Transactional
+    public void setDefaultAddress(Long addressId, String email) {
+        Address address = addressRepository.findById(addressId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy địa chỉ"));
+
+        if (!address.getUser().getEmail().equals(email)) {
+            throw new RuntimeException("Không có quyền cập nhật địa chỉ này!");
+        }
+
+        List<Address> addresses = addressRepository.findByUserIdOrderByIsDefaultDescIdDesc(address.getUser().getId());
+
+        addresses.forEach(a -> a.setIsDefault(false));
+        address.setIsDefault(true);
+
+        addressRepository.saveAll(addresses);
     }
 }
