@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main :: layout_user}">
+
+<head>
+    <title th:fragment="page_title">Thanh toán chuyển khoản | Adidos</title>
+
+    <th:block th:fragment="page_user_css">
+        <link rel="stylesheet" th:href="@{/css/user/checkout.css}">
+    </th:block>
+</head>
+
+<body>
+<th:block th:fragment="content_user">
+    <div class="checkout-result-page">
+        <div class="checkout-result-box">
+            <h1>Thanh toán chuyển khoản</h1>
+
+            <p>
+                Mã đơn hàng:
+                <strong th:text="${'#' + order.id}"></strong>
+            </p>
+
+            <p>
+                Số tiền:
+                <strong th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
+            </p>
+
+            <div class="bank-info-box">
+                <h3>Thông tin chuyển khoản</h3>
+
+                <div class="bank-info-row">
+                    <span>Số tài khoản</span>
+                    <strong>1027982564</strong>
+                </div>
+
+                <div class="bank-info-row">
+                    <span>Ngân hàng</span>
+                    <strong>Vietcombank</strong>
+                </div>
+
+                <div class="bank-info-row">
+                    <span>Chủ tài khoản</span>
+                    <strong>NGUYEN VAN TRIEU</strong>
+                </div>
+            </div>
+
+            <div class="manual-qr-box">
+                QR thủ công sẽ đặt ở đây.
+            </div>
+
+            <p>Nội dung chuyển khoản:</p>
+
+            <h3 class="transfer-content" th:text="${'ADIDOS DH' + order.id}"></h3>
+
+            <a th:href="@{/profile/orders}" class="checkout-main-btn">
+                Tôi đã chuyển khoản
+            </a>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="page_user_js">
+    <script th:src="@{/js/user/checkout.js}"></script>
+</th:block>
+</body>
+</html>

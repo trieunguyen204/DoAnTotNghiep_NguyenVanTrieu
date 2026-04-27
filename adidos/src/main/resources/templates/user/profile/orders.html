@@ -20,29 +20,44 @@
         <div class="profile-content">
             <h2>Đơn hàng của tôi</h2>
 
-            <table class="table-orders">
+            <div th:if="${#lists.isEmpty(orders)}" class="empty-box">
+                Bạn chưa có đơn hàng nào.
+            </div>
+
+            <table th:unless="${#lists.isEmpty(orders)}" class="table-orders">
                 <thead>
                 <tr>
                     <th>Mã đơn</th>
-                    <th>Ngày đặt</th>
+                    <th>Người nhận</th>
                     <th>Tổng tiền</th>
-                    <th>Trạng thái</th>
+                    <th>Trạng thái đơn</th>
+                    <th>Thanh toán</th>
                     <th></th>
                 </tr>
                 </thead>
 
                 <tbody>
                 <tr th:each="order : ${orders}">
-                    <td th:text="${'#' + order.orderCode}"></td>
-
-                    <td th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy')}"></td>
-
-                    <td th:text="${#numbers.formatDecimal(order.totalAmount,0,'COMMA',0,'POINT') + ' ₫'}"></td>
-
-                    <td th:text="${order.status}"></td>
+                    <td th:text="${'#' + order.id}"></td>
 
                     <td>
-                        <a th:href="@{/profile/orders/{id}(id=${order.id})}">
+                        <strong th:text="${order.receiverName}"></strong>
+                        <br>
+                        <span th:text="${order.receiverPhone}"></span>
+                    </td>
+
+                    <td th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}"></td>
+
+                    <td>
+                        <span th:text="${order.orderStatus}"></span>
+                    </td>
+
+                    <td>
+                        <span th:text="${order.paymentStatus}"></span>
+                    </td>
+
+                    <td>
+                        <a th:href="@{/profile/orders/{id}(id=${order.id})}" class="btn-link">
                             Chi tiết
                         </a>
                     </td>
@@ -53,6 +68,7 @@
 
     </div>
 </th:block>
+
 <th:block th:fragment="page_user_js">
     <script th:src="@{/js/user/profile.js}"></script>
 </th:block>

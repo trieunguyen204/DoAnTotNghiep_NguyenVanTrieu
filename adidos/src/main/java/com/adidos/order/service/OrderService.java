@@ -6,14 +6,22 @@ import com.adidos.order.dto.CheckoutRequest;
 import com.adidos.order.dto.OrderResponse;
 import com.adidos.order.entity.Order;
 import com.adidos.order.entity.OrderItem;
+import com.adidos.order.entity.Payment;
 import com.adidos.order.enums.OrderStatus;
 import com.adidos.order.enums.PaymentStatus;
 import com.adidos.order.mapper.OrderMapper;
 import com.adidos.order.repository.OrderRepository;
+import com.adidos.order.repository.PaymentRepository;
 import com.adidos.product.entity.ProductVariant;
 import com.adidos.product.repository.ProductVariantRepository;
+import com.adidos.promotion.service.PromotionService;
+import com.adidos.user.entity.Address;
 import com.adidos.user.entity.User;
+import com.adidos.user.repository.AddressRepository;
 import com.adidos.user.repository.UserRepository;
+import com.adidos.voucher.entity.Voucher;
+import com.adidos.voucher.repository.VoucherRepository;
+import com.adidos.voucher.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -33,60 +41,85 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final ProductVariantRepository variantRepository;
     private final UserRepository userRepository;
+    private final AddressRepository addressRepository;
+    private final PaymentRepository paymentRepository;
+    private final PromotionService promotionService;
+    private final VoucherService voucherService;
+    private final VoucherRepository voucherRepository;
+
 
     /**
      * LOGIC ĐẶT HÀNG (QUAN TRỌNG NHẤT)
      */
     @Transactional
     public Long placeOrder(String email, CheckoutRequest request) {
-        // 1. Xác thực người dùng
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
 
-        // 2. Lấy giỏ hàng của user
+        Address address = addressRepository.findById(request.getAddressId())
+                .orElseThrow(() -> new RuntimeException("Vui lòng chọn địa chỉ nhận hàng"));
+
+        if (!address.getUser().getEmail().equals(email)) {
+            throw new RuntimeException("Địa chỉ không hợp lệ");
+        }
+
         List<CartItem> cartItems = cartItemRepository.findByUserId(user.getId());
+
         if (cartItems.isEmpty()) {
             throw new RuntimeException("Giỏ hàng đang trống, không thể đặt hàng");
         }
 
         BigDecimal totalPrice = BigDecimal.ZERO;
+        BigDecimal shippingFee = new BigDecimal("30000");
+        BigDecimal discountAmount = BigDecimal.ZERO;
+
         List<OrderItem> orderItems = new ArrayList<>();
 
-        // 3. Khởi tạo Đơn hàng (Order)
+        String fullAddress = String.format("%s, %s, %s, %s",
+                address.getAddressDetail(),
+                address.getWard(),
+                address.getDistrict(),
+                address.getProvince());
+
         Order order = Order.builder()
                 .user(user)
-                .receiverName(request.getReceiverName())
-                .shippingAddress(request.getShippingAddress())
-                .shippingFee(new BigDecimal("30000")) // Giả sử phí ship đồng giá 30k (Hoặc free nếu Adidos luxury)
-                .discountAmount(BigDecimal.ZERO) // Sẽ xử lý voucher sau nếu có
+                .receiverName(address.getReceiverName())
+                .receiverPhone(address.getPhone())
+                .shippingAddress(fullAddress)
+                .shippingFee(shippingFee)
+                .discountAmount(discountAmount)
                 .orderStatus(OrderStatus.PENDING)
                 .paymentStatus(PaymentStatus.UNPAID)
                 .build();
 
-        // 4. Xử lý từng mặt hàng trong giỏ
         for (CartItem cartItem : cartItems) {
+
             ProductVariant variant = cartItem.getProductVariant();
 
-            // 4.1 Kiểm tra TỒN KHO lần cuối (Rất quan trọng, vì có thể lúc trong giỏ thì còn hàng, lúc bấm nút thì hết)
             if (variant.getStockQuantity() < cartItem.getQuantity()) {
-                throw new RuntimeException("Sản phẩm '" + variant.getProduct().getName() + "' - Size " +
-                        variant.getSize().getSizeName() + " không đủ số lượng trong kho!");
+                throw new RuntimeException("Sản phẩm '" + variant.getProduct().getName() + "' không đủ tồn kho");
             }
 
-            // 4.2 Trừ Tồn Kho
             variant.setStockQuantity(variant.getStockQuantity() - cartItem.getQuantity());
             variantRepository.save(variant);
 
-            // 4.3 Tính tiền
-            BigDecimal itemTotal = variant.getPrice().multiply(new BigDecimal(cartItem.getQuantity()));
+            Long categoryId = variant.getProduct().getCategory() != null
+                    ? variant.getProduct().getCategory().getId()
+                    : null;
+
+            BigDecimal finalPrice = promotionService.calculateDiscountedPrice(
+                    categoryId,
+                    variant.getPrice()
+            );
+
+            BigDecimal itemTotal = finalPrice.multiply(new BigDecimal(cartItem.getQuantity()));
             totalPrice = totalPrice.add(itemTotal);
 
-            // 4.4 Tạo Snapshot OrderItem
             OrderItem orderItem = OrderItem.builder()
                     .order(order)
                     .productVariant(variant)
                     .productName(variant.getProduct().getName())
-                    .price(variant.getPrice()) // Lấy giá ngay tại thời điểm mua
+                    .price(finalPrice)
                     .quantity(cartItem.getQuantity())
                     .color(variant.getColor().getColorName())
                     .size(variant.getSize().getSizeName())
@@ -95,15 +128,52 @@ public class OrderService {
             orderItems.add(orderItem);
         }
 
-        // 5. Cập nhật tổng tiền và lưu đơn hàng (Cascade = ALL sẽ tự lưu OrderItem)
+        if (request.getVoucherCode() != null && !request.getVoucherCode().isBlank()) {
+            discountAmount = voucherService.calculateDiscount(request.getVoucherCode(), totalPrice);
+
+            Voucher voucher = voucherRepository.findByCode(request.getVoucherCode().toUpperCase())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy voucher"));
+
+            order.setVoucherId(voucher.getId());
+
+        }
+
+        order.setDiscountAmount(discountAmount);
         order.setTotalPrice(totalPrice);
-        order.setOrderItems(orderItems); // Link 2 chiều
+
+        order.setOrderItems(orderItems);
+
         Order savedOrder = orderRepository.save(order);
 
-        // 6. Dọn dẹp Giỏ Hàng sau khi chốt đơn thành công
+        BigDecimal finalAmount = totalPrice.add(shippingFee).subtract(discountAmount);
+
+        Payment payment = Payment.builder()
+                .order(savedOrder)
+                .paymentMethod(request.getPaymentMethod())
+                .amount(finalAmount)
+                .status("PENDING")
+                .build();
+
+        if ("COD".equals(request.getPaymentMethod())) {
+            payment.setStatus("PENDING");
+            savedOrder.setPaymentStatus(PaymentStatus.UNPAID);
+        }
+
+        if ("QR_MANUAL".equals(request.getPaymentMethod())) {
+            payment.setStatus("WAITING_TRANSFER");
+            savedOrder.setPaymentStatus(PaymentStatus.UNPAID);
+        }
+
+        if ("PAYOS".equals(request.getPaymentMethod())) {
+            payment.setStatus("PENDING");
+            savedOrder.setPaymentStatus(PaymentStatus.UNPAID);
+        }
+
+        paymentRepository.save(payment);
+        orderRepository.save(savedOrder);
+
         cartItemRepository.deleteByUserId(user.getId());
 
-        // 7. Trả về ID đơn hàng để redirect sang trang Thanh toán / Thành công
         return savedOrder.getId();
     }
 
@@ -144,7 +214,7 @@ public class OrderService {
      */
     @Transactional
     public void cancelOrder(Long orderId, String email) {
-        Order order = orderRepository.findById(orderId)
+        Order order = orderRepository.findByIdWithItems(orderId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
 
         if (!order.getUser().getEmail().equals(email)) {
@@ -155,15 +225,16 @@ public class OrderService {
             throw new RuntimeException("Chỉ có thể hủy đơn hàng đang chờ xác nhận");
         }
 
-        // Hoàn lại Tồn kho
-        for (OrderItem item : order.getOrderItems()) {
-            ProductVariant variant = item.getProductVariant();
-            variant.setStockQuantity(variant.getStockQuantity() + item.getQuantity());
-            variantRepository.save(variant);
-        }
+        restoreStock(order);
 
-        // Cập nhật trạng thái
         order.setOrderStatus(OrderStatus.CANCELLED);
+        order.setPaymentStatus(PaymentStatus.FAILED);
+
+        paymentRepository.findByOrderId(orderId).ifPresent(payment -> {
+            payment.setStatus("CANCELLED");
+            paymentRepository.save(payment);
+        });
+
         orderRepository.save(order);
     }
 
@@ -195,21 +266,75 @@ public class OrderService {
      */
     @Transactional
     public void updateOrderStatus(Long orderId, OrderStatus newStatus) {
-        Order order = orderRepository.findById(orderId)
+        Order order = orderRepository.findByIdWithItems(orderId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
 
-        // Ngăn chặn việc cập nhật lại đơn đã bị hủy hoặc đã hoàn thành (tùy logic nghiệp vụ)
         if (order.getOrderStatus() == OrderStatus.CANCELLED) {
             throw new RuntimeException("Không thể cập nhật đơn hàng đã hủy!");
         }
 
         order.setOrderStatus(newStatus);
 
-        // Nếu cập nhật thành ĐÃ GIAO, có thể tự động chuyển PaymentStatus thành PAID (nếu là COD)
-        if (newStatus == OrderStatus.DELIVERED && "COD".equals(order.getPaymentStatus().name())) {
-            order.setPaymentStatus(PaymentStatus.PAID);
+        if (newStatus == OrderStatus.DELIVERED) {
+            paymentRepository.findByOrderId(orderId).ifPresent(payment -> {
+                if ("COD".equalsIgnoreCase(payment.getPaymentMethod())) {
+                    payment.setStatus("SUCCESS");
+                    paymentRepository.save(payment);
+
+                    order.setPaymentStatus(PaymentStatus.PAID);
+
+                    increaseVoucherUsedCount(order);
+                }
+            });
         }
 
         orderRepository.save(order);
     }
+
+    private void restoreStock(Order order) {
+        for (OrderItem item : order.getOrderItems()) {
+            ProductVariant variant = item.getProductVariant();
+            variant.setStockQuantity(variant.getStockQuantity() + item.getQuantity());
+            variantRepository.save(variant);
+        }
+    }
+
+    private void increaseVoucherUsedCount(Order order) {
+        if (order.getVoucherId() == null) return;
+
+        Voucher voucher = voucherRepository.findById(order.getVoucherId())
+                .orElse(null);
+
+        if (voucher == null) return;
+
+        voucher.setUsedCount(voucher.getUsedCount() == null ? 1 : voucher.getUsedCount() + 1);
+        voucherRepository.save(voucher);
+    }
+
+    @Transactional
+    public void markPayOSPaid(Long orderId) {
+        Order order = orderRepository.findByIdWithItems(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+
+        order.setPaymentStatus(PaymentStatus.PAID);
+
+        increaseVoucherUsedCount(order);
+
+        orderRepository.save(order);
+    }
+
+    @Transactional
+    public void markPaymentFailedAndCancel(Long orderId) {
+        Order order = orderRepository.findByIdWithItems(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+
+        restoreStock(order);
+
+        order.setOrderStatus(OrderStatus.CANCELLED);
+        order.setPaymentStatus(PaymentStatus.FAILED);
+
+        orderRepository.save(order);
+    }
+
+
 }

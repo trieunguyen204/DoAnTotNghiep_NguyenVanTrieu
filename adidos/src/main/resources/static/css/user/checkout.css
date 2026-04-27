@@ -1,0 +1,398 @@
+.checkout-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 15px;
+}
+
+.checkout-container h2 {
+    margin-bottom: 25px;
+}
+
+.checkout-error {
+    background: #fff1f0;
+    color: #dc3545;
+    padding: 12px 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 30px;
+}
+
+.checkout-box {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.checkout-box h3 {
+    margin-top: 0;
+}
+
+.checkout-box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.checkout-box-header a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.checkout-address-card {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 12px;
+}
+
+.checkout-address-card label {
+    display: flex;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.checkout-address-card p {
+    margin: 0 0 6px;
+}
+
+.badge-default {
+    display: inline-block;
+    color: #ee4d2d;
+    border: 1px solid #ee4d2d;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.empty-address {
+    background: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.payment-option {
+    display: flex;
+    gap: 12px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 12px;
+    cursor: pointer;
+}
+
+.payment-option p {
+    margin: 5px 0 0;
+    color: #666;
+}
+
+.checkout-item {
+    display: flex;
+    gap: 12px;
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+}
+
+.checkout-item img {
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.checkout-item-info {
+    flex: 1;
+}
+
+.checkout-item-info p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.checkout-item-price {
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.checkout-summary {
+    margin-top: 20px;
+}
+
+.checkout-summary div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.checkout-total {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    font-size: 18px;
+}
+
+.checkout-total strong {
+    color: #dc3545;
+}
+
+.btn-place-order {
+    width: 100%;
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.btn-place-order:disabled {
+    background: #aaa;
+    cursor: not-allowed;
+}
+
+@media (max-width: 992px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================
+   CHECKOUT RESULT PAGES
+========================= */
+
+.checkout-result-page {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 0 15px;
+    text-align: center;
+}
+
+.checkout-result-box {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 40px 30px;
+}
+
+.checkout-result-box h1 {
+    margin-top: 0;
+    font-size: 32px;
+}
+
+.checkout-result-box p {
+    color: #555;
+    margin: 12px 0;
+}
+
+.checkout-main-btn {
+    display: inline-block;
+    margin-top: 24px;
+    background: #000;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+.checkout-main-btn:hover {
+    opacity: 0.85;
+}
+
+.bank-info-box {
+    margin: 30px auto 20px;
+    padding: 24px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    text-align: left;
+    background: #fafafa;
+}
+
+.bank-info-box h3 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.bank-info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.bank-info-row:last-child {
+    border-bottom: none;
+}
+
+.bank-info-row span {
+    color: #666;
+}
+
+.bank-info-row strong {
+    color: #000;
+    text-align: right;
+}
+
+.manual-qr-box {
+    margin: 30px auto;
+    padding: 40px 30px;
+    border: 1px dashed #ccc;
+    border-radius: 10px;
+    color: #777;
+    background: #fff;
+}
+
+.transfer-content {
+    margin-top: 10px;
+    color: #dc3545;
+    letter-spacing: 0.5px;
+}
+
+@media (max-width: 576px) {
+    .checkout-result-box {
+        padding: 30px 20px;
+    }
+
+    .bank-info-row {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .bank-info-row strong {
+        text-align: left;
+    }
+}
+
+.checkout-main-btn,
+.btn-place-order {
+    transition: 0.2s ease;
+}
+
+.checkout-main-btn:hover,
+.btn-place-order:hover {
+    opacity: 0.85;
+}
+
+.voucher-box {
+    margin-top: 20px;
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.voucher-box label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.voucher-input-row {
+    display: flex;
+    gap: 10px;
+}
+
+.voucher-input-row input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+}
+
+.voucher-input-row button {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.voucher-message {
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.voucher-message.success {
+    color: #28a745;
+}
+
+.voucher-message.error {
+    color: #dc3545;
+}
+
+
+.voucher-search-box {
+    margin-top: 12px;
+}
+
+.voucher-search-box input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+}
+
+.voucher-list {
+    margin-top: 14px;
+    max-height: 220px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.voucher-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 12px;
+    background: #fff;
+}
+
+.voucher-item.selected {
+    border-color: #000;
+    background: #f8f8f8;
+}
+
+.voucher-item strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.voucher-item p {
+    margin: 0 0 4px;
+    color: #333;
+    font-size: 14px;
+}
+
+.voucher-item small {
+    color: #777;
+}
+
+.btn-select-voucher {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.voucher-empty {
+    margin-top: 10px;
+    color: #777;
+}

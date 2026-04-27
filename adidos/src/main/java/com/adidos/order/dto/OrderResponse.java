@@ -22,5 +22,7 @@ public class OrderResponse {
     private OrderStatus orderStatus;
     private PaymentStatus paymentStatus;
 
+    private String receiverPhone;
+
     private List<OrderItemResponse> items;
 }

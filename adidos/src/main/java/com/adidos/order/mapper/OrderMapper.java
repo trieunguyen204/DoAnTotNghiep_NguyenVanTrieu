@@ -28,6 +28,7 @@ public class OrderMapper {
                 .receiverName(order.getReceiverName())
                 .shippingAddress(order.getShippingAddress())
                 .totalPrice(total)
+                .receiverPhone(order.getReceiverPhone())
                 .shippingFee(ship)
                 .discountAmount(discount)
                 .finalAmount(finalAmount)

@@ -40,7 +40,10 @@ public class SecurityConfig {
                                 "/api/cart/**",
                                 "/403",
                                 "/404",
-                                "/500"
+                                "/500",
+                                "/payment/payos/return",
+                                "/payment/payos/cancel",
+                                "/api/payment/payos/webhook"
                         )
                         .permitAll()
 

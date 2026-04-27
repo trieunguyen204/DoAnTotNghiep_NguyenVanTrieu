@@ -7,12 +7,14 @@ import com.adidos.cart.mapper.CartMapper;
 import com.adidos.cart.repository.CartItemRepository;
 import com.adidos.product.entity.ProductVariant;
 import com.adidos.product.repository.ProductVariantRepository;
+import com.adidos.promotion.service.PromotionService;
 import com.adidos.user.entity.User;
 import com.adidos.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +27,7 @@ public class CartService {
     private final CartItemRepository cartRepository;
     private final ProductVariantRepository variantRepository;
     private final UserRepository userRepository;
+    private final PromotionService promotionService;
 
     @Transactional(readOnly = true)
     public List<CartItemResponse> getCartByUser(String identifier, boolean isLogged) {
@@ -32,11 +35,11 @@ public class CartService {
             User user = userRepository.findByEmail(identifier)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             return cartRepository.findByUserId(user.getId()).stream()
-                    .map(CartMapper::toResponse)
+                    .map(this::toCartItemResponse)
                     .collect(Collectors.toList());
         } else {
             return cartRepository.findBySessionId(identifier).stream()
-                    .map(CartMapper::toResponse)
+                    .map(this::toCartItemResponse)
                     .collect(Collectors.toList());
         }
     }
@@ -112,5 +115,20 @@ public class CartService {
             item.setQuantity(quantity);
             cartRepository.save(item);
         }
+    }
+
+    private CartItemResponse toCartItemResponse(CartItem cartItem) {
+        ProductVariant variant = cartItem.getProductVariant();
+
+        Long categoryId = variant.getProduct().getCategory() != null
+                ? variant.getProduct().getCategory().getId()
+                : null;
+
+        BigDecimal finalPrice = promotionService.calculateDiscountedPrice(
+                categoryId,
+                variant.getPrice()
+        );
+
+        return CartMapper.toResponse(cartItem, finalPrice);
     }
 }

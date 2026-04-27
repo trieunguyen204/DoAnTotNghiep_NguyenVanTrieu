@@ -28,4 +28,7 @@ public class Payment {
     private BigDecimal amount;
 
     private String status; // SUCCESS, FAILED, PENDING
+
+    @Column(name = "checkout_url", columnDefinition = "TEXT")
+    private String checkoutUrl;
 }

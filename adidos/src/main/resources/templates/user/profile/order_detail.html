@@ -18,32 +18,41 @@
         <div th:replace="~{user/profile/sidebar :: sidebar}"></div>
 
         <div class="profile-content">
-
-            <div>
+            <div class="order-detail-header">
                 <h2>
                     Chi tiết đơn #
-                    <span th:text="${order.orderCode}"></span>
+                    <span th:text="${order.id}"></span>
                 </h2>
 
-                <a th:href="@{/profile/orders}">
+                <a th:href="@{/profile/orders}" class="btn-link">
                     ← Quay lại
                 </a>
             </div>
 
             <div class="order-info-box">
                 <p>
-                    <strong>Ngày đặt:</strong>
-                    <span th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+                    <strong>Người nhận:</strong>
+                    <span th:text="${order.receiverName}"></span>
                 </p>
 
                 <p>
-                    <strong>Trạng thái:</strong>
-                    <span th:text="${order.status}"></span>
+                    <strong>Số điện thoại:</strong>
+                    <span th:text="${order.receiverPhone}"></span>
                 </p>
 
                 <p>
-                    <strong>Thanh toán:</strong>
-                    <span th:text="${order.paymentMethod}"></span>
+                    <strong>Địa chỉ:</strong>
+                    <span th:text="${order.shippingAddress}"></span>
+                </p>
+
+                <p>
+                    <strong>Trạng thái đơn:</strong>
+                    <span th:text="${order.orderStatus}"></span>
+                </p>
+
+                <p>
+                    <strong>Trạng thái thanh toán:</strong>
+                    <span th:text="${order.paymentStatus}"></span>
                 </p>
             </div>
 
@@ -51,6 +60,7 @@
                 <thead>
                 <tr>
                     <th>Sản phẩm</th>
+                    <th>Phân loại</th>
                     <th>Giá</th>
                     <th>SL</th>
                     <th>Tổng</th>
@@ -58,34 +68,48 @@
                 </thead>
 
                 <tbody>
-                <tr th:each="item : ${order.orderItems}">
+                <tr th:each="item : ${order.items}">
                     <td th:text="${item.productName}"></td>
-
-                    <td th:text="${#numbers.formatDecimal(item.price,0,'COMMA',0,'POINT') + ' ₫'}"></td>
-
+                    <td th:text="${item.color + ' - ' + item.size}"></td>
+                    <td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT') + 'đ'}"></td>
                     <td th:text="${item.quantity}"></td>
-
-                    <td th:text="${#numbers.formatDecimal(item.price * item.quantity,0,'COMMA',0,'POINT') + ' ₫'}"></td>
+                    <td th:text="${#numbers.formatDecimal(item.subTotal, 0, 'COMMA', 0, 'POINT') + 'đ'}"></td>
                 </tr>
                 </tbody>
             </table>
 
-            <p>
-                <strong>
-                    Tổng cộng:
-                    <span th:text="${#numbers.formatDecimal(order.totalAmount,0,'COMMA',0,'POINT') + ' ₫'}"></span>
-                </strong>
-            </p>
+            <div class="order-total-box">
+                <p>
+                    <span>Tạm tính:</span>
+                    <strong th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+                </p>
 
-            <form th:if="${order.status == 'PENDING'}"
+                <p>
+                    <span>Phí vận chuyển:</span>
+                    <strong th:text="${#numbers.formatDecimal(order.shippingFee, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+                </p>
+
+                <p>
+                    <span>Voucher đơn hàng:</span>
+                    <strong th:text="${#numbers.formatDecimal(order.discountAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+                </p>
+
+                <p class="order-final-total">
+                    <span>Tổng thanh toán:</span>
+                    <strong th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+                </p>
+            </div>
+
+            <form th:if="${order.orderStatus.name() == 'PENDING'}"
                   th:action="@{/profile/orders/{id}/cancel(id=${order.id})}"
-                  method="post">
+                  method="post"
+                  class="confirm-action"
+                  data-message="Bạn chắc chắn muốn hủy đơn hàng này?">
 
                 <button type="submit" class="btn-cancel">
                     Hủy đơn hàng
                 </button>
             </form>
-
         </div>
     </div>
 </th:block>

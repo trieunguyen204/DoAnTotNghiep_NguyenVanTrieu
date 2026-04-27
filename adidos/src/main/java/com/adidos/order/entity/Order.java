@@ -11,13 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "`order`") // Bọc backtick để tránh lỗi từ khóa ORDER của SQL
+@Table(name = "`order`")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "receiver_phone")
+    private String receiverPhone;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -46,11 +49,18 @@ public class Order {
     @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
 
+    @Column(name = "order_code", unique = true)
+    private Long orderCode;
+
 
     @Column(name = "voucher_id")
     private Long voucherId;
 
+
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
+
+
 }

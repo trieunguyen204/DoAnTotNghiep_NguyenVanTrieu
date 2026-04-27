@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main :: layout_user}">
+
+<head>
+    <title th:fragment="page_title">Đặt hàng thành công | Adidos</title>
+
+    <th:block th:fragment="page_user_css">
+        <link rel="stylesheet" th:href="@{/css/user/checkout.css}">
+    </th:block>
+</head>
+
+<body>
+<th:block th:fragment="content_user">
+    <div class="checkout-result-page">
+        <div class="checkout-result-box">
+            <h1>Đặt hàng thành công</h1>
+
+            <p>Cảm ơn bạn đã mua hàng tại Adidos.</p>
+
+            <p>
+                Mã đơn hàng:
+                <strong th:text="${'#' + order.id}"></strong>
+            </p>
+
+            <p>
+                Tổng thanh toán:
+                <strong th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
+            </p>
+
+            <a th:href="@{/profile/orders}" class="checkout-main-btn">
+                Xem đơn hàng
+            </a>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="page_user_js">
+    <script th:src="@{/js/user/checkout.js}"></script>
+</th:block>
+</body>
+</html>

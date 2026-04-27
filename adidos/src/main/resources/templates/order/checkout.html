@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main :: layout_user}">
+
+<head>
+    <title th:fragment="page_title">Thanh toán | Adidos</title>
+
+    <th:block th:fragment="page_user_css">
+        <link rel="stylesheet" th:href="@{/css/user/checkout.css}">
+    </th:block>
+</head>
+
+<body>
+<th:block th:fragment="content_user">
+    <div class="checkout-container">
+
+        <h2>Thanh toán</h2>
+
+        <div th:if="${error}" class="checkout-error" th:text="${error}"></div>
+
+        <form th:action="@{/checkout/place}" method="post">
+
+            <div class="checkout-grid">
+
+                <div class="checkout-left">
+
+                    <div class="checkout-box">
+                        <div class="checkout-box-header">
+                            <h3>Địa chỉ nhận hàng</h3>
+                            <a th:href="@{/profile/addresses}">Quản lý địa chỉ</a>
+                        </div>
+
+                        <div th:if="${#lists.isEmpty(addresses)}" class="empty-address">
+                            Bạn chưa có địa chỉ nhận hàng.
+                            <a th:href="@{/profile/addresses}">Thêm địa chỉ</a>
+                        </div>
+
+                        <div th:each="addr : ${addresses}" class="checkout-address-card">
+                            <label>
+                                <input type="radio"
+                                       name="addressId"
+                                       th:value="${addr.id}"
+                                       th:checked="${defaultAddress != null && defaultAddress.id == addr.id}"
+                                       required>
+
+                                <div>
+                                    <p>
+                                        <strong th:text="${addr.receiverName}"></strong>
+                                        <span>|</span>
+                                        <span th:text="${addr.phone}"></span>
+                                    </p>
+
+                                    <p th:text="${addr.fullAddress}"></p>
+
+                                    <span th:if="${addr.isDefault}" class="badge-default">
+                                        Mặc định
+                                    </span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="checkout-box">
+                        <h3>Phương thức thanh toán</h3>
+
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="COD" checked>
+                            <div>
+                                <strong>Thanh toán khi nhận hàng</strong>
+                                <p>Trả tiền mặt khi nhận được hàng.</p>
+                            </div>
+                        </label>
+
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="QR_MANUAL">
+                            <div>
+                                <strong>Chuyển khoản QR thủ công</strong>
+                                <p>Đặt hàng xong hệ thống hiển thị mã QR để chuyển khoản.</p>
+                            </div>
+                        </label>
+
+                        <label class="payment-option">
+                            <input type="radio" name="paymentMethod" value="PAYOS">
+                            <div>
+                                <strong>Thanh toán tự động qua PayOS</strong>
+                                <p>Tự động xác nhận sau khi thanh toán thành công.</p>
+                            </div>
+                        </label>
+                    </div>
+
+                </div>
+
+                <div class="checkout-right">
+
+                    <div class="checkout-box">
+                        <h3>Đơn hàng</h3>
+
+                        <div th:each="item : ${cartItems}" class="checkout-item">
+                            <img th:src="${item.imageUrl}" alt="Product">
+
+                            <div class="checkout-item-info">
+                                <strong th:text="${item.productName}"></strong>
+                                <p th:text="${item.colorName + ' - ' + item.sizeName}"></p>
+                                <p>Số lượng: <span th:text="${item.quantity}"></span></p>
+                            </div>
+
+                            <div class="checkout-item-price"
+                                 th:text="${#numbers.formatDecimal(item.subTotal, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                            </div>
+                        </div>
+
+                        <div class="voucher-box">
+                            <label>Mã giảm giá</label>
+
+                            <div class="voucher-input-row">
+                                <input type="text"
+                                       name="voucherCode"
+                                       id="voucherCode"
+                                       placeholder="Nhập hoặc chọn mã voucher">
+
+                                <button type="button" id="btnApplyVoucher">
+                                    Áp dụng
+                                </button>
+                            </div>
+
+                            <div class="voucher-search-box">
+                                <input type="text"
+                                       id="voucherSearch"
+                                       placeholder="Tìm voucher...">
+                            </div>
+
+                            <div class="voucher-list" th:if="${!#lists.isEmpty(vouchers)}">
+                                <div class="voucher-item"
+                                     th:each="voucher : ${vouchers}"
+                                     th:data-code="${voucher.code}">
+                                    <div>
+                                        <strong th:text="${voucher.code}"></strong>
+
+                                        <p th:if="${voucher.discountType == 'PERCENT'}"
+                                           th:text="'Giảm ' + ${#numbers.formatDecimal(voucher.discountValue, 0, 'COMMA', 0, 'POINT')} + '%'">
+                                        </p>
+
+                                        <p th:if="${voucher.discountType == 'FIXED'}"
+                                           th:text="'Giảm ' + ${#numbers.formatDecimal(voucher.discountValue, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                                        </p>
+
+                                        <small th:if="${voucher.minOrderValue != null}"
+                                               th:text="'Đơn tối thiểu ' + ${#numbers.formatDecimal(voucher.minOrderValue, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                                        </small>
+                                    </div>
+
+                                    <button type="button" class="btn-select-voucher">
+                                        Chọn
+                                    </button>
+                                </div>
+                            </div>
+
+                            <p th:if="${#lists.isEmpty(vouchers)}" class="voucher-empty">
+                                Hiện chưa có voucher khả dụng.
+                            </p>
+
+                            <p id="voucherMessage"></p>
+
+                            <input type="hidden" id="totalPriceValue" th:value="${totalPrice}">
+                            <input type="hidden" id="shippingFeeValue" th:value="${shippingFee}">
+                        </div>
+
+                        <div class="checkout-summary">
+                            <div>
+                                <span>Tạm tính</span>
+                                <strong th:text="${#numbers.formatDecimal(totalPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
+                            </div>
+
+                            <div>
+                                <span>Phí vận chuyển</span>
+                                <strong th:text="${#numbers.formatDecimal(shippingFee, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
+                            </div>
+                            <div>
+                                <span>Giảm giá</span>
+                                <strong id="discountAmountText">0đ</strong>
+                            </div>
+
+                            <div class="checkout-total">
+                                <span>Tổng thanh toán</span>
+                                <strong id="finalAmountText"
+                                        th:text="${#numbers.formatDecimal(finalAmount, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                                class="btn-place-order"
+                                th:disabled="${#lists.isEmpty(addresses)}">
+                            Đặt hàng
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </form>
+    </div>
+</th:block>
+
+<th:block th:fragment="page_user_js">
+    <script th:src="@{/js/user/checkout.js}"></script>
+</th:block>
+</body>
+</html>

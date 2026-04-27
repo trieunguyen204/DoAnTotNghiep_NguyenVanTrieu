@@ -85,4 +85,15 @@ public class VoucherService {
     public void deleteVoucher(Long id) {
         voucherRepository.deleteById(id);
     }
+    @Transactional(readOnly = true)
+    public List<Voucher> getAvailableVouchers() {
+        LocalDateTime now = LocalDateTime.now();
+
+        return voucherRepository.findByStatus("ACTIVE")
+                .stream()
+                .filter(v -> v.getStartDate() == null || !now.isBefore(v.getStartDate()))
+                .filter(v -> v.getEndDate() == null || !now.isAfter(v.getEndDate()))
+                .filter(v -> v.getUsageLimit() == null || v.getUsedCount() == null || v.getUsedCount() < v.getUsageLimit())
+                .toList();
+    }
 }
