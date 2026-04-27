@@ -336,5 +336,78 @@ public class OrderService {
         orderRepository.save(order);
     }
 
+    @Transactional(readOnly = true)
+    public List<OrderResponse> getOrdersForAdminByStatus(String status) {
+        List<Order> orders;
+
+        if (status == null || status.isBlank() || "ALL".equalsIgnoreCase(status)) {
+            orders = orderRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        } else {
+
+            String cleanStatus = status.split(",")[0].trim().toUpperCase();
+
+            OrderStatus orderStatus = OrderStatus.valueOf(cleanStatus);
+            orders = orderRepository.findByOrderStatus(orderStatus);
+        }
+
+        return orders.stream()
+                .map(OrderMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void approveOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+
+        if (order.getOrderStatus() != OrderStatus.PENDING) {
+            throw new RuntimeException("Chỉ có thể duyệt đơn hàng đang chờ xác nhận");
+        }
+
+        order.setOrderStatus(OrderStatus.PROCESSING);
+        orderRepository.save(order);
+    }
+
+    @Transactional
+    public int approveSelectedOrders(List<Long> orderIds) {
+        int count = 0;
+
+        for (Long id : orderIds) {
+            Order order = orderRepository.findById(id).orElse(null);
+
+            if (order != null && order.getOrderStatus() == OrderStatus.PENDING) {
+                order.setOrderStatus(OrderStatus.PROCESSING);
+                orderRepository.save(order);
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    @Transactional
+    public int approveAllOrdersByStatus(String currentStatus) {
+        List<Order> orders;
+
+        if (currentStatus == null || currentStatus.isBlank() || "ALL".equalsIgnoreCase(currentStatus)) {
+            orders = orderRepository.findByOrderStatus(OrderStatus.PENDING);
+        } else {
+            OrderStatus status = OrderStatus.valueOf(currentStatus.toUpperCase());
+            orders = orderRepository.findByOrderStatus(status);
+        }
+
+        int count = 0;
+
+        for (Order order : orders) {
+            if (order.getOrderStatus() == OrderStatus.PENDING) {
+                order.setOrderStatus(OrderStatus.PROCESSING);
+                orderRepository.save(order);
+                count++;
+            }
+        }
+
+        return count;
+    }
+
 
 }

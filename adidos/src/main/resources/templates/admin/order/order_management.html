@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/admin :: layout}">
+
+<head>
+    <title>Quản lý đơn hàng</title>
+
+    <th:block th:fragment="page_admin_css">
+        <link rel="stylesheet" th:href="@{/css/admin/order-management.css}">
+    </th:block>
+</head>
+
+<body>
+<th:block th:fragment="content">
+    <div class="admin-order-page">
+
+        <div class="page-header">
+            <div>
+                <h1>Quản lý đơn hàng</h1>
+                <p>Duyệt, lọc và cập nhật trạng thái đơn hàng</p>
+            </div>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <div class="order-toolbar">
+            <div class="status-tabs">
+                <a th:href="@{/admin/orders}"
+                   th:classappend="${currentStatus == 'ALL'} ? 'active' : ''">
+                    Tất cả
+                </a>
+
+                <a th:each="st : ${statuses}"
+                   th:href="@{/admin/orders(status=${st.name()})}"
+                   th:text="${st.name()}"
+                   th:classappend="${currentStatus == st.name()} ? 'active' : ''">
+                </a>
+            </div>
+
+            <div class="toolbar-actions">
+                <form th:action="@{/admin/orders/approve-all}" method="post"
+                      class="confirm-form"
+                      data-message="Bạn chắc chắn muốn duyệt tất cả đơn đang chờ trong trang trạng thái này?">
+                    <input type="hidden" name="currentStatus" th:value="${currentStatus}">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-check-double"></i>
+                        Duyệt tất cả
+                    </button>
+                </form>
+
+                <button type="submit" form="bulkApproveForm" class="btn btn-dark">
+                    <i class="fa-solid fa-list-check"></i>
+                    Duyệt đơn đã chọn
+                </button>
+            </div>
+        </div>
+
+        <form id="bulkApproveForm"
+              th:action="@{/admin/orders/approve-selected}"
+              method="post"
+              class="confirm-form"
+              data-message="Bạn chắc chắn muốn duyệt các đơn đã chọn?">
+
+            <input type="hidden" name="currentStatus" th:value="${currentStatus}">
+
+            <div class="order-table-wrapper">
+                <table class="order-table">
+                    <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="checkAllOrders">
+                        </th>
+                        <th>Mã đơn</th>
+                        <th>Người nhận</th>
+                        <th>Địa chỉ</th>
+                        <th>Tổng tiền</th>
+                        <th>Đơn hàng</th>
+                        <th>Thanh toán</th>
+                        <th>Thao tác</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(orders)}">
+                        <td colspan="8" class="empty-row">
+                            Không có đơn hàng nào.
+                        </td>
+                    </tr>
+
+                    <tr th:each="order : ${orders}">
+                        <td>
+                            <input type="checkbox"
+                                   name="orderIds"
+                                   th:value="${order.id}"
+                                   class="order-checkbox"
+                                   th:disabled="${order.orderStatus.name() != 'PENDING'}">
+                        </td>
+
+                        <td>
+                            <strong th:text="${'#' + order.id}"></strong>
+                        </td>
+
+                        <td>
+                            <strong th:text="${order.receiverName}"></strong>
+                            <br>
+                            <span th:text="${order.receiverPhone}"></span>
+                        </td>
+
+                        <td class="address-cell" th:text="${order.shippingAddress}"></td>
+
+                        <td class="money-cell"
+                            th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT')} + 'đ'">
+                        </td>
+
+                        <td>
+                            <span class="status-badge"
+                                  th:classappend="${order.orderStatus.name().toLowerCase()}"
+                                  th:text="${order.orderStatus.name()}">
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="payment-badge"
+                                  th:classappend="${order.paymentStatus.name().toLowerCase()}"
+                                  th:text="${order.paymentStatus.name()}">
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="row-actions">
+                                <form th:if="${order.orderStatus.name() == 'PENDING'}"
+                                      th:action="@{/admin/orders/approve/{id}(id=${order.id})}"
+                                      method="post"
+                                      class="confirm-form"
+                                      data-message="Duyệt đơn hàng này?">
+                                    <input type="hidden" name="currentStatus" th:value="${currentStatus}">
+                                    <button type="submit" class="btn-small btn-approve">
+                                        Duyệt
+                                    </button>
+                                </form>
+
+                                <form th:action="@{/admin/orders/update-status/{id}(id=${order.id})}"
+                                      method="post">
+                                    <input type="hidden" name="currentStatus" th:value="${currentStatus}">
+
+                                    <select name="orderStatus" class="status-select">
+                                        <option th:each="st : ${statuses}"
+                                                th:value="${st.name()}"
+                                                th:text="${st.name()}"
+                                                th:selected="${st.name() == order.orderStatus.name()}">
+                                        </option>
+                                    </select>
+
+                                    <button type="submit" class="btn-small btn-update">
+                                        Lưu
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+</th:block>
+
+<th:block th:fragment="page_js">
+    <script th:src="@{/js/admin/order-management.js}"></script>
+</th:block>
+</body>
+</html>
