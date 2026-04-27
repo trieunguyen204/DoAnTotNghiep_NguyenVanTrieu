@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      >
+
+<head>
+    <title th:fragment="page_title">Không có quyền truy cập | Adidos</title>
+
+    <th:block >
+        <style>
+            .error-page {
+                min-height: 60vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                padding: 40px 15px;
+            }
+
+            .error-box h1 {
+                font-size: 90px;
+                margin: 0;
+                color: #000;
+            }
+
+            .error-box h2 {
+                margin: 10px 0;
+                font-size: 28px;
+            }
+
+            .error-box p {
+                color: #666;
+                margin-bottom: 25px;
+            }
+
+            .btn-back-home {
+                display: inline-block;
+                background: #000;
+                color: #fff;
+                padding: 12px 24px;
+                border-radius: 6px;
+                text-decoration: none;
+            }
+        </style>
+    </th:block>
+</head>
+
+<body>
+<th:block >
+    <div class="error-page">
+        <div class="error-box">
+            <h1>403</h1>
+            <h2>Không có quyền truy cập</h2>
+            <p>Tài khoản của bạn không có quyền truy cập khu vực quản trị.</p>
+            <a th:href="@{/}" class="btn-back-home">Quay về trang chủ</a>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

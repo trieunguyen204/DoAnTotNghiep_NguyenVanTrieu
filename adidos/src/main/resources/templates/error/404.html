@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      >
+
+<head>
+    <title th:fragment="page_title">Không tìm thấy trang | Adidos</title>
+</head>
+
+<body>
+<th:block th:fragment="content_user">
+    <div style="min-height:60vh; display:flex; justify-content:center; align-items:center; text-align:center;">
+        <div>
+            <h1 style="font-size:90px; margin:0;">404</h1>
+            <h2>Không tìm thấy trang</h2>
+            <p>Trang bạn đang tìm kiếm không tồn tại.</p>
+            <a th:href="@{/}" style="background:#000; color:#fff; padding:12px 24px; text-decoration:none; border-radius:6px;">
+                Quay về trang chủ
+            </a>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

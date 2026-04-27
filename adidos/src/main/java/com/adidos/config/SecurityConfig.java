@@ -25,17 +25,22 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                        // public
-                        .requestMatchers("/"
-                                , "/login"
-                                , "/register"
-                                , "/products/**"
-                                , "/css/**"
-                                , "/js/**"
-                                ,"/product/{id}"
-                                ,"/category/{id}"
-                                , "/uploads/**"
-                                ,"/cart"
-                                ,"/api/cart/**"
+                        .requestMatchers(
+                                "/",
+                                "/login",
+                                "/register",
+                                "/products/**",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/product/{id}",
+                                "/category/{id}",
+                                "/uploads/**",
+                                "/cart",
+                                "/api/cart/**",
+                                "/403",
+                                "/404",
+                                "/500"
                         )
                         .permitAll()
 
@@ -59,7 +64,11 @@ public class SecurityConfig {
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
-                );
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/403")
+                )
+        ;
         return http.build();
     }
 
