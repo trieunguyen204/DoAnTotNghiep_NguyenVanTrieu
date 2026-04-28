@@ -1,7 +1,5 @@
-package com.adidos.voucher.controller;
+package com.adidos.voucher;
 
-import com.adidos.voucher.entity.Voucher;
-import com.adidos.voucher.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.adidos.voucher.entity;
+package com.adidos.voucher;
 
 import jakarta.persistence.*;
 import lombok.*;

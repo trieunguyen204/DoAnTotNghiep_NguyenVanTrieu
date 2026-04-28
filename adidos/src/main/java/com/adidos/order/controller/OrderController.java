@@ -8,7 +8,7 @@ import com.adidos.order.service.OrderService;
 import com.adidos.order.service.PayOSService;
 import com.adidos.user.dto.AddressResponse;
 import com.adidos.user.service.AddressService;
-import com.adidos.voucher.service.VoucherService;
+import com.adidos.voucher.VoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

@@ -1,4 +1,4 @@
-package com.adidos.voucher.controller;
+package com.adidos.voucher;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

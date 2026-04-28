@@ -189,34 +189,62 @@
 
 .row-actions {
     display: flex;
-    gap: 8px;
     align-items: center;
-    flex-wrap: wrap;
+    gap: 8px;
+    flex-wrap: nowrap;
 }
 
+.row-actions form {
+    margin: 0;
+}
+
+.status-update-form {
+    display: contents;
+}
+
+.btn-detail {
+    background: #0d6efd;
+    color: #fff;
+    text-decoration: none;
+}
+
+
 .btn-small {
+    height: 34px;
     border: none;
-    padding: 7px 11px;
-    border-radius: 6px;
+    padding: 0 12px;
+    border-radius: 7px;
     cursor: pointer;
     font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
 }
+
 
 .btn-approve {
     background: #198754;
     color: #fff;
+    width: 78px;
 }
 
 .btn-update {
     background: #000;
     color: #fff;
+    width: 58px;
 }
 
 .status-select {
-    padding: 7px 10px;
+    height: 34px;
+    width: 100%;
+    min-width: 130px;
+    padding: 0 10px;
     border: 1px solid #ddd;
-    border-radius: 6px;
+    border-radius: 7px;
     outline: none;
+    background: #fff;
+    font-size: 13px;
 }
 
 @media (max-width: 768px) {
@@ -237,3 +265,157 @@
         width: 100%;
     }
 }
+
+.order-table th:last-child,
+.order-table td:last-child {
+    min-width: 330px;
+}
+
+.order-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.order-detail-box {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.order-detail-box h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.order-detail-box p {
+    margin: 10px 0;
+    color: #444;
+}
+
+.admin-order-total {
+    max-width: 420px;
+    margin-left: auto;
+    margin-top: 24px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.admin-order-total p {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.admin-order-total .final-total {
+    border-top: 1px solid #eee;
+    padding-top: 12px;
+    font-size: 18px;
+    color: #dc3545;
+}
+
+.row-actions {
+    display: grid;
+    grid-template-columns: 78px 78px 1fr 58px;
+    align-items: center;
+    gap: 8px;
+}
+
+.order-detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.order-table th:first-child,
+.order-table td:first-child {
+    width: 70px;
+    text-align: center;
+}
+
+.order-checkbox,
+#checkAllOrders {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #bdbdbd;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #fff;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.order-checkbox:hover,
+#checkAllOrders:hover {
+    border-color: #000;
+    transform: scale(1.05);
+}
+
+.order-checkbox:checked,
+#checkAllOrders:checked {
+    background: #000;
+    border-color: #000;
+}
+
+/* dấu tick */
+.order-checkbox:checked::after,
+#checkAllOrders:checked::after {
+    content: "✓";
+    position: absolute;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* disabled */
+.order-checkbox:disabled {
+    background: #f3f3f3;
+    border-color: #ddd;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* row được chọn */
+.order-table tbody tr.selected-row {
+    background: #f8f9ff;
+    border-left: 4px solid #000;
+}
+
+/* hover row */
+.order-table tbody tr:hover {
+    background: #fafafa;
+}
+
+/* Khi đơn không còn nút Duyệt, giữ khoảng trống để layout không thụt */
+/* Khi đơn không còn nút Duyệt, giữ khoảng trống để layout không thụt */
+.row-actions > .btn-detail + .status-update-form,
+.row-actions > .btn-detail + form.status-update-form {
+    grid-column: auto;
+}
+
+/* Placeholder cho nút duyệt bị thiếu */
+.approve-placeholder {
+    width: 78px;
+    height: 34px;
+}
+
+.status-done {
+    color: #198754;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.status-cancelled {
+    color: #dc3545;
+    font-weight: 700;
+    white-space: nowrap;
+}
+

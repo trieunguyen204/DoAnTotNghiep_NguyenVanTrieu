@@ -51,7 +51,7 @@
 
                 <button type="submit" form="bulkApproveForm" class="btn btn-dark">
                     <i class="fa-solid fa-list-check"></i>
-                    Duyệt đơn đã chọn
+                    Cập nhật bước tiếp theo
                 </button>
             </div>
         </div>
@@ -94,7 +94,8 @@
                                    name="orderIds"
                                    th:value="${order.id}"
                                    class="order-checkbox"
-                                   th:disabled="${order.orderStatus.name() != 'PENDING'}">
+                                   th:disabled="${order.orderStatus.name() == 'DELIVERED'
+                                            or order.orderStatus.name() == 'CANCELLED'}">
                         </td>
 
                         <td>
@@ -129,26 +130,50 @@
 
                         <td>
                             <div class="row-actions">
+
+                                <a th:href="@{/admin/orders/detail/{id}(id=${order.id}, status=${currentStatus})}"
+                                   class="btn-small btn-detail">
+                                    Chi tiết
+                                </a>
+
                                 <form th:if="${order.orderStatus.name() == 'PENDING'}"
                                       th:action="@{/admin/orders/approve/{id}(id=${order.id})}"
                                       method="post"
                                       class="confirm-form"
                                       data-message="Duyệt đơn hàng này?">
+
                                     <input type="hidden" name="currentStatus" th:value="${currentStatus}">
+
                                     <button type="submit" class="btn-small btn-approve">
                                         Duyệt
                                     </button>
                                 </form>
 
-                                <form th:action="@{/admin/orders/update-status/{id}(id=${order.id})}"
-                                      method="post">
+                                <span th:unless="${order.orderStatus.name() == 'PENDING'}"
+                                      class="approve-placeholder"></span>
+
+                                <form th:if="${order.orderStatus.name() != 'DELIVERED'
+                                             and order.orderStatus.name() != 'CANCELLED'}"
+                                      th:action="@{/admin/orders/update-status/{id}(id=${order.id})}"
+                                      method="post"
+                                      class="status-update-form">
+
                                     <input type="hidden" name="currentStatus" th:value="${currentStatus}">
 
                                     <select name="orderStatus" class="status-select">
-                                        <option th:each="st : ${statuses}"
-                                                th:value="${st.name()}"
-                                                th:text="${st.name()}"
-                                                th:selected="${st.name() == order.orderStatus.name()}">
+                                        <option th:if="${order.orderStatus.name() == 'PENDING'}"
+                                                value="CANCELLED">
+                                            CANCELLED
+                                        </option>
+
+                                        <option th:if="${order.orderStatus.name() == 'PROCESSING'}"
+                                                value="SHIPPING">
+                                            SHIPPING
+                                        </option>
+
+                                        <option th:if="${order.orderStatus.name() == 'SHIPPING'}"
+                                                value="DELIVERED">
+                                            DELIVERED
                                         </option>
                                     </select>
 
@@ -156,6 +181,17 @@
                                         Lưu
                                     </button>
                                 </form>
+
+                                <span th:if="${order.orderStatus.name() == 'DELIVERED'}"
+                                      class="status-done">
+                                    Hoàn tất
+                                </span>
+
+                                <span th:if="${order.orderStatus.name() == 'CANCELLED'}"
+                                      class="status-cancelled">
+                                    Đã hủy
+                                </span>
+
                             </div>
                         </td>
                     </tr>

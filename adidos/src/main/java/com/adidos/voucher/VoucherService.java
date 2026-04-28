@@ -1,7 +1,5 @@
-package com.adidos.voucher.service;
+package com.adidos.voucher;
 
-import com.adidos.voucher.entity.Voucher;
-import com.adidos.voucher.repository.VoucherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

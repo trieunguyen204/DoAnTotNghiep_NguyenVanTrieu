@@ -1,4 +1,4 @@
-package com.adidos.review.entity;
+package com.adidos.review;
 
 import com.adidos.order.entity.OrderItem;
 import com.adidos.product.entity.Product;
@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 

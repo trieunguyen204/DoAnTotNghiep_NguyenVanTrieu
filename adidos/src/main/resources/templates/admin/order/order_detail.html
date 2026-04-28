@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/admin :: layout}">
+
+<head>
+    <title>Chi tiết đơn hàng</title>
+
+    <th:block th:fragment="page_admin_css">
+        <link rel="stylesheet" th:href="@{/css/admin/order-management.css}">
+    </th:block>
+</head>
+
+<body>
+<th:block th:fragment="content">
+    <div class="admin-order-page">
+
+        <div class="page-header">
+            <div>
+                <h1>
+                    Chi tiết đơn #
+                    <span th:text="${order.id}"></span>
+                </h1>
+                <p>Thông tin chi tiết đơn hàng</p>
+            </div>
+
+            <a th:href="${currentStatus == 'ALL'} ? @{/admin/orders} : @{/admin/orders(status=${currentStatus})}"
+               class="btn btn-dark">
+                Quay lại
+            </a>
+        </div>
+
+        <div class="order-detail-grid">
+
+            <div class="order-detail-box">
+                <h3>Thông tin người nhận</h3>
+
+                <p>
+                    <strong>Người nhận:</strong>
+                    <span th:text="${order.receiverName}"></span>
+                </p>
+
+                <p>
+                    <strong>Số điện thoại:</strong>
+                    <span th:text="${order.receiverPhone}"></span>
+                </p>
+
+                <p>
+                    <strong>Địa chỉ:</strong>
+                    <span th:text="${order.shippingAddress}"></span>
+                </p>
+            </div>
+
+            <div class="order-detail-box">
+                <h3>Trạng thái</h3>
+
+                <p>
+                    <strong>Đơn hàng:</strong>
+                    <span th:text="${order.orderStatus}"></span>
+                </p>
+
+                <p>
+                    <strong>Thanh toán:</strong>
+                    <span th:text="${order.paymentStatus}"></span>
+                </p>
+            </div>
+
+        </div>
+
+        <div class="order-table-wrapper">
+            <table class="order-table">
+                <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Phân loại</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Thành tiền</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="item : ${order.items}">
+                    <td th:text="${item.productName}"></td>
+                    <td th:text="${item.color + ' - ' + item.size}"></td>
+                    <td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT') + 'đ'}"></td>
+                    <td th:text="${item.quantity}"></td>
+                    <td th:text="${#numbers.formatDecimal(item.subTotal, 0, 'COMMA', 0, 'POINT') + 'đ'}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="admin-order-total">
+            <p>
+                <span>Tạm tính:</span>
+                <strong th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+            </p>
+
+            <p>
+                <span>Phí vận chuyển:</span>
+                <strong th:text="${#numbers.formatDecimal(order.shippingFee, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+            </p>
+
+            <p>
+                <span>Giảm giá:</span>
+                <strong th:text="${#numbers.formatDecimal(order.discountAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+            </p>
+
+            <p class="final-total">
+                <span>Tổng thanh toán:</span>
+                <strong th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+            </p>
+        </div>
+
+    </div>
+</th:block>
+
+<th:block th:fragment="page_js">
+    <script th:src="@{/js/admin/order-management.js}"></script>
+</th:block>
+</body>
+</html>

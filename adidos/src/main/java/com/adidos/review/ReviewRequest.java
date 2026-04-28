@@ -1,4 +1,4 @@
-package com.adidos.review.dto;
+package com.adidos.review;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

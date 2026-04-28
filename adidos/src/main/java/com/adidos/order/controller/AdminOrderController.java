@@ -54,8 +54,8 @@ public class AdminOrderController {
                 return redirectByStatus(currentStatus);
             }
 
-            int count = orderService.approveSelectedOrders(orderIds);
-            redirectAttributes.addFlashAttribute("success", "Đã duyệt " + count + " đơn hàng.");
+            int count = orderService.advanceSelectedOrders(orderIds);
+            redirectAttributes.addFlashAttribute("success", "Đã cập nhật " + count + " đơn hàng.");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
@@ -99,5 +99,18 @@ public class AdminOrderController {
         String cleanStatus = currentStatus.split(",")[0].trim().toUpperCase();
 
         return "redirect:/admin/orders?status=" + cleanStatus;
+    }
+
+
+    @GetMapping("/detail/{id}")
+    public String orderDetail(@PathVariable Long id,
+                              @RequestParam(value = "status", required = false) String status,
+                              Model model) {
+        OrderResponse order = orderService.getOrderDetailForAdmin(id);
+
+        model.addAttribute("order", order);
+        model.addAttribute("currentStatus", status == null || status.isBlank() ? "ALL" : status);
+
+        return "admin/order/order_detail";
     }
 }

@@ -19,9 +19,9 @@ import com.adidos.user.entity.Address;
 import com.adidos.user.entity.User;
 import com.adidos.user.repository.AddressRepository;
 import com.adidos.user.repository.UserRepository;
-import com.adidos.voucher.entity.Voucher;
-import com.adidos.voucher.repository.VoucherRepository;
-import com.adidos.voucher.service.VoucherService;
+import com.adidos.voucher.Voucher;
+import com.adidos.voucher.VoucherRepository;
+import com.adidos.voucher.VoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -401,6 +401,42 @@ public class OrderService {
         for (Order order : orders) {
             if (order.getOrderStatus() == OrderStatus.PENDING) {
                 order.setOrderStatus(OrderStatus.PROCESSING);
+                orderRepository.save(order);
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    @Transactional
+    public int advanceSelectedOrders(List<Long> orderIds) {
+        int count = 0;
+
+        for (Long id : orderIds) {
+            Order order = orderRepository.findById(id).orElse(null);
+
+            if (order == null) continue;
+
+            if (order.getOrderStatus() == OrderStatus.PENDING) {
+                order.setOrderStatus(OrderStatus.PROCESSING);
+                orderRepository.save(order);
+                count++;
+            } else if (order.getOrderStatus() == OrderStatus.PROCESSING) {
+                order.setOrderStatus(OrderStatus.SHIPPING);
+                orderRepository.save(order);
+                count++;
+            } else if (order.getOrderStatus() == OrderStatus.SHIPPING) {
+                order.setOrderStatus(OrderStatus.DELIVERED);
+
+                paymentRepository.findByOrderId(id).ifPresent(payment -> {
+                    if ("COD".equalsIgnoreCase(payment.getPaymentMethod())) {
+                        payment.setStatus("SUCCESS");
+                        paymentRepository.save(payment);
+                        order.setPaymentStatus(PaymentStatus.PAID);
+                    }
+                });
+
                 orderRepository.save(order);
                 count++;
             }

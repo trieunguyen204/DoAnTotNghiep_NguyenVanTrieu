@@ -1,12 +1,7 @@
-package com.adidos.review.service;
+package com.adidos.review;
 
 import com.adidos.order.repository.OrderItemRepository;
 import com.adidos.product.repository.ProductRepository;
-import com.adidos.review.dto.ReviewRequest;
-import com.adidos.review.dto.ReviewResponse;
-import com.adidos.review.entity.Review;
-import com.adidos.review.mapper.ReviewMapper;
-import com.adidos.review.repository.ReviewRepository;
 import com.adidos.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

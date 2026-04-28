@@ -1,6 +1,5 @@
-package com.adidos.voucher.repository;
+package com.adidos.voucher;
 
-import com.adidos.voucher.entity.Voucher;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

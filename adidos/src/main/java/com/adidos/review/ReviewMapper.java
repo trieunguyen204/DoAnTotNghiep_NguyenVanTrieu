@@ -1,7 +1,5 @@
-package com.adidos.review.mapper;
+package com.adidos.review;
 
-import com.adidos.review.dto.ReviewResponse;
-import com.adidos.review.entity.Review;
 import java.util.stream.Collectors;
 
 public class ReviewMapper {
