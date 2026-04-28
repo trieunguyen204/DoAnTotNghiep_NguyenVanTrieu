@@ -29,6 +29,9 @@
                 </a>
             </div>
 
+            <div th:if="${success}" class="alert-success" th:text="${success}"></div>
+            <div th:if="${error}" class="alert-error" th:text="${error}"></div>
+
             <div class="order-info-box">
                 <p>
                     <strong>Người nhận:</strong>
@@ -64,6 +67,7 @@
                     <th>Giá</th>
                     <th>SL</th>
                     <th>Tổng</th>
+                    <th>Đánh giá</th>
                 </tr>
                 </thead>
 
@@ -74,6 +78,42 @@
                     <td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT') + 'đ'}"></td>
                     <td th:text="${item.quantity}"></td>
                     <td th:text="${#numbers.formatDecimal(item.subTotal, 0, 'COMMA', 0, 'POINT') + 'đ'}"></td>
+
+                    <td>
+                        <span th:if="${item.reviewed}" class="reviewed-label">
+                            Đã đánh giá
+                        </span>
+
+                        <form th:if="${order.orderStatus.name() == 'DELIVERED' and !item.reviewed}"
+                              th:action="@{/reviews/add}"
+                              method="post"
+                              class="review-form-inline">
+
+                            <input type="hidden" name="orderId" th:value="${order.id}">
+                            <input type="hidden" name="orderItemId" th:value="${item.id}">
+                            <input type="hidden" name="productId" th:value="${item.productId}">
+
+                            <select name="rating" required>
+                                <option value="">Sao</option>
+                                <option value="5">5 ★</option>
+                                <option value="4">4 ★</option>
+                                <option value="3">3 ★</option>
+                                <option value="2">2 ★</option>
+                                <option value="1">1 ★</option>
+                            </select>
+
+                            <input type="text"
+                                   name="comment"
+                                   placeholder="Nhận xét..."
+                                   required>
+
+                            <button type="submit">Gửi</button>
+                        </form>
+
+                        <span th:if="${order.orderStatus.name() != 'DELIVERED'}" class="review-disabled">
+                            Chưa thể đánh giá
+                        </span>
+                    </td>
                 </tr>
                 </tbody>
             </table>

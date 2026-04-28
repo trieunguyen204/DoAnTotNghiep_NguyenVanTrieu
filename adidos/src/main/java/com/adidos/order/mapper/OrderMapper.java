@@ -57,13 +57,25 @@ public class OrderMapper {
 
         return OrderItemResponse.builder()
                 .id(item.getId())
-                .variantId(item.getProductVariant() != null ? item.getProductVariant().getId() : null)
+
+                .productId(
+                        item.getProductVariant() != null
+                                ? item.getProductVariant().getProduct().getId()
+                                : null
+                )
+
+                .variantId(
+                        item.getProductVariant() != null
+                                ? item.getProductVariant().getId()
+                                : null
+                )
+
                 .productName(item.getProductName())
                 .color(item.getColor())
                 .size(item.getSize())
                 .price(price)
                 .quantity(item.getQuantity())
-                .subTotal(price.multiply(qty)) // Tự động tính thành tiền
+                .subTotal(price.multiply(qty))
                 .build();
     }
 }

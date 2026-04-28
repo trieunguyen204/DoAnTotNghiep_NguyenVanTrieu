@@ -32,16 +32,50 @@
 
             <div class="product-section section-reviews">
                 <h2 class="section-title">ĐÁNH GIÁ TỪ NGƯỜI MUA</h2>
+
                 <div class="review-box">
-                    <div th:if="${canReview}" class="review-form">
-                        <textarea placeholder="Chia sẻ cảm nhận của bạn về sản phẩm..."></textarea>
-                        <button class="luxury-btn small-btn">GỬI ĐÁNH GIÁ</button>
+
+                    <div th:if="${#lists.isEmpty(reviews)}" class="review-empty">
+                        Sản phẩm chưa có đánh giá nào.
                     </div>
-                    <div th:unless="${canReview}" class="review-notice">
-                        <p>Chỉ những khách hàng đã mua sản phẩm này mới có thể để lại đánh giá.</p>
+
+                    <div th:unless="${#lists.isEmpty(reviews)}" class="review-list">
+                        <div th:each="review : ${reviews}" class="review-item">
+
+                            <div class="review-user">
+                                <img th:src="${review.avatarUrl != null && !review.avatarUrl.isEmpty() ? review.avatarUrl : '/images/default-avatar.png'}"
+                                     alt="Avatar">
+
+                                <div>
+                                    <strong th:text="${review.userName}"></strong>
+
+                                    <div class="review-stars">
+                                        <span th:each="i : ${#numbers.sequence(1, review.rating)}">★</span>
+                                    </div>
+
+                                    <small th:text="${#temporals.format(review.createdAt, 'dd/MM/yyyy HH:mm')}"></small>
+                                </div>
+                            </div>
+
+                            <p class="review-variant" th:if="${review.variantInfo != null}"
+                               th:text="${'Phân loại: ' + review.variantInfo}">
+                            </p>
+
+                            <p class="review-comment" th:text="${review.comment}"></p>
+
+                            <div th:if="${review.replies != null and !#lists.isEmpty(review.replies)}"
+                                 class="review-replies">
+
+                                <div th:each="reply : ${review.replies}" class="review-reply">
+                                    <strong>Adidos phản hồi:</strong>
+                                    <p th:text="${reply.comment}"></p>
+                                    <small th:text="${#temporals.format(reply.createdAt, 'dd/MM/yyyy HH:mm')}"></small>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
-                    <div class="review-list">
-                    </div>
+
                 </div>
             </div>
 

@@ -15,6 +15,7 @@ import com.adidos.order.repository.PaymentRepository;
 import com.adidos.product.entity.ProductVariant;
 import com.adidos.product.repository.ProductVariantRepository;
 import com.adidos.promotion.service.PromotionService;
+import com.adidos.review.ReviewRepository;
 import com.adidos.user.entity.Address;
 import com.adidos.user.entity.User;
 import com.adidos.user.repository.AddressRepository;
@@ -46,6 +47,7 @@ public class OrderService {
     private final PromotionService promotionService;
     private final VoucherService voucherService;
     private final VoucherRepository voucherRepository;
+    private final ReviewRepository reviewRepository;
 
 
     /**
@@ -206,7 +208,7 @@ public class OrderService {
             throw new RuntimeException("Bạn không có quyền xem đơn hàng này");
         }
 
-        return toOrderResponseWithPayment(order);
+        return markReviewedItems(toOrderResponseWithPayment(order));
     }
 
     /**
@@ -522,6 +524,19 @@ public class OrderService {
                 .orElse(null);
 
         return OrderMapper.toResponse(order, payment);
+    }
+
+    private OrderResponse markReviewedItems(OrderResponse response) {
+        if (response.getItems() == null) {
+            return response;
+        }
+
+        response.getItems().forEach(item -> {
+            boolean reviewed = reviewRepository.existsByOrderItemId(item.getId());
+            item.setReviewed(reviewed);
+        });
+
+        return response;
     }
 
 

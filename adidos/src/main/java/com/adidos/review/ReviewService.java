@@ -1,7 +1,10 @@
 package com.adidos.review;
 
+import com.adidos.order.entity.OrderItem;
+import com.adidos.order.enums.OrderStatus;
 import com.adidos.order.repository.OrderItemRepository;
 import com.adidos.product.repository.ProductRepository;
+import com.adidos.user.entity.User;
 import com.adidos.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class ReviewService {
+
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
@@ -22,23 +26,43 @@ public class ReviewService {
     @Transactional(readOnly = true)
     public List<ReviewResponse> getProductReviews(Long productId) {
         return reviewRepository.findByProductIdAndParentIsNullOrderByCreatedAtDesc(productId)
-                .stream().map(ReviewMapper::toResponse).collect(Collectors.toList());
+                .stream()
+                .map(ReviewMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
     @Transactional
     public void addReview(String email, ReviewRequest request) {
+        if (request.getOrderItemId() == null) {
+            throw new RuntimeException("Thiếu thông tin sản phẩm trong đơn hàng");
+        }
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+
+        OrderItem orderItem = orderItemRepository.findById(request.getOrderItemId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm trong đơn hàng"));
+
+        if (!orderItem.getOrder().getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Bạn không có quyền đánh giá sản phẩm này");
+        }
+
+        if (orderItem.getOrder().getOrderStatus() != OrderStatus.DELIVERED) {
+            throw new RuntimeException("Chỉ được đánh giá sau khi đơn hàng đã giao thành công");
+        }
+
+        if (reviewRepository.existsByOrderItemId(orderItem.getId())) {
+            throw new RuntimeException("Bạn đã đánh giá sản phẩm này rồi");
+        }
+
         Review review = new Review();
-        review.setUser(userRepository.findByEmail(email).orElseThrow());
-        review.setProduct(productRepository.findById(request.getProductId()).orElseThrow());
+        review.setUser(user);
+        review.setProduct(orderItem.getProductVariant().getProduct());
+        review.setProductVariant(orderItem.getProductVariant());
+        review.setOrderItem(orderItem);
         review.setRating(request.getRating());
         review.setComment(request.getComment());
 
-        if (request.getOrderItemId() != null) {
-            orderItemRepository.findById(request.getOrderItemId()).ifPresent(item -> {
-                review.setOrderItem(item);
-                review.setProductVariant(item.getProductVariant());
-            });
-        }
         reviewRepository.save(review);
     }
 }

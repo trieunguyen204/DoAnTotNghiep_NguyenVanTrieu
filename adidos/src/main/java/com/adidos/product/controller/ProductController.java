@@ -3,6 +3,7 @@ package com.adidos.product.controller;
 import com.adidos.product.dto.ProductResponse;
 import com.adidos.product.service.CategoryService;
 import com.adidos.product.service.ProductService;
+import com.adidos.review.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ public class ProductController {
     private final ProductService productService;
     private final CategoryService categoryService;
 
+    private final ReviewService reviewService;
 
     @GetMapping("/product/{id}")
     public String getProductDetail(@PathVariable Long id, Model model) {
@@ -29,6 +31,7 @@ public class ProductController {
 
 
         model.addAttribute("canReview", false);
+        model.addAttribute("reviews", reviewService.getProductReviews(id));
 
         List<ProductResponse> allActive = productService.getAllActiveProducts();
         List<ProductResponse> relatedProducts = allActive.stream()
