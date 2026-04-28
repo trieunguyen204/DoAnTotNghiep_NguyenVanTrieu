@@ -4,6 +4,7 @@ import com.adidos.order.dto.OrderItemResponse;
 import com.adidos.order.dto.OrderResponse;
 import com.adidos.order.entity.Order;
 import com.adidos.order.entity.OrderItem;
+import com.adidos.order.entity.Payment;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -13,27 +14,30 @@ import java.util.stream.Collectors;
 public class OrderMapper {
 
     public static OrderResponse toResponse(Order order) {
+        return toResponse(order, null);
+    }
+
+    public static OrderResponse toResponse(Order order, Payment payment) {
         if (order == null) return null;
 
-        // Xử lý null-safe cho các khoản tiền
         BigDecimal total = order.getTotalPrice() != null ? order.getTotalPrice() : BigDecimal.ZERO;
         BigDecimal ship = order.getShippingFee() != null ? order.getShippingFee() : BigDecimal.ZERO;
         BigDecimal discount = order.getDiscountAmount() != null ? order.getDiscountAmount() : BigDecimal.ZERO;
 
-        // Tính tổng thực thu: Tiền hàng + Phí ship - Giảm giá
         BigDecimal finalAmount = total.add(ship).subtract(discount);
 
         return OrderResponse.builder()
                 .id(order.getId())
                 .receiverName(order.getReceiverName())
+                .receiverPhone(order.getReceiverPhone())
                 .shippingAddress(order.getShippingAddress())
                 .totalPrice(total)
-                .receiverPhone(order.getReceiverPhone())
                 .shippingFee(ship)
                 .discountAmount(discount)
                 .finalAmount(finalAmount)
                 .orderStatus(order.getOrderStatus())
                 .paymentStatus(order.getPaymentStatus())
+                .paymentMethod(payment != null ? payment.getPaymentMethod() : null)
                 .items(toItemResponseList(order.getOrderItems()))
                 .build();
     }

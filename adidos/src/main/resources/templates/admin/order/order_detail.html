@@ -58,9 +58,15 @@
                     <span th:text="${order.orderStatus}"></span>
                 </p>
 
+
                 <p>
                     <strong>Thanh toán:</strong>
                     <span th:text="${order.paymentStatus}"></span>
+                </p>
+
+                <p>
+                    <strong>Phương thức thanh toán:</strong>
+                    <span th:text="${order.paymentMethod != null ? order.paymentMethod : 'Không xác định'}"></span>
                 </p>
             </div>
 

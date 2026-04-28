@@ -70,7 +70,7 @@ public class OrderService {
         }
 
         BigDecimal totalPrice = BigDecimal.ZERO;
-        BigDecimal shippingFee = new BigDecimal("30000");
+        BigDecimal shippingFee = BigDecimal.ZERO;
         BigDecimal discountAmount = BigDecimal.ZERO;
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -189,7 +189,7 @@ public class OrderService {
         List<Order> orders = orderRepository.findByUserIdWithItems(user.getId());
 
         return orders.stream()
-                .map(OrderMapper::toResponse)
+                .map(this::toOrderResponseWithPayment)
                 .collect(Collectors.toList());
     }
 
@@ -206,7 +206,7 @@ public class OrderService {
             throw new RuntimeException("Bạn không có quyền xem đơn hàng này");
         }
 
-        return OrderMapper.toResponse(order);
+        return toOrderResponseWithPayment(order);
     }
 
     /**
@@ -238,7 +238,7 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-    // --- CÁC HÀM DÀNH RIÊNG CHO ADMIN ---
+
 
     /**
      * Lấy toàn bộ đơn hàng trong hệ thống (Mới nhất xếp lên đầu)
@@ -247,7 +247,7 @@ public class OrderService {
     public List<OrderResponse> getAllOrdersForAdmin() {
         return orderRepository.findAll(Sort.by(Sort.Direction.DESC, "id"))
                 .stream()
-                .map(OrderMapper::toResponse)
+                .map(this::toOrderResponseWithPayment)
                 .collect(Collectors.toList());
     }
 
@@ -258,7 +258,7 @@ public class OrderService {
     public OrderResponse getOrderDetailForAdmin(Long orderId) {
         Order order = orderRepository.findByIdWithItems(orderId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
-        return OrderMapper.toResponse(order);
+        return toOrderResponseWithPayment(order);
     }
 
     /**
@@ -351,7 +351,7 @@ public class OrderService {
         }
 
         return orders.stream()
-                .map(OrderMapper::toResponse)
+                .map(this::toOrderResponseWithPayment)
                 .collect(Collectors.toList());
     }
 
@@ -433,7 +433,10 @@ public class OrderService {
                     if ("COD".equalsIgnoreCase(payment.getPaymentMethod())) {
                         payment.setStatus("SUCCESS");
                         paymentRepository.save(payment);
+
                         order.setPaymentStatus(PaymentStatus.PAID);
+
+                        increaseVoucherUsedCount(order);
                     }
                 });
 
@@ -444,6 +447,84 @@ public class OrderService {
 
         return count;
     }
+
+    @Transactional
+    public void markManualTransferWaitingConfirm(Long orderId, String email) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+
+        if (!order.getUser().getEmail().equals(email)) {
+            throw new RuntimeException("Bạn không có quyền thao tác đơn hàng này");
+        }
+
+        Payment payment = paymentRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thông tin thanh toán"));
+
+        if (!"QR_MANUAL".equalsIgnoreCase(payment.getPaymentMethod())) {
+            throw new RuntimeException("Đơn hàng này không phải thanh toán chuyển khoản thủ công");
+        }
+
+        if (order.getPaymentStatus() == PaymentStatus.PAID) {
+            throw new RuntimeException("Đơn hàng đã được thanh toán");
+        }
+
+
+        if ("WAITING_CONFIRM".equalsIgnoreCase(payment.getStatus())) {
+            throw new RuntimeException("Bạn đã gửi yêu cầu xác nhận trước đó");
+        }
+
+        if ("SUCCESS".equalsIgnoreCase(payment.getStatus())) {
+            throw new RuntimeException("Đơn hàng đã được xác nhận thanh toán");
+        }
+
+        payment.setStatus("WAITING_CONFIRM");
+        paymentRepository.save(payment);
+    }
+
+    @Transactional
+    public void adminConfirmManualPayment(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+
+        Payment payment = paymentRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thanh toán"));
+
+        if (order.getOrderStatus() != OrderStatus.PENDING) {
+            throw new RuntimeException(
+                    "Chỉ đơn hàng chờ duyệt mới được xác nhận thanh toán"
+            );
+        }
+
+        if (!"QR_MANUAL".equals(payment.getPaymentMethod())) {
+            throw new RuntimeException(
+                    "Chỉ áp dụng cho thanh toán chuyển khoản thủ công"
+            );
+        }
+
+        if (order.getPaymentStatus() == PaymentStatus.PAID) {
+            throw new RuntimeException(
+                    "Đơn hàng đã thanh toán rồi"
+            );
+        }
+
+        payment.setStatus("SUCCESS");
+        paymentRepository.save(payment);
+
+        order.setPaymentStatus(PaymentStatus.PAID);
+
+        increaseVoucherUsedCount(order);
+
+        orderRepository.save(order);
+    }
+
+    private OrderResponse toOrderResponseWithPayment(Order order) {
+        Payment payment = paymentRepository.findByOrderId(order.getId())
+                .orElse(null);
+
+        return OrderMapper.toResponse(order, payment);
+    }
+
+
 
 
 }

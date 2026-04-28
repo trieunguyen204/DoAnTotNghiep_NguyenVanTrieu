@@ -113,4 +113,26 @@ public class AdminOrderController {
 
         return "admin/order/order_detail";
     }
+
+    @PostMapping("/confirm-payment/{id}")
+    public String confirmPayment(@PathVariable Long id,
+                                 @RequestParam(value = "currentStatus", required = false) String currentStatus,
+                                 RedirectAttributes redirectAttributes) {
+        try {
+            orderService.adminConfirmManualPayment(id);
+
+            redirectAttributes.addFlashAttribute(
+                    "success",
+                    "Đã xác nhận thanh toán đơn hàng."
+            );
+
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    e.getMessage()
+            );
+        }
+
+        return redirectByStatus(currentStatus);
+    }
 }

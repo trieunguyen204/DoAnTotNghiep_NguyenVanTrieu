@@ -25,4 +25,5 @@ public class OrderResponse {
     private String receiverPhone;
 
     private List<OrderItemResponse> items;
+    private String paymentMethod;
 }

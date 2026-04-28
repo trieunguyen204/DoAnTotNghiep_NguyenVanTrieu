@@ -152,6 +152,26 @@
                                 <span th:unless="${order.orderStatus.name() == 'PENDING'}"
                                       class="approve-placeholder"></span>
 
+                                <form th:if="${order.orderStatus.name() == 'PENDING'
+                                     and order.paymentStatus.name() == 'UNPAID'
+                                     and order.paymentMethod == 'QR_MANUAL'}"
+                                      th:action="@{/admin/orders/confirm-payment/{id}(id=${order.id})}"
+                                      method="post"
+                                      class="confirm-form"
+                                      data-message="Xác nhận đã nhận tiền chuyển khoản?">
+
+                                    <input type="hidden" name="currentStatus" th:value="${currentStatus}">
+
+                                    <button type="submit" class="btn-paid">
+                                        Đã nhận tiền
+                                    </button>
+                                </form>
+
+                                <span th:unless="${order.orderStatus.name() == 'PENDING'
+                                     and order.paymentStatus.name() == 'UNPAID'
+                                     and order.paymentMethod == 'QR_MANUAL'}"
+                                class="paid-placeholder"></span>
+
                                 <form th:if="${order.orderStatus.name() != 'DELIVERED'
                                              and order.orderStatus.name() != 'CANCELLED'}"
                                       th:action="@{/admin/orders/update-status/{id}(id=${order.id})}"

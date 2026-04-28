@@ -45,17 +45,15 @@
                 </div>
             </div>
 
-            <div class="manual-qr-box">
-                QR thủ công sẽ đặt ở đây.
-            </div>
-
             <p>Nội dung chuyển khoản:</p>
 
             <h3 class="transfer-content" th:text="${'ADIDOS DH' + order.id}"></h3>
 
-            <a th:href="@{/profile/orders}" class="checkout-main-btn">
-                Tôi đã chuyển khoản
-            </a>
+            <form th:action="@{/payment/qr/confirm/{id}(id=${order.id})}" method="post">
+                <button type="submit" class="checkout-main-btn">
+                    Tôi đã chuyển khoản
+                </button>
+            </form>
         </div>
     </div>
 </th:block>

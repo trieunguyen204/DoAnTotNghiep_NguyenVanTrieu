@@ -1,4 +1,4 @@
-package com.adidos.home.service;
+package com.adidos.home;
 
 import com.adidos.order.enums.OrderStatus;
 import com.adidos.order.repository.OrderRepository;

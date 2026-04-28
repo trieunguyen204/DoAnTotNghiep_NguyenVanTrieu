@@ -187,66 +187,6 @@
     color: #41464b;
 }
 
-.row-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: nowrap;
-}
-
-.row-actions form {
-    margin: 0;
-}
-
-.status-update-form {
-    display: contents;
-}
-
-.btn-detail {
-    background: #0d6efd;
-    color: #fff;
-    text-decoration: none;
-}
-
-
-.btn-small {
-    height: 34px;
-    border: none;
-    padding: 0 12px;
-    border-radius: 7px;
-    cursor: pointer;
-    font-size: 13px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-}
-
-
-.btn-approve {
-    background: #198754;
-    color: #fff;
-    width: 78px;
-}
-
-.btn-update {
-    background: #000;
-    color: #fff;
-    width: 58px;
-}
-
-.status-select {
-    height: 34px;
-    width: 100%;
-    min-width: 130px;
-    padding: 0 10px;
-    border: 1px solid #ddd;
-    border-radius: 7px;
-    outline: none;
-    background: #fff;
-    font-size: 13px;
-}
-
 @media (max-width: 768px) {
     .admin-order-page {
         padding: 15px;
@@ -318,12 +258,7 @@
     color: #dc3545;
 }
 
-.row-actions {
-    display: grid;
-    grid-template-columns: 78px 78px 1fr 58px;
-    align-items: center;
-    gap: 8px;
-}
+
 
 .order-detail-grid {
         grid-template-columns: 1fr;
@@ -394,19 +329,6 @@
     background: #fafafa;
 }
 
-/* Khi đơn không còn nút Duyệt, giữ khoảng trống để layout không thụt */
-/* Khi đơn không còn nút Duyệt, giữ khoảng trống để layout không thụt */
-.row-actions > .btn-detail + .status-update-form,
-.row-actions > .btn-detail + form.status-update-form {
-    grid-column: auto;
-}
-
-/* Placeholder cho nút duyệt bị thiếu */
-.approve-placeholder {
-    width: 78px;
-    height: 34px;
-}
-
 .status-done {
     color: #198754;
     font-weight: 700;
@@ -417,5 +339,122 @@
     color: #dc3545;
     font-weight: 700;
     white-space: nowrap;
+}
+
+/* =========================
+   ORDER ACTION BUTTONS - CLEAN
+========================= */
+
+.order-table th:last-child,
+.order-table td:last-child {
+    min-width: 430px;
+}
+
+.row-actions {
+    display: grid;
+    grid-template-columns: 72px 64px 72px 130px 52px;
+    align-items: center;
+    gap: 6px;
+}
+
+.row-actions form {
+    margin: 0;
+}
+
+.status-update-form {
+    display: contents;
+}
+
+.btn-small,
+.btn-tiny,
+.btn-detail,
+.btn-approve,
+.btn-update,
+.btn-paid {
+    height: 30px;
+    min-width: unset;
+    padding: 0 8px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 30px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.btn-detail {
+    width: 72px;
+    background: #0d6efd;
+    color: #fff;
+}
+
+.btn-approve {
+    width: 64px;
+    background: #198754;
+    color: #fff;
+}
+
+.btn-paid {
+    width: 72px;
+    background: #ff9800;
+    color: #fff;
+}
+
+.btn-update {
+    width: 52px;
+    background: #000;
+    color: #fff;
+}
+
+.btn-detail:hover,
+.btn-approve:hover,
+.btn-paid:hover,
+.btn-update:hover {
+    opacity: 0.85;
+}
+
+.approve-placeholder {
+    width: 64px;
+    height: 30px;
+    display: block;
+}
+
+.paid-placeholder {
+    width: 72px;
+    height: 30px;
+    display: block;
+}
+
+.status-select {
+    width: 130px;
+    height: 30px;
+    padding: 0 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+    background: #fff;
+    font-size: 12px;
+    box-sizing: border-box;
+}
+
+.status-done,
+.status-cancelled {
+    grid-column: span 2;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.status-done {
+    color: #198754;
+}
+
+.status-cancelled {
+    color: #dc3545;
 }
 

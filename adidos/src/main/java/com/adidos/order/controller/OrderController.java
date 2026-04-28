@@ -52,7 +52,7 @@ public class OrderController {
                 .map(CartItemResponse::getSubTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        BigDecimal shippingFee = new BigDecimal("30000");
+        BigDecimal shippingFee = BigDecimal.ZERO;
         BigDecimal finalAmount = totalPrice.add(shippingFee);
 
         model.addAttribute("cartItems", cartItems);
@@ -122,7 +122,13 @@ public class OrderController {
     @GetMapping("/payment/payos/return")
     public String payosReturn(@RequestParam Long orderId,
                               RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("success", "Thanh toán PayOS đang được xác nhận.");
+        try {
+            payOSService.syncPaymentStatus(orderId);
+            redirectAttributes.addFlashAttribute("success", "Thanh toán PayOS thành công!");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
         return "redirect:/checkout/success/" + orderId;
     }
 
@@ -152,6 +158,20 @@ public class OrderController {
                     "message", e.getMessage()
             ));
         }
+    }
+
+    @PostMapping("/payment/qr/confirm/{id}")
+    public String confirmManualTransfer(@PathVariable Long id,
+                                        Principal principal,
+                                        RedirectAttributes redirectAttributes) {
+        try {
+            orderService.markManualTransferWaitingConfirm(id, principal.getName());
+            redirectAttributes.addFlashAttribute("success", "Đã gửi yêu cầu xác nhận thanh toán. Vui lòng chờ admin kiểm tra.");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
+        return "redirect:/profile/orders/" + id;
     }
 
 

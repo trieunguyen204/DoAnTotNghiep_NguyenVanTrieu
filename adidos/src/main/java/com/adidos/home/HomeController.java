@@ -1,4 +1,4 @@
-package com.adidos.home.controller;
+package com.adidos.home;
 
 import com.adidos.product.service.ProductService;
 import com.adidos.promotion.entity.Promotion;

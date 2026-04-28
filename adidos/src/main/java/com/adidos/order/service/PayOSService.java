@@ -2,6 +2,7 @@ package com.adidos.order.service;
 
 import com.adidos.order.entity.Order;
 import com.adidos.order.entity.Payment;
+import com.adidos.order.enums.PaymentStatus;
 import com.adidos.order.repository.OrderRepository;
 import com.adidos.order.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
@@ -107,6 +108,39 @@ public class PayOSService {
 
         paymentRepository.save(payment);
         orderRepository.save(order);
+    }
+
+    @Transactional
+    public void syncPaymentStatus(Long orderId) {
+        Payment payment = paymentRepository.findByOrderId(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy payment"));
+
+        Order order = payment.getOrder();
+
+        try {
+            Long orderCode = Long.valueOf(payment.getTransactionCode());
+
+            var info = payOS.paymentRequests().get(orderCode);
+
+            if ("PAID".equalsIgnoreCase(info.getStatus().name())) {
+                payment.setStatus("SUCCESS");
+                order.setPaymentStatus(PaymentStatus.PAID);
+
+                paymentRepository.save(payment);
+                orderRepository.save(order);
+
+            } else {
+                throw new RuntimeException(
+                        "PayOS chưa xác nhận thanh toán. Trạng thái hiện tại: "
+                                + info.getStatus().name()
+                );
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "Không thể kiểm tra trạng thái PayOS: " + e.getMessage()
+            );
+        }
     }
 
 
