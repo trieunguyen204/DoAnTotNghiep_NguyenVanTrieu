@@ -18,4 +18,6 @@ public class ReviewResponse {
     private String variantInfo; // VD: Đen / 42
     private LocalDateTime createdAt;
     private List<ReviewResponse> replies; // Dành cho Admin phản hồi
+    private Long productId;
+    private String productName;
 }

@@ -65,4 +65,36 @@ public class ReviewService {
 
         reviewRepository.save(review);
     }
+
+    @Transactional(readOnly = true)
+    public List<ReviewResponse> getAllRootReviews() {
+        return reviewRepository.findByParentIsNullOrderByCreatedAtDesc()
+                .stream()
+                .map(ReviewMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void adminReplyReview(Long reviewId, String adminEmail, String content) {
+        if (content == null || content.trim().isEmpty()) {
+            throw new RuntimeException("Nội dung phản hồi không được để trống");
+        }
+
+        Review parent = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đánh giá"));
+
+        User admin = userRepository.findByEmail(adminEmail)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy admin"));
+
+        Review reply = Review.builder()
+                .user(admin)
+                .product(parent.getProduct())
+                .productVariant(parent.getProductVariant())
+                .parent(parent)
+                .rating(null)
+                .comment(content.trim())
+                .build();
+
+        reviewRepository.save(reply);
+    }
 }

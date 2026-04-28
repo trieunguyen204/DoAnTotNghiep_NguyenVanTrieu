@@ -11,14 +11,17 @@ public class ReviewMapper {
 
         return ReviewResponse.builder()
                 .id(review.getId())
+                .productId(review.getProduct() != null ? review.getProduct().getId() : null)
+                .productName(review.getProduct() != null ? review.getProduct().getName() : "Không xác định")
                 .userName(review.getUser().getFullName())
                 .avatarUrl(review.getUser().getAvatarUrl())
                 .rating(review.getRating())
                 .comment(review.getComment())
                 .variantInfo(variantInfo)
                 .createdAt(review.getCreatedAt())
-                .replies(review.getReplies() != null ?
-                        review.getReplies().stream().map(ReviewMapper::toResponse).collect(Collectors.toList()) : null)
+                .replies(review.getReplies() != null
+                        ? review.getReplies().stream().map(ReviewMapper::toResponse).collect(Collectors.toList())
+                        : null)
                 .build();
     }
 }
