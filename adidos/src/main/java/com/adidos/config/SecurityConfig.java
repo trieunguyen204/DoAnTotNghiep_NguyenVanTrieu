@@ -43,7 +43,9 @@ public class SecurityConfig {
                                 "/500",
                                 "/payment/payos/return",
                                 "/payment/payos/cancel",
-                                "/api/payment/payos/webhook"
+                                "/api/payment/payos/webhook",
+                                "/forgot-password",
+                                "/reset-password"
                         )
                         .permitAll()
 

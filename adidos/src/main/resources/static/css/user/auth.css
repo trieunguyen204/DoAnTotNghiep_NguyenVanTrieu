@@ -139,3 +139,67 @@ a.text-dark { text-decoration: none; }
 a.text-dark:hover { text-decoration: underline; }
 
 /* =============Kết thúc Css của Login và Register================ */
+
+
+.forgot-link {
+    color: #111;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.auth-message {
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.auth-message.success {
+    background: #e8f7ee;
+    color: #17803d;
+}
+
+.auth-message.error {
+    background: #fff1f0;
+    color: #dc3545;
+}
+
+.password-rules {
+    font-size: 13px;
+    color: #777;
+    margin-top: -8px;
+    margin-bottom: 14px;
+}
+
+.password-rules.valid {
+    color: #17803d;
+}
+
+.password-rules.invalid {
+    color: #dc3545;
+}
+
+.password-toggle-box {
+    position: relative;
+}
+
+.password-toggle-box input {
+    padding-right: 42px;
+}
+
+.password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: #666;
+    cursor: pointer;
+}
