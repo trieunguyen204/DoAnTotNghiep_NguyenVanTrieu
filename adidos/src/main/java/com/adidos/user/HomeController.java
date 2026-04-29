@@ -1,4 +1,4 @@
-package com.adidos.home;
+package com.adidos.user;
 
 import com.adidos.product.service.ProductService;
 import com.adidos.promotion.entity.Promotion;

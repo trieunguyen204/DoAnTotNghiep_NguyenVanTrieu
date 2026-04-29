@@ -1,27 +1,159 @@
 <!DOCTYPE html>
-<!-- gọi layout -->
 <html xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layouts/admin :: layout}"
->
+      th:replace="~{layouts/admin :: layout}">
 
-    <head>
-        <!-- CSS riêng -->
-        <th:block th:fragment="page_admin_css">
-            <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}">
-        </th:block>
-    </head>
+<head>
+    <title>Dashboard Admin</title>
 
-    <body>
+    <th:block th:fragment="page_admin_css">
+        <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}">
+    </th:block>
+</head>
 
-        <!-- content -->
-        <div th:fragment="content">
-            <h1>Dashboard</h1>
+<body>
+<th:block th:fragment="content">
+    <div class="dashboard-page">
+
+        <div class="dashboard-header">
+            <div>
+                <h1>Dashboard</h1>
+                <p>Tổng quan hoạt động bán hàng của Adidos</p>
+            </div>
         </div>
 
-        <!-- JS riêng -->
-        <th:block th:fragment="page_js">
-            <script th:src="@{/js/admin/dashboard.js}"></script>
-        </th:block>
+        <form th:action="@{/admin}" method="get" class="dashboard-filter">
+            <select name="mode">
+                <option value="month" th:selected="${mode == 'month'}">
+                    Doanh thu theo tháng
+                </option>
+                <option value="year" th:selected="${mode == 'year'}">
+                    Doanh thu theo năm
+                </option>
+            </select>
 
-    </body>
+            <input type="number"
+                   name="year"
+                   th:value="${selectedYear}"
+                   min="2020"
+                   max="2100">
+
+            <button type="submit">Xem</button>
+        </form>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span>Tổng doanh thu</span>
+                <strong th:text="${#numbers.formatDecimal(stats.totalRevenue, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
+            </div>
+
+            <div class="stat-card">
+                <span>Doanh thu hôm nay</span>
+                <strong th:text="${#numbers.formatDecimal(stats.todayRevenue, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
+            </div>
+
+            <div class="stat-card">
+                <span>Doanh thu tháng này</span>
+                <strong th:text="${#numbers.formatDecimal(stats.monthRevenue, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
+            </div>
+
+            <div class="stat-card">
+                <span>Doanh thu năm</span>
+                <strong th:text="${#numbers.formatDecimal(stats.yearRevenue, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
+            </div>
+
+            <div class="stat-card">
+                <span>Tổng đơn hàng</span>
+                <strong th:text="${stats.totalOrders}"></strong>
+            </div>
+
+            <div class="stat-card">
+                <span>Người dùng</span>
+                <strong th:text="${stats.totalUsers}"></strong>
+            </div>
+
+            <div class="stat-card">
+                <span>Sản phẩm</span>
+                <strong th:text="${stats.totalProducts}"></strong>
+            </div>
+
+            <div class="stat-card">
+                <span>Đánh giá</span>
+                <strong th:text="${stats.totalReviews}"></strong>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-box">
+                <h3 th:text="${mode == 'year' ? 'Doanh thu theo năm' : 'Doanh thu theo tháng'}">
+                    Doanh thu
+                </h3>
+                <canvas id="monthlyRevenueChart"></canvas>
+            </div>
+
+            <div class="dashboard-box">
+                <h3>Trạng thái đơn hàng</h3>
+
+                <div class="status-list">
+                    <div>
+                        <span>Chờ duyệt</span>
+                        <strong th:text="${stats.pendingOrders}"></strong>
+                    </div>
+
+                    <div>
+                        <span>Đang xử lý</span>
+                        <strong th:text="${stats.processingOrders}"></strong>
+                    </div>
+
+                    <div>
+                        <span>Đang giao</span>
+                        <strong th:text="${stats.shippingOrders}"></strong>
+                    </div>
+
+                    <div>
+                        <span>Đã giao</span>
+                        <strong th:text="${stats.deliveredOrders}"></strong>
+                    </div>
+
+                    <div>
+                        <span>Đã hủy</span>
+                        <strong th:text="${stats.cancelledOrders}"></strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid bottom-grid">
+            <div class="dashboard-box product-analysis-box">
+                <h3>Phân tích sản phẩm</h3>
+                <p>Xem sản phẩm bán chạy, sản phẩm sắp hết hàng và sản phẩm bán ế.</p>
+
+                <a th:href="@{/admin/product-analytics(type='best-selling')}"
+                   class="dashboard-main-btn">
+                    Xem phân tích sản phẩm
+                </a>
+            </div>
+
+            <div class="dashboard-box">
+                <h3>Phương thức thanh toán</h3>
+                <canvas id="paymentMethodChart"></canvas>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            window.dashboardData = {
+                chartLabels: [[${stats.chartLabels}]],
+                chartRevenue: [[${stats.chartRevenue}]],
+                paymentLabels: [[${stats.paymentMethodStats.![paymentMethod]}]],
+                paymentData: [[${stats.paymentMethodStats.![total]}]]
+            };
+        </script>
+
+    </div>
+</th:block>
+
+<th:block th:fragment="page_js">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:src="@{/js/admin/dashboard.js}"></script>
+</th:block>
+</body>
 </html>

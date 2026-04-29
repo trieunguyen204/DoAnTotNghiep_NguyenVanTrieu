@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/admin :: layout}">
+
+<head>
+    <th:block th:fragment="page_admin_css">
+        <link rel="stylesheet" th:href="@{/css/admin/product-analytics.css}">
+    </th:block>
+</head>
+
+<body>
+<th:block th:fragment="content">
+    <div class="product-analytics-page">
+
+        <div class="page-header">
+            <div>
+                <h1>Phân tích sản phẩm</h1>
+                <p>Theo dõi sản phẩm bán chạy, tồn kho thấp và sản phẩm bán chậm.</p>
+            </div>
+
+            <a th:href="@{/admin}" class="btn-back-dashboard">
+                Quay lại Dashboard
+            </a>
+        </div>
+
+        <div class="analytics-tabs">
+            <a th:href="@{/admin/product-analytics(type='best-selling')}"
+               th:classappend="${currentType == 'best-selling'} ? 'active' : ''">
+                Sản phẩm bán chạy
+            </a>
+
+            <a th:href="@{/admin/product-analytics(type='low-stock')}"
+               th:classappend="${currentType == 'low-stock'} ? 'active' : ''">
+                Sản phẩm sắp hết hàng
+            </a>
+
+            <a th:href="@{/admin/product-analytics(type='slow-selling')}"
+               th:classappend="${currentType == 'slow-selling'} ? 'active' : ''">
+                Sản phẩm bán ế
+            </a>
+        </div>
+
+        <div th:if="${productPage.isEmpty()}" class="empty-box">
+            Không có dữ liệu phù hợp.
+        </div>
+
+        <div class="product-analytics-list" th:unless="${productPage.isEmpty()}">
+            <div class="product-analytics-card" th:each="p : ${productPage.content}">
+
+                <div class="product-overview">
+                    <img th:src="${p.imageUrl}" alt="Product">
+
+                    <div>
+                        <h3 th:text="${p.productName}"></h3>
+
+                        <p>
+                            <span>Tổng tồn kho:</span>
+                            <strong th:text="${p.totalStock}"></strong>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="product-sales-info">
+                    <div>
+                        <span>Tổng lượt bán</span>
+                        <strong th:text="${p.totalSold}"></strong>
+                    </div>
+
+                    <button type="button"
+                            class="btn-view-variants"
+                            th:data-product-id="${p.productId}">
+                        Xem chi tiết theo biến thể
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="pagination"
+             th:if="${productPage.totalPages > 1}">
+
+            <a th:if="${productPage.hasPrevious()}"
+               th:href="@{/admin/product-analytics(type=${currentType}, page=${productPage.number - 1})}">
+                Trước
+            </a>
+
+            <span>
+                Trang <strong th:text="${productPage.number + 1}"></strong>
+                /
+                <strong th:text="${productPage.totalPages}"></strong>
+            </span>
+
+            <a th:if="${productPage.hasNext()}"
+               th:href="@{/admin/product-analytics(type=${currentType}, page=${productPage.number + 1})}">
+                Sau
+            </a>
+        </div>
+
+        <div class="variant-modal" id="variantModal">
+            <div class="variant-modal-content">
+                <div class="variant-modal-header">
+                    <h3>Chi tiết lượt bán theo biến thể</h3>
+                    <button type="button" id="closeVariantModal">×</button>
+                </div>
+
+                <div id="variantModalBody">
+                    Đang tải...
+                </div>
+            </div>
+        </div>
+
+    </div>
+</th:block>s
+
+<th:block th:fragment="page_js">
+    <script th:src="@{/js/admin/product-analytics.js}"></script>
+</th:block>
+</body>
+</html>
