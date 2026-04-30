@@ -22,10 +22,11 @@
                         <p class="page-subtitle">Quản lý định danh và trạng thái hệ thống</p>
                     </div>
 
-                    <form class="search-form" th:action="@{/admin/users}" method="get">
-                        <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm tên hoặc email..." class="search-input">
-                        <button type="submit" class="btn-search"><i class="fas fa-search"></i></button>
-                        <a th:if="${keyword != null}" th:href="@{/admin/users}" class="btn-clear-search">Bỏ lọc</a>
+                    <form th:action="@{/admin/users}" method="get">
+                        <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm user...">
+                        <input type="hidden" name="page" value="0">
+                        <input type="hidden" name="size" th:value="${size}">
+                        <button type="submit">Tìm kiếm</button>
                     </form>
                 </div>
 
@@ -94,6 +95,25 @@
                         </tr>
                         </tbody>
                     </table>
+
+                    <div class="admin-pagination" th:if="${totalPages > 1}">
+                        <a th:classappend="${currentPage == 0} ? ' disabled'"
+                           th:href="@{/admin/users(page=${currentPage - 1}, size=${size}, keyword=${keyword})}">
+                            Trước
+                        </a>
+
+                        <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                            <a th:classappend="${i == currentPage} ? ' active'"
+                               th:text="${i + 1}"
+                               th:href="@{/admin/users(page=${i}, size=${size}, keyword=${keyword})}">
+                            </a>
+                        </th:block>
+
+                        <a th:classappend="${currentPage + 1 >= totalPages} ? ' disabled'"
+                           th:href="@{/admin/users(page=${currentPage + 1}, size=${size}, keyword=${keyword})}">
+                            Sau
+                        </a>
+                    </div>
                 </div>
             </div>
 

@@ -1,6 +1,8 @@
-package com.adidos.admin;
+package com.adidos.admin.service;
 
 
+import com.adidos.admin.dto.ProductAnalyticsResponse;
+import com.adidos.admin.dto.VariantSalesResponse;
 import com.adidos.order.entity.Order;
 import com.adidos.order.entity.OrderItem;
 import com.adidos.order.enums.OrderStatus;

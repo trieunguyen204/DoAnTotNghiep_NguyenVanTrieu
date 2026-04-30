@@ -5,6 +5,7 @@ import com.adidos.product.service.CategoryService;
 import com.adidos.product.service.ProductService;
 import com.adidos.review.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,15 +54,26 @@ public class ProductController {
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String brand,
             @RequestParam(required = false) String material,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size,
             Model model) {
 
-        model.addAttribute("category", categoryService.getById(id));
+        Page<ProductResponse> productPage =
+                productService.getProductsByCategoryIdPage(
+                        id, minPrice, maxPrice, brand, material, page, size
+                );
 
-        model.addAttribute("products", productService.getProductsByCategoryId(id, minPrice, maxPrice, brand, material));
+        model.addAttribute("category", categoryService.getById(id));
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("productPage", productPage);
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("totalItems", productPage.getTotalElements());
+        model.addAttribute("size", size);
 
         model.addAttribute("brands", productService.getBrandsByCategory(id));
         model.addAttribute("materials", productService.getMaterialsByCategory(id));
-
 
         model.addAttribute("minPrice", minPrice);
         model.addAttribute("maxPrice", maxPrice);

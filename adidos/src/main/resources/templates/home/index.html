@@ -22,7 +22,11 @@
                             <div th:replace="~{fragments/components :: product_card(${product})}"></div>
                         </th:block>
                     </div>
-                    <a href="/khuyen-mai" class="btn-view-all">Xem tất cả</a>
+                    <a th:if="${topPromo != null}"
+                       th:href="@{/promotions/{id}(id=${topPromo.id})}"
+                       class="btn-view-all">
+                        Xem tất cả
+                    </a>
                 </div>
 
                 <div class="home-section" th:if="${soonPromo != null and topPromo != null and soonPromo.id != topPromo.id and !soonPromoProducts.isEmpty()}">
@@ -32,15 +36,57 @@
                             <div th:replace="~{fragments/components :: product_card(${product})}"></div>
                         </th:block>
                     </div>
-                    <a href="/khuyen-mai" class="btn-view-all">Xem tất cả</a>
+                    <a th:if="${soonPromo != null}"
+                       th:href="@{/promotions/{id}(id=${soonPromo.id})}"
+                       class="btn-view-all">
+                        Xem tất cả
+                    </a>
                 </div>
 
                 <div class="home-section">
-                    <h2>Toàn bộ sản phẩm</h2>
-                    <div class="product-grid">
+                    <div class="section-heading-row">
+                        <div>
+                            <h2>Toàn bộ sản phẩm</h2>
+                            <p class="section-subtitle">
+                                Khám phá các sản phẩm mới nhất tại Adidos
+                            </p>
+                        </div>
+
+                        <span class="product-count"
+                              th:text="'Tổng: ' + ${totalItems} + ' sản phẩm'">
+        </span>
+                    </div>
+
+                    <div class="product-grid" th:if="${!allProducts.isEmpty()}">
                         <th:block th:each="product : ${allProducts}">
                             <div th:replace="~{fragments/components :: product_card(${product})}"></div>
                         </th:block>
+                    </div>
+
+                    <div class="empty-products" th:if="${allProducts.isEmpty()}">
+                        Hiện chưa có sản phẩm nào.
+                    </div>
+
+                    <div class="pagination-wrap" th:if="${totalPages > 1}">
+                        <a class="page-btn"
+                           th:classappend="${currentPage == 0} ? ' disabled'"
+                           th:href="@{/(page=${currentPage - 1}, size=${size})}">
+                            Trước
+                        </a>
+
+                        <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                            <a class="page-number"
+                               th:classappend="${i == currentPage} ? ' active'"
+                               th:text="${i + 1}"
+                               th:href="@{/(page=${i}, size=${size})}">
+                            </a>
+                        </th:block>
+
+                        <a class="page-btn"
+                           th:classappend="${currentPage + 1 >= totalPages} ? ' disabled'"
+                           th:href="@{/(page=${currentPage + 1}, size=${size})}">
+                            Sau
+                        </a>
                     </div>
                 </div>
 

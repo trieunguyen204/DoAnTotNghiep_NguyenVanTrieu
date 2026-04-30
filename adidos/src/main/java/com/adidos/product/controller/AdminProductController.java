@@ -7,6 +7,7 @@ import com.adidos.product.repository.ProductRepository;
 import com.adidos.product.service.CategoryService;
 import com.adidos.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,24 +26,22 @@ public class AdminProductController {
     private final ProductRepository productRepository;
 
     @GetMapping
-    public String listProducts(@RequestParam(required = false) String keyword, Model model) {
-        List<ProductResponse> products;
-        if (keyword != null && !keyword.isEmpty()) {
+    public String productManagement(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size,
+            Model model
+    ) {
+        Page<ProductResponse> productPage = productService.getProductsPage(page, size);
 
-            products = productRepository.searchProducts(keyword).stream()
-                    .map(ProductMapper::toProductResponse).collect(Collectors.toList());
-            model.addAttribute("keyword", keyword);
-        } else {
-            products = productService.getAllActiveProducts();
-        }
-        model.addAttribute("products", products);
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("productPage", productPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("totalItems", productPage.getTotalElements());
+        model.addAttribute("size", size);
 
-        model.addAttribute("categories", categoryService.getSubCategoriesForForm());
         return "admin/product/product_management";
     }
-
-
-
 
 
     @PostMapping("/save")

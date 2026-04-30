@@ -64,6 +64,30 @@
                 </tr>
                 </tbody>
             </table>
+
+            <div class="profile-pagination" th:if="${totalPages > 1}">
+
+                <a class="profile-page-btn"
+                   th:classappend="${currentPage == 0} ? ' disabled'"
+                   th:href="@{/profile/orders(page=${currentPage - 1}, size=${size})}">
+                    Trước
+                </a>
+
+                <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                    <a class="profile-page-number"
+                       th:classappend="${i == currentPage} ? ' active'"
+                       th:text="${i + 1}"
+                       th:href="@{/profile/orders(page=${i}, size=${size})}">
+                    </a>
+                </th:block>
+
+                <a class="profile-page-btn"
+                   th:classappend="${currentPage + 1 >= totalPages} ? ' disabled'"
+                   th:href="@{/profile/orders(page=${currentPage + 1}, size=${size})}">
+                    Sau
+                </a>
+
+            </div>
         </div>
 
     </div>

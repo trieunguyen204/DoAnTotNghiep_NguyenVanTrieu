@@ -1,6 +1,8 @@
-package com.adidos.admin;
+package com.adidos.admin.controller;
 
 
+import com.adidos.admin.entity.DashboardStats;
+import com.adidos.admin.service.DashboardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

@@ -37,6 +37,38 @@
     outline: none;
     transition: 0.3s;
 }
+.admin-pagination {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.admin-pagination a {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 14px;
+    border-radius: 10px;
+    background: #fff;
+    color: #111;
+    border: 1px solid #ddd;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.admin-pagination a.active,
+.admin-pagination a:hover {
+    background: #111;
+    color: #fff;
+}
+
+.admin-pagination a.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
 
 .search-input:focus { border-color: var(--neon-cyan); box-shadow: 0 0 8px rgba(0, 242, 254, 0.3); }
 

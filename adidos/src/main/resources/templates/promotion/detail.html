@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layouts/main :: layout_user}">
+<head>
+    <title th:fragment="page_title">Khuyến mãi | Adidos</title>
+
+    <th:block th:fragment="page_user_css">
+        <link rel="stylesheet" th:href="@{/css/user/index.css}">
+    </th:block>
+</head>
+
+<body>
+<th:block th:fragment="content_user">
+
+    <section class="home-section">
+
+
+        <section class="promo-page">
+
+            <div class="promo-hero">
+                <div>
+                    <span class="promo-badge">LIMITED OFFER</span>
+                    <h1 th:text="${promotion.promotionName}"></h1>
+                    <p>
+                        Khám phá bộ sưu tập sản phẩm đang được áp dụng ưu đãi hấp dẫn nhất tại Adidos.
+                    </p>
+                </div>
+
+                <div class="promo-stats">
+                    <div class="promo-stat-card">
+                        <strong>Loại ưu đãi</strong>
+                        <span th:text="${promotion.discountType}"></span>
+                    </div>
+
+                    <div class="promo-stat-card">
+                        <strong>Kết thúc</strong>
+                        <span th:text="${#temporals.format(promotion.endDate,'dd/MM/yyyy')}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="promo-product-section">
+                <div class="promo-product-header">
+                    <h2>Sản phẩm khuyến mãi</h2>
+
+                    <div class="promo-product-count"
+                         th:text="'Tổng ' + ${totalItems} + ' sản phẩm'">
+                    </div>
+                </div>
+
+                <!-- product-grid -->
+            </div>
+
+        </section>
+
+        <div class="promotion-toolbar">
+            <div>
+                <h2>Sản phẩm khuyến mãi</h2>
+                <p>Danh sách sản phẩm thuộc các danh mục được áp dụng ưu đãi.</p>
+            </div>
+
+            <span class="promotion-total"
+                  th:text="'Tổng: ' + ${totalItems} + ' sản phẩm'">
+    </span>
+        </div>
+
+        <div class="product-grid" th:if="${!products.isEmpty()}">
+            <th:block th:each="product : ${products}">
+                <div th:replace="~{fragments/components :: product_card(${product})}"></div>
+            </th:block>
+        </div>
+
+        <div class="pagination-wrap" th:if="${totalPages > 1}">
+            <a class="page-btn"
+               th:classappend="${currentPage == 0} ? ' disabled'"
+               th:href="@{/promotions/{id}(id=${promotion.id}, page=${currentPage - 1}, size=${size})}">
+                Trước
+            </a>
+
+            <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                <a class="page-number"
+                   th:classappend="${i == currentPage} ? ' active'"
+                   th:text="${i + 1}"
+                   th:href="@{/promotions/{id}(id=${promotion.id}, page=${i}, size=${size})}">
+                </a>
+            </th:block>
+
+            <a class="page-btn"
+               th:classappend="${currentPage + 1 >= totalPages} ? ' disabled'"
+               th:href="@{/promotions/{id}(id=${promotion.id}, page=${currentPage + 1}, size=${size})}">
+                Sau
+            </a>
+        </div>
+
+        <div class="empty-products" th:if="${products.isEmpty()}">
+            Hiện chưa có sản phẩm nào trong khuyến mãi này.
+        </div>
+    </section>
+
+</th:block>
+
+<th:block th:fragment="page_user_js">
+    <script th:src="@{/js/user/index.js}"></script>
+</th:block>
+</body>
+</html>

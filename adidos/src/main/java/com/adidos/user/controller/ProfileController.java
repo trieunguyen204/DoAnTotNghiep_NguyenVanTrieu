@@ -9,6 +9,7 @@ import com.adidos.user.dto.UserResponse;
 import com.adidos.user.service.AddressService;
 import com.adidos.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -83,12 +84,24 @@ public class ProfileController {
 
     // 3. QUẢN LÝ ĐƠN HÀNG
     @GetMapping("/orders")
-    public String viewOrders(Model model, Principal principal) {
+    public String viewOrders(
+            Model model,
+            Principal principal,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
         String email = principal.getName();
-        // Sửa: Dùng getMyOrders(email) thay vì tìm qua UserID
-        List<OrderResponse> orders = orderService.getMyOrders(email);
-        model.addAttribute("orders", orders);
+
+        Page<OrderResponse> orderPage = orderService.getMyOrdersPage(email, page, size);
+
+        model.addAttribute("orders", orderPage.getContent());
+        model.addAttribute("orderPage", orderPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", orderPage.getTotalPages());
+        model.addAttribute("totalItems", orderPage.getTotalElements());
+        model.addAttribute("size", size);
         model.addAttribute("activeMenu", "orders");
+
         return "user/profile/orders";
     }
 

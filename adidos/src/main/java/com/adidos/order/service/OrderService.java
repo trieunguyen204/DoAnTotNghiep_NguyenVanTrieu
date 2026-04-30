@@ -33,6 +33,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -48,6 +52,17 @@ public class OrderService {
     private final VoucherService voucherService;
     private final VoucherRepository voucherRepository;
     private final ReviewRepository reviewRepository;
+
+    @Transactional(readOnly = true)
+    public Page<OrderResponse> getMyOrdersPage(String email, int page, int size) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        return orderRepository.findByUserIdOrderByIdDesc(user.getId(), pageable)
+                .map(OrderMapper::toResponse);
+    }
 
 
     /**
@@ -239,7 +254,6 @@ public class OrderService {
 
         orderRepository.save(order);
     }
-
 
 
     /**
@@ -538,8 +552,6 @@ public class OrderService {
 
         return response;
     }
-
-
 
 
 }

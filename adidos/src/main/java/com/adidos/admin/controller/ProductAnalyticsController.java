@@ -1,6 +1,8 @@
-package com.adidos.admin;
+package com.adidos.admin.controller;
 
 
+import com.adidos.admin.dto.ProductAnalyticsResponse;
+import com.adidos.admin.service.ProductAnalyticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

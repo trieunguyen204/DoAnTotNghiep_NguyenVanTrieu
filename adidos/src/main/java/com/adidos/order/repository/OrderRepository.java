@@ -11,19 +11,24 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
 
     List<Order> findByUserIdOrderByIdDesc(Long userId);
 
-   List<Order> findByOrderStatus(OrderStatus orderStatus);
+    List<Order> findByOrderStatus(OrderStatus orderStatus);
 
     @Query("SELECT o FROM Order o LEFT JOIN FETCH o.orderItems WHERE o.id = :orderId")
     Optional<Order> findByIdWithItems(@Param("orderId") Long orderId);
 
     @Query("SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.orderItems WHERE o.user.id = :userId ORDER BY o.id DESC")
     List<Order> findByUserIdWithItems(@Param("userId") Long userId);
+
+    Page<Order> findByUserIdOrderByIdDesc(Long userId, Pageable pageable);
 
 
     // Đếm tổng số đơn hàng

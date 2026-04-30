@@ -225,3 +225,12 @@
     border-bottom: 1px solid #000; /* Gạch chân nhẹ để nhấn mạnh trang hiện tại */
     padding-bottom: 2px;
 }
+.main-content .pagination-wrap {
+    margin-top: 45px;
+}
+
+.main-content .page-number,
+.main-content .page-btn {
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}

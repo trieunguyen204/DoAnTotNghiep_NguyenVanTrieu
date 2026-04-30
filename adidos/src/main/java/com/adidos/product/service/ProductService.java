@@ -8,6 +8,7 @@ import com.adidos.promotion.entity.Promotion;
 import com.adidos.promotion.service.PromotionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +35,21 @@ public class ProductService {
     private final PromotionService promotionService;
 
 
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getProductsPage(int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by(Sort.Direction.DESC, "id")
+        );
+
+        return productRepository.findAll(pageable)
+                .map(product -> {
+                    ProductResponse res = ProductMapper.toProductResponse(product);
+                    applyPromotionData(res, product);
+                    return res;
+                });
+    }
 
 
     /**
@@ -47,6 +67,22 @@ public class ProductService {
         ProductResponse response = ProductMapper.toProductResponse(product);
         applyPromotionData(response, product);
         return response;
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getActiveProductsPage(int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by(Sort.Direction.DESC, "id")
+        );
+
+        return productRepository.findByStatus("ACTIVE", pageable)
+                .map(product -> {
+                    ProductResponse response = ProductMapper.toProductResponse(product);
+                    applyPromotionData(response, product);
+                    return response;
+                });
     }
 
 
@@ -167,6 +203,59 @@ public class ProductService {
         } catch (Exception e) {
             throw new RuntimeException("Lỗi khi lưu file: " + e.getMessage());
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getProductsForPromotionPage(Promotion promo, int page, int size) {
+        if (promo == null || promo.getCategories() == null || promo.getCategories().isEmpty()) {
+            return Page.empty();
+        }
+
+        List<Long> catIds = promo.getCategories()
+                .stream()
+                .map(Category::getId)
+                .toList();
+
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by(Sort.Direction.DESC, "id")
+        );
+
+        return productRepository.findByCategoryIdInAndStatus(catIds, "ACTIVE", pageable)
+                .map(product -> {
+                    ProductResponse res = ProductMapper.toProductResponse(product);
+                    applyPromotionData(res, product);
+                    return res;
+                });
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getProductsByCategoryIdPage(
+            Long categoryId,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            String brand,
+            String material,
+            int page,
+            int size
+    ) {
+        List<ProductResponse> filteredProducts = getProductsByCategoryId(
+                categoryId,
+                minPrice,
+                maxPrice,
+                brand,
+                material
+        );
+
+        int start = Math.min(page * size, filteredProducts.size());
+        int end = Math.min(start + size, filteredProducts.size());
+
+        List<ProductResponse> pageContent = filteredProducts.subList(start, end);
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        return new PageImpl<>(pageContent, pageable, filteredProducts.size());
     }
 
     @Transactional

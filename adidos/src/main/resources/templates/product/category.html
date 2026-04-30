@@ -24,7 +24,9 @@
 
         <div class="category-layout">
             <aside class="sidebar-filter">
-                <form th:action="@{/category/{id}(id=${category.id})}" method="GET">
+                <form th:action="@{/category/{id}(id=${category.id})}" method="GET"
+                    <input type="hidden" name="page" value="0">
+                    <input type="hidden" name="size" th:value="${size}">
                     <h3>LỌC SẢN PHẨM</h3>
 
                     <div class="filter-group">
@@ -64,6 +66,52 @@
                     <th:block th:each="product : ${products}">
                         <div th:replace="~{fragments/components :: product_card(${product})}"></div>
                     </th:block>
+                </div>
+
+                <div class="pagination-wrap" th:if="${totalPages > 1}">
+                    <a class="page-btn"
+                       th:classappend="${currentPage == 0} ? ' disabled'"
+                       th:href="@{/category/{id}(
+                                id=${category.id},
+                                page=${currentPage - 1},
+                                size=${size},
+                                minPrice=${minPrice},
+                                maxPrice=${maxPrice},
+                                brand=${selectedBrand},
+                                material=${selectedMaterial}
+                           )}">
+                        Trước
+                    </a>
+
+                    <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                        <a class="page-number"
+                           th:classappend="${i == currentPage} ? ' active'"
+                           th:text="${i + 1}"
+                           th:href="@{/category/{id}(
+                                id=${category.id},
+                                page=${i},
+                                size=${size},
+                                minPrice=${minPrice},
+                                maxPrice=${maxPrice},
+                                brand=${selectedBrand},
+                                material=${selectedMaterial}
+                           )}">
+                        </a>
+                    </th:block>
+
+                    <a class="page-btn"
+                       th:classappend="${currentPage + 1 >= totalPages} ? ' disabled'"
+                       th:href="@{/category/{id}(
+                                id=${category.id},
+                                page=${currentPage + 1},
+                                size=${size},
+                                minPrice=${minPrice},
+                                maxPrice=${maxPrice},
+                                brand=${selectedBrand},
+                                material=${selectedMaterial}
+                           )}">
+                        Sau
+                    </a>
                 </div>
 
                 <div th:if="${#lists.isEmpty(products)}" class="empty-msg">

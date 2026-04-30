@@ -1,6 +1,8 @@
 package com.adidos.product.repository;
 
 import com.adidos.product.entity.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -33,4 +35,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findTop4ByCategoryIdInAndStatus(List<Long> categoryIds, String status);
 
+    Page<Product> findByStatus(String status, Pageable pageable);
+
+    Page<Product> findByCategoryIdInAndStatus(List<Long> categoryIds, String status, Pageable pageable);
+
+
+    Page<Product> findAll(Pageable pageable);
 }

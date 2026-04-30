@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import com.adidos.user.dto.UserResponse;
+import org.springframework.data.domain.Page;
 
 @Controller
 @RequestMapping("/admin/users")
@@ -18,18 +20,29 @@ public class AdminUserController {
     private final UserService userService;
 
     // 1. Hiển thị danh sách & Tìm kiếm
+
+
     @GetMapping
-    public String adminUsers(@RequestParam(required = false) String keyword, Model model) {
-        List<UserResponse> users;
-        if (keyword != null && !keyword.isEmpty()) {
-            users = userService.searchUsers(keyword);
-            model.addAttribute("keyword", keyword);
-        } else {
-            users = userService.getAll();
-        }
-        model.addAttribute("users", users);
+    public String userManagement(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size,
+            Model model
+    ) {
+        Page<UserResponse> userPage = userService.searchUsersPage(keyword, page, size);
+
+        model.addAttribute("users", userPage.getContent());
+        model.addAttribute("userPage", userPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", userPage.getTotalPages());
+        model.addAttribute("totalItems", userPage.getTotalElements());
+        model.addAttribute("size", size);
+        model.addAttribute("keyword", keyword);
+
         return "admin/user/user_management";
     }
+
+
 
     // 2. Khóa / Mở khóa tài khoản
     @PostMapping("/{id}/status")

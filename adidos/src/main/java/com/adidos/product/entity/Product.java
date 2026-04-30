@@ -3,6 +3,7 @@ package com.adidos.product.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,37 @@ public class Product {
     @PrePersist
     protected void onCreate() {
         this.createdAt = java.time.LocalDateTime.now();
+    }
+
+
+    public String getPrimaryImageUrl() {
+        if (variants == null || variants.isEmpty()) {
+            return "/images/default.jpg";
+        }
+
+        for (ProductVariant variant : variants) {
+            if (variant.getImages() != null && !variant.getImages().isEmpty()) {
+
+
+                for (ProductImage image : variant.getImages()) {
+                    if (Boolean.TRUE.equals(image.getIsPrimary())) {
+                        return image.getImageUrl();
+                    }
+                }
+
+                return variant.getImages().get(0).getImageUrl();
+            }
+        }
+
+        return "/images/default.jpg";
+    }
+
+    public BigDecimal getDisplayPrice() {
+        if (variants == null || variants.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+
+        return variants.get(0).getPrice();
     }
 
 }

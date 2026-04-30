@@ -20,6 +20,11 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -28,6 +33,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserProviderRepository providerRepository;
+
+    @Transactional(readOnly = true)
+    public Page<UserResponse> searchUsersPage(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by(Sort.Direction.DESC, "id")
+        );
+
+        return userRepository.searchUsersPage(
+                keyword == null ? "" : keyword.trim(),
+                pageable
+        ).map(this::toResponse);
+    }
 
     public List<UserResponse> getAll() {
         return userRepository.findAll()
@@ -188,8 +207,6 @@ public class UserService {
         user.setRole(role);
         userRepository.save(user);
     }
-
-
 
 
 }
