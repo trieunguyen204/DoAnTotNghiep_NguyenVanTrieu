@@ -41,19 +41,25 @@
                             <th>Tên Sản Phẩm</th>
                             <th>Thương Hiệu</th>
                             <th>Giá Gốc</th>
+                            <th>Trạng thái</th>
                             <th>Thao tác</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="prod : ${products}">
-                            <td th:text="${prod.id}">1</td>
+                            <td th:text="${prod.id}"></td>
                             <td>
-                                <img th:if="${prod.primaryImageUrl != null}" th:src="${prod.primaryImageUrl}" class="product-thumb" alt="img">
-                                <span th:unless="${prod.primaryImageUrl != null}" class="no-img">No Image</span>
+                                <img th:if="${prod.primaryImageUrl != null}" th:src="${prod.primaryImageUrl}" class="product-thumb">
                             </td>
-                            <td th:text="${prod.name}">Tên SP</td>
-                            <td th:text="${prod.brand}">Thương hiệu</td>
-                            <td th:text="${prod.originalPrice}">0đ</td>
+                            <td th:text="${prod.name}"></td>
+                            <td th:text="${prod.brand}"></td>
+                            <td th:text="${prod.originalPrice}"></td>
+                            <td>
+                                <span th:text="${prod.status}"
+                                      th:classappend="${prod.status == 'ACTIVE'} ? 'badge-active' : 'badge-inactive'">
+                                </span>
+                            </td>
+
                             <td>
                                 <div class="action-btns">
                                     <button class="btn-action btn-warning edit-btn"
@@ -140,7 +146,10 @@
                                 <label>Danh mục</label>
                                 <select name="categoryId" id="productCategory" class="form-control select-search" required>
                                     <option value="">-- Chọn danh mục --</option>
-                                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+                                    <option th:each="cat : ${categories}"
+                                            th:value="${cat.id}"
+                                            th:text="${cat.name}">
+                                    </option>
                                 </select>
                             </div>
 

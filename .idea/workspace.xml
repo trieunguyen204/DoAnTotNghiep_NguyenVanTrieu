@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="2b79baec-7ac5-4b1e-89ed-cb7232adc94b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/adidos/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/cart/repository/CartItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/cart/repository/CartItemRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/cart/service/CartService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/cart/service/CartService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/controller/OrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/dto/CheckoutRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/dto/CheckoutRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/entity/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/entity/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/enums/OrderStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/enums/OrderStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/mapper/OrderMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/mapper/OrderMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/OrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/OrderRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/service/OrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/controller/AdminProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/controller/AdminProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/dto/ProductResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/dto/ProductResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/entity/Category.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/entity/Category.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/entity/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/entity/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/entity/ProductVariant.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/entity/ProductVariant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/mapper/ProductMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/mapper/ProductMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/service/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/service/ProductService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/promotion/controller/AdminPromotionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/promotion/AdminPromotionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/promotion/entity/Promotion.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/promotion/Promotion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/promotion/repository/PromotionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/promotion/PromotionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/promotion/service/PromotionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/promotion/PromotionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/user/controller/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/user/controller/HomeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/user/controller/UserPromotionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/user/controller/UserPromotionController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/user/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/product.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/product.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/promotion.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/promotion.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/category.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/category.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/checkout.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/checkout.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/js/admin/product/product.js" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/js/admin/product/product.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/js/user/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/js/user/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/product/product_management.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/product/product_management.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/fragments/components.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/fragments/components.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/fragments/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/fragments/header.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/home/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/home/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/order/checkout.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/order/checkout.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/order/success.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/order/success.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/product/category.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/product/category.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="3D4NcHgF1WZWWkG8g8jnldVRFHv" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.AdidosApplication.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/DoAnTotNghiep_NguyenVanTrieu&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration name="AdidosApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.adidos.AdidosApplication" />
+      <module name="adidos" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.adidos.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.AdidosApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2b79baec-7ac5-4b1e-89ed-cb7232adc94b" name="Changes" comment="" />
+      <created>1777537459352</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1777537459352</updated>
+    </task>
+    <servers />
+  </component>
+</project>

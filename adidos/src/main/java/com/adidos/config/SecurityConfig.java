@@ -46,7 +46,13 @@ public class SecurityConfig {
                                 "/api/payment/payos/webhook",
                                 "/forgot-password",
                                 "/reset-password",
-                                "/promotions/{id}"
+                                "/promotions/{id}",
+                                "/checkout",
+                                "/checkout/place",
+                                "/checkout/success/**",
+                                "/payment/qr/**",
+                                "/register-after-order",
+                                "/register-after-order/**"
                         )
                         .permitAll()
 

@@ -24,7 +24,7 @@
 
         <div class="category-layout">
             <aside class="sidebar-filter">
-                <form th:action="@{/category/{id}(id=${category.id})}" method="GET"
+                <form th:action="@{/category/{id}(id=${category.id})}" method="GET">
                     <input type="hidden" name="page" value="0">
                     <input type="hidden" name="size" th:value="${size}">
                     <h3>LỌC SẢN PHẨM</h3>
@@ -122,7 +122,7 @@
     </div>
 
     <th:block th:fragment="page_user_js">
-        <script th:src="@{/js/user/category.js}"></script>
+        <script th:src="@{/js/user/index.js}"></script>
     </th:block>
 </body>
 </html>

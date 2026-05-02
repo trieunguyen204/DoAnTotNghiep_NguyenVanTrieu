@@ -1,7 +1,9 @@
 package com.adidos.order.service;
 
+import com.adidos.cart.dto.CartItemResponse;
 import com.adidos.cart.entity.CartItem;
 import com.adidos.cart.repository.CartItemRepository;
+import com.adidos.cart.service.CartService;
 import com.adidos.order.dto.CheckoutRequest;
 import com.adidos.order.dto.OrderResponse;
 import com.adidos.order.entity.Order;
@@ -14,7 +16,7 @@ import com.adidos.order.repository.OrderRepository;
 import com.adidos.order.repository.PaymentRepository;
 import com.adidos.product.entity.ProductVariant;
 import com.adidos.product.repository.ProductVariantRepository;
-import com.adidos.promotion.service.PromotionService;
+import com.adidos.promotion.PromotionService;
 import com.adidos.review.ReviewRepository;
 import com.adidos.user.entity.Address;
 import com.adidos.user.entity.User;
@@ -52,6 +54,23 @@ public class OrderService {
     private final VoucherService voucherService;
     private final VoucherRepository voucherRepository;
     private final ReviewRepository reviewRepository;
+    private final CartService cartService;
+    private final ProductVariantRepository productVariantRepository;
+
+
+
+    @Transactional(readOnly = true)
+    public OrderResponse getGuestOrderDetail(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+
+        if (order.getUser() != null) {
+            throw new RuntimeException("Đơn hàng này thuộc tài khoản đã đăng nhập");
+        }
+
+        return OrderMapper.toResponse(order);
+    }
+
 
     @Transactional(readOnly = true)
     public Page<OrderResponse> getMyOrdersPage(String email, int page, int size) {
@@ -63,6 +82,128 @@ public class OrderService {
         return orderRepository.findByUserIdOrderByIdDesc(user.getId(), pageable)
                 .map(OrderMapper::toResponse);
     }
+
+    @Transactional
+    public void linkGuestOrdersToUser(User user) {
+        if (user == null || user.getEmail() == null) return;
+
+        List<Order> guestOrders =
+                orderRepository.findByGuestEmailIgnoreCaseOrderByIdDesc(user.getEmail());
+
+        for (Order order : guestOrders) {
+            if (order.getUser() == null) {
+                order.setUser(user);
+            }
+        }
+
+        orderRepository.saveAll(guestOrders);
+    }
+
+
+    @Transactional
+    public Long placeGuestOrder(String sessionId, CheckoutRequest request) {
+
+        if (request.getGuestName() == null || request.getGuestName().isBlank()) {
+            throw new RuntimeException("Vui lòng nhập họ tên người nhận");
+        }
+
+        if (request.getGuestPhone() == null || request.getGuestPhone().isBlank()) {
+            throw new RuntimeException("Vui lòng nhập số điện thoại");
+        }
+
+        if (request.getGuestAddress() == null || request.getGuestAddress().isBlank()) {
+            throw new RuntimeException("Vui lòng nhập địa chỉ giao hàng");
+        }
+
+        if (request.getGuestEmail() == null || request.getGuestEmail().isBlank()) {
+            throw new RuntimeException("Vui lòng nhập email");
+        }
+
+        List<CartItemResponse> cartItems = cartService.getCartByUser(sessionId, false);
+
+        if (cartItems == null || cartItems.isEmpty()) {
+            throw new RuntimeException("Giỏ hàng đang trống");
+        }
+
+        BigDecimal shippingFee = BigDecimal.ZERO;
+        BigDecimal discountAmount = BigDecimal.ZERO;
+
+        Order order = new Order();
+        order.setUser(null);
+
+        order.setReceiverName(request.getGuestName());
+        order.setReceiverPhone(request.getGuestPhone());
+        order.setShippingAddress(request.getGuestAddress());
+
+        order.setGuestName(request.getGuestName());
+        order.setGuestEmail(request.getGuestEmail().trim().toLowerCase());
+        order.setGuestPhone(request.getGuestPhone());
+        order.setGuestAddress(request.getGuestAddress());
+
+        order.setShippingFee(shippingFee);
+        order.setDiscountAmount(discountAmount);
+
+        OrderStatus initialStatus =
+                "COD".equalsIgnoreCase(request.getPaymentMethod())
+                        ? OrderStatus.PENDING
+                        : OrderStatus.WAITING_PAYMENT;
+
+        order.setOrderStatus(initialStatus);
+        order.setPaymentStatus(PaymentStatus.UNPAID);
+        order.setOrderCode(System.currentTimeMillis());
+
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        for (CartItemResponse cartItem : cartItems) {
+            ProductVariant variant = productVariantRepository.findById(cartItem.getVariantId())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy biến thể sản phẩm"));
+
+            if (variant.getStockQuantity() < cartItem.getQuantity()) {
+                throw new RuntimeException("Sản phẩm '" + variant.getProduct().getName() + "' không đủ tồn kho");
+            }
+
+            if ("COD".equalsIgnoreCase(request.getPaymentMethod())) {
+                variant.setStockQuantity(variant.getStockQuantity() - cartItem.getQuantity());
+                variantRepository.save(variant);
+            }
+
+            Long categoryId = variant.getProduct().getCategory() != null
+                    ? variant.getProduct().getCategory().getId()
+                    : null;
+
+            BigDecimal finalPrice = promotionService.calculateDiscountedPrice(
+                    categoryId,
+                    variant.getPrice()
+            );
+
+            OrderItem item = new OrderItem();
+            item.setOrder(order);
+            item.setProductVariant(variant);
+            item.setProductName(variant.getProduct().getName());
+            item.setColor(variant.getColor() != null ? variant.getColor().getColorName() : null);
+            item.setSize(variant.getSize() != null ? variant.getSize().getSizeName() : null);
+            item.setQuantity(cartItem.getQuantity());
+            item.setPrice(finalPrice);
+
+            orderItems.add(item);
+        }
+
+        BigDecimal totalPrice = orderItems.stream()
+                .map(i -> i.getPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        order.setTotalPrice(totalPrice);
+        order.setOrderItems(orderItems);
+
+        Order savedOrder = orderRepository.save(order);
+
+        if ("COD".equalsIgnoreCase(request.getPaymentMethod())) {
+            cartService.clearCart(sessionId, false);
+        }
+
+        return savedOrder.getId();
+    }
+
 
 
     /**
@@ -98,6 +239,11 @@ public class OrderService {
                 address.getDistrict(),
                 address.getProvince());
 
+        OrderStatus initialStatus =
+                "COD".equalsIgnoreCase(request.getPaymentMethod())
+                        ? OrderStatus.PENDING
+                        : OrderStatus.WAITING_PAYMENT;
+
         Order order = Order.builder()
                 .user(user)
                 .receiverName(address.getReceiverName())
@@ -105,7 +251,7 @@ public class OrderService {
                 .shippingAddress(fullAddress)
                 .shippingFee(shippingFee)
                 .discountAmount(discountAmount)
-                .orderStatus(OrderStatus.PENDING)
+                .orderStatus(initialStatus)
                 .paymentStatus(PaymentStatus.UNPAID)
                 .build();
 
@@ -117,8 +263,10 @@ public class OrderService {
                 throw new RuntimeException("Sản phẩm '" + variant.getProduct().getName() + "' không đủ tồn kho");
             }
 
-            variant.setStockQuantity(variant.getStockQuantity() - cartItem.getQuantity());
-            variantRepository.save(variant);
+            if ("COD".equalsIgnoreCase(request.getPaymentMethod())) {
+                variant.setStockQuantity(variant.getStockQuantity() - cartItem.getQuantity());
+                variantRepository.save(variant);
+            }
 
             Long categoryId = variant.getProduct().getCategory() != null
                     ? variant.getProduct().getCategory().getId()
@@ -189,7 +337,9 @@ public class OrderService {
         paymentRepository.save(payment);
         orderRepository.save(savedOrder);
 
-        cartItemRepository.deleteByUserId(user.getId());
+        if ("COD".equalsIgnoreCase(request.getPaymentMethod())) {
+            cartItemRepository.deleteByUserId(user.getId());
+        }
 
         return savedOrder.getId();
     }
@@ -328,10 +478,44 @@ public class OrderService {
     }
 
     @Transactional
+    public void cancelUnpaidPaymentOrder(Long orderId) {
+        Order order = orderRepository.findByIdWithItems(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+
+        if (order.getPaymentStatus() == PaymentStatus.PAID) {
+            throw new RuntimeException("Đơn hàng đã thanh toán, không thể hủy");
+        }
+
+        if (order.getOrderStatus() == OrderStatus.WAITING_PAYMENT) {
+            order.setOrderStatus(OrderStatus.CANCELLED);
+            order.setPaymentStatus(PaymentStatus.FAILED);
+
+            paymentRepository.findByOrderId(orderId).ifPresent(payment -> {
+                payment.setStatus("CANCELLED");
+                paymentRepository.save(payment);
+            });
+
+            orderRepository.save(order);
+        }
+    }
+
+    @Transactional
     public void markPayOSPaid(Long orderId) {
         Order order = orderRepository.findByIdWithItems(orderId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
 
+        for (OrderItem item : order.getOrderItems()) {
+            ProductVariant variant = item.getProductVariant();
+
+            if (variant.getStockQuantity() < item.getQuantity()) {
+                throw new RuntimeException("Sản phẩm '" + item.getProductName() + "' không đủ tồn kho");
+            }
+
+            variant.setStockQuantity(variant.getStockQuantity() - item.getQuantity());
+            variantRepository.save(variant);
+        }
+
+        order.setOrderStatus(OrderStatus.PENDING);
         order.setPaymentStatus(PaymentStatus.PAID);
 
         increaseVoucherUsedCount(order);

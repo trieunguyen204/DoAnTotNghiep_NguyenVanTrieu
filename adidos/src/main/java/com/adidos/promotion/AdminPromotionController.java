@@ -1,8 +1,6 @@
-package com.adidos.promotion.controller;
+package com.adidos.promotion;
 
 import com.adidos.product.service.CategoryService;
-import com.adidos.promotion.entity.Promotion;
-import com.adidos.promotion.service.PromotionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

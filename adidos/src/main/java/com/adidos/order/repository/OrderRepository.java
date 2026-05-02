@@ -25,8 +25,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o LEFT JOIN FETCH o.orderItems WHERE o.id = :orderId")
     Optional<Order> findByIdWithItems(@Param("orderId") Long orderId);
 
-    @Query("SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.orderItems WHERE o.user.id = :userId ORDER BY o.id DESC")
-    List<Order> findByUserIdWithItems(@Param("userId") Long userId);
+
 
     Page<Order> findByUserIdOrderByIdDesc(Long userId, Pageable pageable);
 
@@ -39,4 +38,30 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Order o WHERE o.orderStatus = 'DELIVERED'")
     BigDecimal calculateTotalRevenue();
+
+    List<Order> findByGuestEmailIgnoreCaseOrderByIdDesc(String guestEmail);
+
+    @Query("""
+    SELECT DISTINCT o FROM Order o
+    LEFT JOIN FETCH o.orderItems i
+    LEFT JOIN FETCH i.productVariant v
+    LEFT JOIN FETCH v.product p
+    LEFT JOIN FETCH v.color
+    LEFT JOIN FETCH v.size
+    WHERE LOWER(o.guestEmail) = LOWER(:email)
+    ORDER BY o.id DESC
+    """)
+    List<Order> findGuestOrdersWithItemsByEmail(@Param("email") String email);
+
+    @Query("""
+    SELECT DISTINCT o FROM Order o
+    LEFT JOIN FETCH o.orderItems i
+    LEFT JOIN FETCH i.productVariant v
+    LEFT JOIN FETCH v.product p
+    LEFT JOIN FETCH v.color
+    LEFT JOIN FETCH v.size
+    WHERE o.user.id = :userId
+    ORDER BY o.id DESC
+    """)
+    List<Order> findByUserIdWithItems(@Param("userId") Long userId);
 }

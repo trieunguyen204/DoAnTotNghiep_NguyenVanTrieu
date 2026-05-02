@@ -8,9 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('btnAddProduct').addEventListener('click', () => {
         form.reset();
         document.getElementById('prodId').value = '';
-
-        // RESET UI CỦA SELECT2
         $('#productCategory').val(null).trigger('change');
+
+        document.getElementById('prodStatus').value = 'ACTIVE';
 
         modalTitle.textContent = 'Thêm Sản Phẩm Mới';
         modal.style.display = 'flex';
@@ -32,10 +32,12 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('prodStatus').value = this.dataset.status || 'ACTIVE';
 
             // ĐỔ DỮ LIỆU VÀ UPDATE UI CHO SELECT2 (Sửa lại ID cho đúng)
-            if(this.dataset.category) {
-                $('#productCategory').val(this.dataset.category).trigger('change');
+            const categoryId = this.getAttribute('data-category');
+
+            if (categoryId && $('#productCategory option[value="' + categoryId + '"]').length > 0) {
+                $('#productCategory').val(categoryId).trigger('change');
             } else {
-                $('#productCategory').val(null).trigger('change');
+                $('#productCategory').val('').trigger('change');
             }
 
             modalTitle.textContent = 'Cập Nhật Sản Phẩm';

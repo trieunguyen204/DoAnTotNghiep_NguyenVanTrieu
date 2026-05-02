@@ -4,8 +4,8 @@ import com.adidos.product.dto.*;
 import com.adidos.product.entity.*;
 import com.adidos.product.mapper.ProductMapper;
 import com.adidos.product.repository.*;
-import com.adidos.promotion.entity.Promotion;
-import com.adidos.promotion.service.PromotionService;
+import com.adidos.promotion.Promotion;
+import com.adidos.promotion.PromotionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
@@ -92,11 +92,19 @@ public class ProductService {
     @Transactional
     public void saveProduct(ProductRequest request) {
         Product product;
+
         if (request.getId() != null) {
             product = productRepository.findById(request.getId())
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
+
+
+            product.setStatus(request.getStatus());
+
         } else {
             product = new Product();
+
+
+            product.setStatus("ACTIVE");
         }
 
         product.setName(request.getName());
@@ -104,10 +112,11 @@ public class ProductService {
         product.setBrand(request.getBrand());
         product.setMaterial(request.getMaterial().trim().toLowerCase());
         product.setGender(request.getGender());
-        product.setStatus(request.getStatus());
 
         if (request.getCategoryId() != null) {
-            product.setCategory(categoryRepository.findById(request.getCategoryId()).orElse(null));
+            Category category = categoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy danh mục"));
+            product.setCategory(category);
         }
 
         productRepository.save(product);
@@ -115,14 +124,17 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
 
-      Product product = productRepository.findById(id)
-              .orElseThrow(()-> new RuntimeException("Không tìm thấy sản phẩm để xoá"));
+        product.setStatus("INACTIVE");
 
-      product.setStatus("INACTIVE");
 
-      productRepository.save(product);
+        if (product.getVariants() != null) {
+            product.getVariants().forEach(v -> v.setStatus("INACTIVE"));
+        }
 
+        productRepository.save(product);
     }
 
     @Transactional
@@ -141,6 +153,7 @@ public class ProductService {
             }
             variant = new ProductVariant();
             variant.setProduct(productRepository.findById(request.getProductId()).orElseThrow());
+            variant.setStatus("ACTIVE");
         }
 
         variant.setPrice(request.getPrice());
@@ -153,11 +166,12 @@ public class ProductService {
 
     @Transactional
     public void deleteVariant(Long id) {
-
         ProductVariant variant = productVariantRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy biến thể"));
 
-        productVariantRepository.deleteById(id);
+        variant.setStatus("INACTIVE");
+
+        productVariantRepository.save(variant);
     }
 
     private final ProductImageRepository productImageRepository;
@@ -378,34 +392,65 @@ public class ProductService {
 
 
     private void applyPromotionData(ProductResponse response, Product product) {
-        BigDecimal originalPrice = product.getVariants().isEmpty() ? BigDecimal.ZERO : product.getVariants().get(0).getPrice();
-        Long categoryId = product.getCategory() != null ? product.getCategory().getId() : null;
+        BigDecimal originalPrice = product.getVariants().stream()
+                .filter(v -> "ACTIVE".equalsIgnoreCase(v.getStatus()))
+                .findFirst()
+                .map(ProductVariant::getPrice)
+                .orElse(BigDecimal.ZERO);
 
-        // 1. Lấy khuyến mãi để gắn tên
-        Promotion promo = promotionService.getBestPromotionForCategory(categoryId);
-        if (promo != null) {
-            response.setPromotionName(promo.getPromotionName());
+        Long promotionCategoryId = null;
+        Promotion promo = null;
 
-            response.setDiscountType(promo.getDiscountType());
-            response.setPromotionDiscountValue(promo.getDiscountValue());
+        if (product.getCategory() != null) {
+            // 1. Thử danh mục trực tiếp của sản phẩm
+            promotionCategoryId = product.getCategory().getId();
+            promo = promotionService.getBestPromotionForCategory(promotionCategoryId);
+
+            // 2. Nếu không có promotion ở danh mục con, thử danh mục cha
+            if (promo == null && product.getCategory().getParent() != null) {
+                promotionCategoryId = product.getCategory().getParent().getId();
+                promo = promotionService.getBestPromotionForCategory(promotionCategoryId);
+            }
         }
 
-        // 2. Tính giá giảm cho sản phẩm gốc
-        BigDecimal discountedPrice = promotionService.calculateDiscountedPrice(categoryId, originalPrice);
+        // 3. Gắn thông tin promotion để badge sale lấy được
+        if (promo != null) {
+            response.setPromotionName(promo.getPromotionName());
+            response.setDiscountType(promo.getDiscountType());
+            response.setPromotionDiscountValue(promo.getDiscountValue());
+        } else {
+            response.setPromotionName(null);
+            response.setDiscountType(null);
+            response.setPromotionDiscountValue(null);
+        }
+
+        // 4. Tính giá giảm theo đúng category có promotion
+        BigDecimal discountedPrice = promotionService.calculateDiscountedPrice(
+                promotionCategoryId,
+                originalPrice
+        );
+
         response.setOriginalPrice(originalPrice);
         response.setDiscountedPrice(discountedPrice);
         response.setHasPromotion(discountedPrice.compareTo(originalPrice) < 0);
 
-        // 3. Tính giá giảm cho TỪNG BIẾN THỂ để gửi ra HTML
+        // 5. Tính giá giảm cho từng biến thể
         if (response.getVariants() != null) {
+            Long finalPromotionCategoryId = promotionCategoryId;
+
             response.getVariants().forEach(variant -> {
-                BigDecimal vDiscounted = promotionService.calculateDiscountedPrice(categoryId, variant.getPrice());
+                BigDecimal vDiscounted = promotionService.calculateDiscountedPrice(
+                        finalPromotionCategoryId,
+                        variant.getPrice()
+                );
                 variant.setDiscountedPrice(vDiscounted);
             });
         }
 
-        // 4. Logic 7 ngày cho hàng mới
-        response.setIsNew(product.getCreatedAt() != null && product.getCreatedAt().isAfter(java.time.LocalDateTime.now().minusDays(7)));
+        response.setIsNew(
+                product.getCreatedAt() != null &&
+                        product.getCreatedAt().isAfter(java.time.LocalDateTime.now().minusDays(7))
+        );
     }
 
     public List<ProductResponse> getProductsForPromotion(Promotion promo) {

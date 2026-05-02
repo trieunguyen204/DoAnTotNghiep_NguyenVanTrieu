@@ -1,4 +1,4 @@
-package com.adidos.promotion.entity;
+package com.adidos.promotion;
 
 import com.adidos.product.entity.Category;
 import jakarta.persistence.*;

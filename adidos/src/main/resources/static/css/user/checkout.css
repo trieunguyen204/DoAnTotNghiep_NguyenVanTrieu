@@ -34,6 +34,28 @@
     margin-top: 0;
 }
 
+.guest-checkout-box {
+    background: #fff;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.guest-checkout-box input,
+.guest-checkout-box textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+}
+
+.guest-checkout-box textarea {
+    min-height: 100px;
+}
+
 .checkout-box-header {
     display: flex;
     justify-content: space-between;
@@ -395,4 +417,108 @@
 .voucher-empty {
     margin-top: 10px;
     color: #777;
+}
+
+/* Nút chính */
+.checkout-main-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #111, #333);
+    color: #fff;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.checkout-main-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+}
+
+/* Nút phụ */
+.checkout-secondary-btn {
+    display: inline-block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: #fff;
+    color: #111;
+    border: 1px solid #ddd;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.25s ease;
+}
+
+.checkout-secondary-btn:hover {
+    background: #111;
+    color: #fff;
+}
+
+.register-box {
+    max-width: 420px;
+    margin: 40px auto;
+    padding: 28px;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+}
+
+.register-box h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 800;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+    border-color: #111;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+}
+
+.checkout-result-box {
+    max-width: 450px;
+    margin: 60px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+}
+
+.checkout-result-box h1 {
+    margin-bottom: 10px;
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.checkout-result-box p {
+    margin-bottom: 12px;
+    color: #555;
 }

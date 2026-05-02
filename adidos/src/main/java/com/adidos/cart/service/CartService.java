@@ -7,7 +7,7 @@ import com.adidos.cart.mapper.CartMapper;
 import com.adidos.cart.repository.CartItemRepository;
 import com.adidos.product.entity.ProductVariant;
 import com.adidos.product.repository.ProductVariantRepository;
-import com.adidos.promotion.service.PromotionService;
+import com.adidos.promotion.PromotionService;
 import com.adidos.user.entity.User;
 import com.adidos.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +28,7 @@ public class CartService {
     private final ProductVariantRepository variantRepository;
     private final UserRepository userRepository;
     private final PromotionService promotionService;
+    private final CartItemRepository cartItemRepository;
 
     @Transactional(readOnly = true)
     public List<CartItemResponse> getCartByUser(String identifier, boolean isLogged) {
@@ -41,6 +42,19 @@ public class CartService {
             return cartRepository.findBySessionId(identifier).stream()
                     .map(this::toCartItemResponse)
                     .collect(Collectors.toList());
+        }
+    }
+
+    @Transactional
+    public void clearCart(String identifier, boolean isLogged) {
+
+        if (isLogged) {
+            User user = userRepository.findByEmail(identifier)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy user"));
+
+            cartItemRepository.deleteByUser(user);
+        } else {
+            cartItemRepository.deleteBySessionId(identifier);
         }
     }
 

@@ -30,5 +30,5 @@ public class ProductResponse {
     private String promotionName;
 
     private String discountType;
-    private java.math.BigDecimal promotionDiscountValue;
+    private BigDecimal promotionDiscountValue;
 }

@@ -9,6 +9,7 @@ import com.adidos.order.service.PayOSService;
 import com.adidos.user.dto.AddressResponse;
 import com.adidos.user.service.AddressService;
 import com.adidos.voucher.VoucherService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,36 +33,46 @@ public class OrderController {
     private final VoucherService voucherService;
 
     @GetMapping("/checkout")
-    public String checkoutPage(Model model, Principal principal) {
-        String email = principal.getName();
+    public String checkoutPage(Model model, Principal principal, HttpSession session) {
 
-        List<CartItemResponse> cartItems = cartService.getCartByUser(email, true);
-        List<AddressResponse> addresses = addressService.getMyAddresses(email);
-        model.addAttribute("vouchers", voucherService.getAvailableVouchers());
+        boolean isLogged = principal != null;
+        String identifier = isLogged ? principal.getName() : session.getId();
+
+        List<CartItemResponse> cartItems = isLogged
+                ? cartService.getCartByUser(principal.getName(), true)
+                : cartService.getCartByUser(session.getId(), false);
 
         if (cartItems.isEmpty()) {
             return "redirect:/cart";
         }
 
-        AddressResponse defaultAddress = addresses.stream()
-                .filter(a -> Boolean.TRUE.equals(a.getIsDefault()))
-                .findFirst()
-                .orElse(addresses.isEmpty() ? null : addresses.get(0));
+        model.addAttribute("isLogged", isLogged);
+        model.addAttribute("cartItems", cartItems);
+
+        if (isLogged) {
+            List<AddressResponse> addresses = addressService.getMyAddresses(principal.getName());
+
+            AddressResponse defaultAddress = addresses.stream()
+                    .filter(a -> Boolean.TRUE.equals(a.getIsDefault()))
+                    .findFirst()
+                    .orElse(addresses.isEmpty() ? null : addresses.get(0));
+
+            model.addAttribute("addresses", addresses);
+            model.addAttribute("defaultAddress", defaultAddress);
+        } else {
+            model.addAttribute("addresses", List.of());
+        }
 
         BigDecimal totalPrice = cartItems.stream()
                 .map(CartItemResponse::getSubTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        BigDecimal shippingFee = BigDecimal.ZERO;
-        BigDecimal finalAmount = totalPrice.add(shippingFee);
-
-        model.addAttribute("cartItems", cartItems);
-        model.addAttribute("addresses", addresses);
-        model.addAttribute("defaultAddress", defaultAddress);
         model.addAttribute("totalPrice", totalPrice);
-        model.addAttribute("shippingFee", shippingFee);
-        model.addAttribute("finalAmount", finalAmount);
+        model.addAttribute("shippingFee", BigDecimal.ZERO);
+        model.addAttribute("finalAmount", totalPrice);
+
         model.addAttribute("checkoutRequest", new CheckoutRequest());
+        model.addAttribute("vouchers", voucherService.getAvailableVouchers());
 
         return "order/checkout";
     }
@@ -69,9 +80,17 @@ public class OrderController {
     @PostMapping("/checkout/place")
     public String placeOrder(@ModelAttribute CheckoutRequest request,
                              Principal principal,
+                             HttpSession session,
                              RedirectAttributes redirectAttributes) {
+
         try {
-            Long orderId = orderService.placeOrder(principal.getName(), request);
+            Long orderId;
+
+            if (principal != null) {
+                orderId = orderService.placeOrder(principal.getName(), request);
+            } else {
+                orderId = orderService.placeGuestOrder(session.getId(), request);
+            }
 
             if ("COD".equals(request.getPaymentMethod())) {
                 return "redirect:/checkout/success/" + orderId;
@@ -94,12 +113,21 @@ public class OrderController {
         }
     }
 
+
+
     @GetMapping("/checkout/success/{id}")
     public String checkoutSuccess(@PathVariable Long id,
                                   Model model,
                                   Principal principal) {
-        OrderResponse order = orderService.getOrderDetail(id, principal.getName());
+        boolean isLogged = principal != null;
+
+        OrderResponse order = isLogged
+                ? orderService.getOrderDetail(id, principal.getName())
+                : orderService.getGuestOrderDetail(id);
+
         model.addAttribute("order", order);
+        model.addAttribute("isLogged", isLogged);
+
         return "order/success";
     }
 
@@ -107,7 +135,15 @@ public class OrderController {
     public String qrPayment(@PathVariable Long id,
                             Model model,
                             Principal principal) {
-        OrderResponse order = orderService.getOrderDetail(id, principal.getName());
+
+        OrderResponse order;
+
+        if (principal != null) {
+            order = orderService.getOrderDetail(id, principal.getName());
+        } else {
+            order = orderService.getGuestOrderDetail(id);
+        }
+
         model.addAttribute("order", order);
         return "order/qr_payment";
     }

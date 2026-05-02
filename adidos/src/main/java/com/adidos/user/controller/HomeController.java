@@ -2,8 +2,8 @@ package com.adidos.user.controller;
 
 import com.adidos.product.dto.ProductResponse;
 import com.adidos.product.service.ProductService;
-import com.adidos.promotion.entity.Promotion;
-import com.adidos.promotion.repository.PromotionRepository;
+import com.adidos.promotion.Promotion;
+import com.adidos.promotion.PromotionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;

@@ -28,8 +28,16 @@
                 <strong th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
             </p>
 
-            <a th:href="@{/profile/orders}" class="checkout-main-btn">
-                Xem đơn hàng
+            <a th:unless="${isLogged}"
+               th:href="@{/}"
+               class="checkout-secondary-btn">
+                Về trang chủ
+            </a>
+
+            <a th:if="${isLogged}"
+               th:href="@{/profile/orders}"
+               class="checkout-main-btn">
+                Xem đơn hàng của tôi
             </a>
         </div>
     </div>

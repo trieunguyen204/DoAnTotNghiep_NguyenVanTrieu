@@ -40,6 +40,9 @@ public class AdminProductController {
         model.addAttribute("totalItems", productPage.getTotalElements());
         model.addAttribute("size", size);
 
+
+        model.addAttribute("categories", categoryService.getSubCategoriesForForm());
+
         return "admin/product/product_management";
     }
 

@@ -1,6 +1,5 @@
-package com.adidos.promotion.repository;
+package com.adidos.promotion;
 
-import com.adidos.promotion.entity.Promotion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

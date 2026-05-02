@@ -23,7 +23,9 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort;import com.adidos.order.entity.Order;
+import com.adidos.order.repository.OrderRepository;
+import com.adidos.user.dto.RegisterAfterOrderRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +35,61 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserProviderRepository providerRepository;
+    private final OrderRepository orderRepository;
+
+    @Transactional
+    public void registerAfterOrder(RegisterAfterOrderRequest request) {
+
+        if (request.getOrderId() == null) {
+            throw new RuntimeException("Không tìm thấy đơn hàng");
+        }
+
+        if (request.getEmail() == null || request.getEmail().isBlank()) {
+            throw new RuntimeException("Vui lòng nhập email");
+        }
+
+        if (request.getPassword() == null || request.getPassword().isBlank()) {
+            throw new RuntimeException("Vui lòng nhập mật khẩu");
+        }
+
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("Mật khẩu xác nhận không khớp");
+        }
+
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email này đã được đăng ký");
+        }
+
+        Order order = orderRepository.findById(request.getOrderId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+
+        if (order.getUser() != null) {
+            throw new RuntimeException("Đơn hàng này đã thuộc về một tài khoản");
+        }
+
+        User user = User.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .fullName(
+                        request.getFullName() != null && !request.getFullName().isBlank()
+                                ? request.getFullName()
+                                : order.getReceiverName()
+                )
+                .phone(
+                        request.getPhone() != null && !request.getPhone().isBlank()
+                                ? request.getPhone()
+                                : order.getReceiverPhone()
+                )
+                .role("USER")
+                .status("ACTIVE")
+                .build();
+
+        User savedUser = userRepository.save(user);
+
+        order.setUser(savedUser);
+        order.setGuestEmail(request.getEmail());
+        orderRepository.save(order);
+    }
 
     @Transactional(readOnly = true)
     public Page<UserResponse> searchUsersPage(String keyword, int page, int size) {

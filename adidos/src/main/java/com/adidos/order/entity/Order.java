@@ -24,7 +24,7 @@ public class Order {
     private String receiverPhone;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "receiver_name")
@@ -56,6 +56,18 @@ public class Order {
 
     @Column(name = "voucher_id")
     private Long voucherId;
+
+    @Column(name = "guest_name")
+    private String guestName;
+
+    @Column(name = "guest_email")
+    private String guestEmail;
+
+    @Column(name = "guest_phone")
+    private String guestPhone;
+
+    @Column(name = "guest_address", columnDefinition = "TEXT")
+    private String guestAddress;
 
 
 

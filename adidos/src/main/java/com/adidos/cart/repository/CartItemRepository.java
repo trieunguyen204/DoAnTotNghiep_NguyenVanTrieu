@@ -1,6 +1,7 @@
 package com.adidos.cart.repository;
 
 import com.adidos.cart.entity.CartItem;
+import com.adidos.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,4 +30,8 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
     List<CartItem> findBySessionId(String sessionId);
     Optional<CartItem> findBySessionIdAndProductVariantId(String sessionId, Long productVariantId);
+
+    void deleteByUser(User user);
+
+    void deleteBySessionId(String sessionId);
 }

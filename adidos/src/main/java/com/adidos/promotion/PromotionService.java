@@ -1,9 +1,7 @@
-package com.adidos.promotion.service;
+package com.adidos.promotion;
 
 import com.adidos.product.entity.Category;
 import com.adidos.product.repository.CategoryRepository;
-import com.adidos.promotion.entity.Promotion;
-import com.adidos.promotion.repository.PromotionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

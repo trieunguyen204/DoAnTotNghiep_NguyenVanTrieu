@@ -25,7 +25,9 @@ public class ProductMapper {
     public static ProductResponse toProductResponse(Product product) {
         if (product == null) return null;
 
-        List<ProductVariant> variants = product.getVariants();
+        List<ProductVariant> variants = product.getVariants().stream()
+                .filter(v -> "ACTIVE".equalsIgnoreCase(v.getStatus()))
+                .collect(Collectors.toList());
 
         // Tính giá gốc (lấy giá của biến thể rẻ nhất)
         BigDecimal minPrice = (variants != null && !variants.isEmpty()) ?

@@ -22,18 +22,7 @@ a { text-decoration: none; color: inherit; }
 .header-inner { display: flex; justify-content: space-between; align-items: center; height: 80px; }
 .logo { font-size: 32px; font-weight: 900; letter-spacing: -1px; text-transform: uppercase; }
 
-/* Mega Menu Dropdown */
-/*
-.main-nav ul { list-style: none; display: flex; gap: 30px; height: 100%; align-items: center; }
-.main-nav > ul > li { position: relative; height: 100%; display: flex; align-items: center; }
-.main-nav a { font-weight: 700; font-size: 14px; letter-spacing: 1px; }
-.main-nav > ul > li:hover { border-bottom: 3px solid #000; }
 
-.dropdown { position: absolute; top: 100%; left: 0; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 200px; opacity: 0; visibility: hidden; transition: 0.3s; flex-direction: column; padding: 10px 0; border: 1px solid #eee; }
-.has-dropdown:hover .dropdown { opacity: 1; visibility: visible; }
-.dropdown li { width: 100%; padding: 10px 20px; }
-.dropdown li:hover { background: #f8f8f8; }
-*/
 /* Mega Menu Dropdown - ADIDAS STREETWEAR STYLE */
 .main-nav ul { list-style: none; display: flex; gap: 35px; height: 100%; align-items: center; }
 .main-nav > ul > li { position: relative; height: 100%; display: flex; align-items: center; }

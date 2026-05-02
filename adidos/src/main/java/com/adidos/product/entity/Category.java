@@ -1,6 +1,6 @@
 package com.adidos.product.entity;
 
-import com.adidos.promotion.entity.Promotion;
+import com.adidos.promotion.Promotion;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

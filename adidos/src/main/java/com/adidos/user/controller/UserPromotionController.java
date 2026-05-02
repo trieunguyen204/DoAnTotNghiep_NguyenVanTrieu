@@ -2,8 +2,8 @@ package com.adidos.user.controller;
 
 import com.adidos.product.dto.ProductResponse;
 import com.adidos.product.service.ProductService;
-import com.adidos.promotion.entity.Promotion;
-import com.adidos.promotion.repository.PromotionRepository;
+import com.adidos.promotion.Promotion;
+import com.adidos.promotion.PromotionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -21,9 +21,9 @@ public class UserPromotionController {
 
     @GetMapping("/promotions/{id}")
     public String promotionDetail(
-            @PathVariable Long id,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "8") int size,
+            @PathVariable("id") Long id,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "8") int size,
             Model model
     ) {
         Promotion promotion = promotionRepository.findById(id)

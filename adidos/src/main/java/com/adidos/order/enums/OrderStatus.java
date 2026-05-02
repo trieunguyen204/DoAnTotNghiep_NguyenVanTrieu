@@ -6,4 +6,6 @@ public enum OrderStatus {
     SHIPPING,       // Đang giao hàng
     DELIVERED,      // Đã giao thành công
     CANCELLED       // Đã hủy
+    ,WAITING_PAYMENT
+
 }

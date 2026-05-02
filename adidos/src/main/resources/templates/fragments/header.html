@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" >
     <body>
     <header th:fragment="header" class="site-header" id="main-header">
         <div class="container header-inner">
@@ -42,17 +42,34 @@
                             </svg>
                         </a>
 
-                        <ul class="dropdown-menu">
-                            <li><a th:href="@{/profile}">Thông tin tài khoản</a></li>
-                            <li><a th:href="@{/profile/addresses}">Quản lý địa chỉ</a></li>
-                            <li><a th:href="@{/profile/orders}">Đơn hàng</a></li>
-                            <li class="divider"></li>
-                            <li>
-                                <form th:action="@{/logout}" method="post">
-                                    <button type="submit" class="btn-logout">Đăng xuất</button>
-                                </form>
-                            </li>
-                        </ul>
+
+                        <div class="account-wrapper">
+
+                            <!-- Guest -->
+                            <a sec:authorize="isAnonymous()" th:href="@{/login}" class="account-icon">
+                                <i class="fa fa-user"></i>
+                            </a>
+
+                            <!-- Logged in -->
+                            <div sec:authorize="isAuthenticated()" class="account-dropdown">
+                                <i class="fa fa-user"></i>
+
+                                <ul class="dropdown-menu" sec:authorize="isAuthenticated()">
+                                    <li><a th:href="@{/profile}">Thông tin tài khoản</a></li>
+                                    <li><a th:href="@{/profile/addresses}">Quản lý địa chỉ</a></li>
+                                    <li><a th:href="@{/profile/orders}">Đơn hàng</a></li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <form th:action="@{/logout}" method="post">
+                                            <button type="submit" class="btn-logout">Đăng xuất</button>
+                                        </form>
+                                    </li>
+                                </ul>
+
+
+                            </div>
+
+                        </div>
                     </div>
 
                 </div>
