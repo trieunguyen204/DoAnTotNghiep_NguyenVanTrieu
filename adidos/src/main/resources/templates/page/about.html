@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/main :: layout_user}">
+<head>
+    <title th:fragment="page_title">Giới thiệu ADIDOS</title>
+
+    <th:block th:fragment="page_user_css">
+        <link rel="stylesheet" th:href="@{/css/user/about.css}">
+    </th:block>
+</head>
+
+<body>
+<div th:fragment="content_user">
+
+    <section class="about-hero">
+        <div class="about-hero-content">
+            <span class="about-label">ADIDOS STORE</span>
+            <h1>Thời trang năng động cho thế hệ trẻ</h1>
+            <p>
+                ADIDOS là cửa hàng quần áo hướng tới phong cách trẻ trung, hiện đại và dễ ứng dụng trong đời sống hằng
+                ngày.
+                Chúng tôi mang đến các sản phẩm phù hợp cho đi học, đi làm, dạo phố, luyện tập và những hoạt động thường
+                ngày.
+            </p>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="about-text">
+            <h2>Về ADIDOS</h2>
+            <p>
+                ADIDOS được xây dựng với mong muốn tạo ra một không gian mua sắm thời trang đơn giản, tiện lợi và đáng
+                tin cậy.
+                Các sản phẩm tại cửa hàng được lựa chọn theo tiêu chí dễ mặc, dễ phối, chất liệu thoải mái và mức giá
+                phù hợp.
+            </p>
+            <p>
+                Chúng tôi không chỉ bán quần áo, mà còn muốn giúp khách hàng tự tin hơn trong phong cách cá nhân của
+                mình.
+            </p>
+        </div>
+
+        <div class="about-image">
+            <img src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=900&q=80"
+                 alt="ADIDOS fashion">
+        </div>
+    </section>
+
+    <section class="about-values">
+        <div class="value-card">
+            <h3>Phong cách</h3>
+            <p>Thiết kế trẻ trung, hiện đại, dễ phối đồ và phù hợp nhiều hoàn cảnh.</p>
+        </div>
+
+        <div class="value-card">
+            <h3>Chất lượng</h3>
+            <p>Sản phẩm được chọn lọc kỹ lưỡng về chất liệu, form dáng và độ bền khi sử dụng.</p>
+        </div>
+
+        <div class="value-card">
+            <h3>Dịch vụ</h3>
+            <p>Trải nghiệm mua sắm nhanh chóng, tư vấn tận tình và hỗ trợ khách hàng sau mua.</p>
+        </div>
+    </section>
+
+    <section class="about-cta">
+        <h2>Khám phá phong cách của bạn cùng ADIDOS</h2>
+        <p>Cập nhật những mẫu quần áo mới nhất và lựa chọn sản phẩm phù hợp với bạn.</p>
+        <a th:href="@{/}" class="btn-about">Mua sắm ngay</a>
+    </section>
+
+</div>
+
+<th:block th:fragment="page_user_js">
+    <script th:src="@{/js/user/index.js}"></script>
+</th:block>
+</body>
+</html>

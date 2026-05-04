@@ -8,17 +8,51 @@
             <nav class="main-nav">
                 <ul>
                     <li><a th:href="@{/}">TRANG CHỦ</a></li>
-                    <li class="has-dropdown" th:each="cat, iterStat : ${rootCategories}" th:if="${iterStat.index < 5}">
-                        <a th:href="@{/category/{id}(id=${cat.id})}" th:text="${cat.name}">DANH MỤC</a>
-                        <ul class="dropdown">
-                            <li th:each="sub : ${cat.subCategories}">
-                                <a th:href="@{/category/{id}(id=${sub.id})}" th:text="${sub.name}">Menu con</a>
-                            </li>
-                            <li class="view-all-item">
-                                <a th:href="@{/category/{id}(id=${cat.id})}">Xem tất cả →</a>
-                            </li>
-                        </ul>
+
+                    <li class="has-mega">
+                        <a th:href="@{/}" class="nav-link">DANH MỤC</a>
+
+                        <div class="mega-menu">
+                            <div class="mega-inner">
+
+                                <div class="mega-columns">
+                                    <div class="mega-col" th:each="cat : ${rootCategories}">
+                                        <a class="mega-title"
+                                           th:href="@{/category/{id}(id=${cat.id})}"
+                                           th:text="${cat.name}">
+                                            NAM
+                                        </a>
+
+                                        <a th:each="sub : ${cat.subCategories}"
+                                           th:href="@{/category/{id}(id=${sub.id})}"
+                                           th:text="${sub.name}">
+                                            Áo thun
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="mega-banners">
+                                    <a href="#" class="mega-banner">
+                                        <img src="/images/banner-mega-1.png" alt="Adidos banner">
+                                        <div>
+                                            <strong>HÀNG MỚI VỀ</strong>
+                                            <p>Khám phá bộ sưu tập mới nhất</p>
+                                        </div>
+                                    </a>
+
+                                    <a href="#" class="mega-banner">
+                                        <img src="/images/banner-mega-2.png" alt="Adidos sale">
+                                        <div>
+                                            <strong>ADICLUB DAYS SALE</strong>
+                                            <p>Ưu đãi nổi bật trong tháng</p>
+                                        </div>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
                     </li>
+                    <li><a th:href="@{/about}">GIỚI THIỆU</a></li>
                 </ul>
             </nav>
 
@@ -33,43 +67,38 @@
                     </button>
                 </form>
 
-                <div class="user-actions">
-                    <div class="action-icon profile-dropdown-container">
-                        <a th:href="@{/profile}" class="action-icon">
-                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <div class="action-icon profile-dropdown-container">
+
+                    <!-- Guest -->
+                    <a sec:authorize="isAnonymous()" th:href="@{/login}" class="profile-trigger">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                             stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+
+                    <!-- Logged in -->
+                    <div sec:authorize="isAuthenticated()" class="account-dropdown">
+                        <a th:href="@{/profile}" class="profile-trigger">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                                 stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                                 <circle cx="12" cy="7" r="4"></circle>
                             </svg>
                         </a>
 
-
-                        <div class="account-wrapper">
-
-                            <!-- Guest -->
-                            <a sec:authorize="isAnonymous()" th:href="@{/login}" class="account-icon">
-                                <i class="fa fa-user"></i>
-                            </a>
-
-                            <!-- Logged in -->
-                            <div sec:authorize="isAuthenticated()" class="account-dropdown">
-                                <i class="fa fa-user"></i>
-
-                                <ul class="dropdown-menu" sec:authorize="isAuthenticated()">
-                                    <li><a th:href="@{/profile}">Thông tin tài khoản</a></li>
-                                    <li><a th:href="@{/profile/addresses}">Quản lý địa chỉ</a></li>
-                                    <li><a th:href="@{/profile/orders}">Đơn hàng</a></li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <form th:action="@{/logout}" method="post">
-                                            <button type="submit" class="btn-logout">Đăng xuất</button>
-                                        </form>
-                                    </li>
-                                </ul>
-
-
-                            </div>
-
-                        </div>
+                        <ul class="dropdown-menu">
+                            <li><a th:href="@{/profile}">Thông tin tài khoản</a></li>
+                            <li><a th:href="@{/profile/addresses}">Quản lý địa chỉ</a></li>
+                            <li><a th:href="@{/profile/orders}">Đơn hàng</a></li>
+                            <li class="divider"></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+                                    <button type="submit" class="btn-logout">Đăng xuất</button>
+                                </form>
+                            </li>
+                        </ul>
                     </div>
 
                 </div>

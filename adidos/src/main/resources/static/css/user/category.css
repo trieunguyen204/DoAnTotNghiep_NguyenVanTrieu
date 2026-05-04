@@ -1,7 +1,8 @@
+
 .category-container {
     max-width: 1500px; /* Mở rộng container để chứa card to hơn */
     margin: 0 auto;
-    padding: 0px 20px;
+    padding: 15px 20px;
 }
 
 .category-title {

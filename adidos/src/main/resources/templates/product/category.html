@@ -56,6 +56,20 @@
                         </select>
                     </div>
 
+                    <div class="filter-group">
+                        <label>DANH MỤC</label>
+
+                        <select name="categoryId" id="filterCategory" class="select-search">
+                            <option value="">TẤT CẢ DANH MỤC</option>
+
+                            <option th:each="cat : ${subCategories}"
+                                    th:value="${cat.id}"
+                                    th:text="${cat.name}"
+                                    th:selected="${cat.id == selectedCategoryId}">
+                            </option>
+                        </select>
+                    </div>
+
                     <button type="submit" class="btn-filter">ÁP DỤNG</button>
                     <a th:href="@{/category/{id}(id=${category.id})}" class="btn-clear">LÀM MỚI BỘ LỌC</a>
                 </form>

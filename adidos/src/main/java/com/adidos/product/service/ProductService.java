@@ -245,17 +245,20 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponse> getProductsByCategoryIdPage(
-            Long categoryId,
-            BigDecimal minPrice,
-            BigDecimal maxPrice,
-            String brand,
-            String material,
-            int page,
-            int size
-    ) {
+    public Page<ProductResponse> getProductsByCategoryIdPage(Long rootId,
+         Long categoryId,
+         BigDecimal minPrice,
+         BigDecimal maxPrice,
+         String brand,
+         String material,
+         int page,
+         int size) {
+
+
+        Long finalCategoryId = categoryId != null ? categoryId : rootId;
+
         List<ProductResponse> filteredProducts = getProductsByCategoryId(
-                categoryId,
+                finalCategoryId,
                 minPrice,
                 maxPrice,
                 brand,

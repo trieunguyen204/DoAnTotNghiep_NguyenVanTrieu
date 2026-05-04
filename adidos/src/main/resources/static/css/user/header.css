@@ -1,0 +1,376 @@
+/* RESET */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+/* HEADER */
+.site-header {
+    padding-top:12px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+.header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* LOGO */
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-decoration: none;
+    color: #000;
+}
+
+/* NAV */
+.main-nav ul {
+
+    list-style: none;
+    display: flex;
+    gap: 28px;
+}
+
+.main-nav a {
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+    position: relative;
+}
+
+.main-nav a:hover {
+    color: #000;
+}
+
+.main-nav a::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #000;
+    transition: width 0.3s ease;
+}
+
+.main-nav a:hover::after {
+    width: 100%;
+}
+
+/* MEGA MENU */
+.has-mega {
+    position: static;
+}
+
+/* MEGA MENU ANIMATION */
+.mega-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100vw;
+    min-height: 430px;
+    background: #fff;
+    border-top: 1px solid #eee;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0);
+    pointer-events: none;
+    transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+
+/* hover */
+.has-mega:hover .mega-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.mega-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 36px 40px;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+
+
+.mega-columns {
+
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px; /* giảm khoảng cách cột */
+
+    flex: none;
+    width: 58%; /* cố định */
+    padding-left: 120px;
+}
+.mega-col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.mega-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #000;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin-bottom: 6px;
+}
+
+.mega-col a {
+    position: relative;
+}
+.mega-col a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 0;
+    height: 1.5px;
+    background: #000;
+    transition: 0.25s;
+}
+.mega-col a:hover::after {
+    width: 100%;
+}
+
+.mega-col a:hover {
+    text-decoration: none;
+}
+
+/* BANNERS */
+.mega-banners {
+
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 16px;
+    width: 42%;
+    margin-right: 90px;
+}
+
+.mega-banner {
+    display: block;
+    text-decoration: none;
+    color: #000;
+}
+
+.mega-banner img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+}
+
+.mega-banner div {
+    margin-top: 12px;
+}
+
+.mega-banner strong {
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.mega-banner p {
+    margin-top: 4px;
+    font-size: 14px;
+    color: #555;
+}
+
+
+
+/* SEARCH */
+.luxury-search {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 2px;
+}
+
+.luxury-search input {
+    border: none;
+    outline: none;
+    font-size: 13px;
+    padding: 5px;
+    width: 140px;
+}
+
+.luxury-search button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+/* ACTIONS */
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.action-icon {
+    position: relative;
+    cursor: pointer;
+}
+
+/* PROFILE DROPDOWN */
+.profile-dropdown-container {
+    position: relative;
+}
+
+.account-dropdown {
+    position: relative;
+}
+
+.profile-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    text-decoration: none;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 220px;
+    background: #fff;
+    border: 1px solid #eee;
+    list-style: none;
+    padding: 8px 0;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    pointer-events: none;
+    transition: 0.22s ease;
+    z-index: 2000;
+}
+
+
+.account-dropdown:hover .dropdown-menu,
+.dropdown-menu:hover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+.account-dropdown::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 220px;
+    height: 12px;
+    background: transparent;
+}
+
+.dropdown-menu {
+    top: calc(100% + 8px);
+}
+
+.dropdown-menu li {
+    padding: 0;
+}
+
+.dropdown-menu li a,
+.btn-logout {
+    width: 100%;
+    display: block;
+    padding: 11px 16px;
+    border: none;
+    background: transparent;
+    text-align: left;
+    text-decoration: none;
+    color: #222;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+    background: #f5f5f5;
+}
+
+.divider {
+    height: 1px;
+    background: #eee;
+    margin: 6px 0;
+}
+
+/* LOGOUT BUTTON */
+.dropdown-menu li a:hover,
+.btn-logout:hover {
+    background: #f5f5f5;
+}
+
+/* CART */
+.cart-wrap {
+    position: relative;
+}
+
+.cart-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: #000;
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 50%;
+}
+
+/* GLASS HEADER */
+.site-header.scrolled {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.has-mega::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100vw;
+    height: 18px;
+    background: transparent;
+}
+
+.mega-menu:hover {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+
+.logo {
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+
+

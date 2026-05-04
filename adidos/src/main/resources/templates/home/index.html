@@ -9,38 +9,97 @@
     <body>
             <th:block th:fragment="content_user">
 
-                <section class="hero-light">
-                    <div class="hero-content-light">
+                <div class="hero-slider">
 
-                    </div>
-                </section>
+                    <section class="hero-adidas">
+                        <div class="hero-adidas-content">
+                            <span class="hero-label">ADIDOS ORIGINALS</span>
+                            <h1>Thời trang thể thao cho mọi ngày</h1>
+                            <p>
+                                Khám phá áo thun, hoodie, quần jogger và các item streetwear mới nhất.
+                            </p>
+
+                            <div class="hero-actions">
+                                <a href="/category/1" class="hero-btn primary">Mua đồ nam</a>
+                                <a href="/category/2" class="hero-btn secondary">Mua đồ nữ</a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="uniqlo-video">
+
+                        <video class="uniqlo-video-bg"
+                               autoplay
+                               muted
+                               loop
+                               playsinline>
+                            <source src="https://image.uniqlo.com/UQ/ST3/vn/imagesother/TVCM_26SS/Linen_26SS/Linen_PC6mb.mp4" type="video/mp4">
+                        </video>
+
+                        <div class="uniqlo-video-overlay"></div>
+
+                        <div class="uniqlo-video-content">
+                            <span class="uniqlo-tag">LINEN COLLECTION</span>
+
+                            <h2>Thoáng nhẹ cho mùa hè</h2>
+
+                            <p>
+                                Bộ sưu tập Linen mới – nhẹ, mát, tối giản đúng chất cotton.
+                            </p>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+
 
                 <div class="home-section" th:if="${topPromo != null and !topPromoProducts.isEmpty()}">
-                    <h2>SALE KHỦNG: <span th:text="${topPromo.promotionName}"></span></h2>
+
+                    <div class="section-heading-premium">
+                        <span class="section-tag">ƯU ĐÃI NỔI BẬT</span>
+
+                        <h2 th:text="${topPromo.promotionName}">
+                            TÊN KHUYẾN MÃI
+                        </h2>
+
+                        <a th:href="@{/promotions/{id}(id=${topPromo.id})}"
+                           class="link-view-all">
+                            Xem tất cả →
+                        </a>
+                    </div>
+
                     <div class="product-grid">
                         <th:block th:each="product : ${topPromoProducts}">
                             <div th:replace="~{fragments/components :: product_card(${product})}"></div>
                         </th:block>
                     </div>
-                    <a th:if="${topPromo != null}"
-                       th:href="@{/promotions/{id}(id=${topPromo.id})}"
-                       class="btn-view-all">
-                        Xem tất cả
-                    </a>
+
                 </div>
 
-                <div class="home-section" th:if="${soonPromo != null and topPromo != null and soonPromo.id != topPromo.id and !soonPromoProducts.isEmpty()}">
-                    <h2>SẮP KẾT THÚC: <span th:text="${soonPromo.promotionName}"></span></h2>
+                <div class="home-section"
+                     th:if="${soonPromo != null and topPromo != null and soonPromo.id != topPromo.id and !soonPromoProducts.isEmpty()}">
+
+                    <div class="section-heading-premium">
+                        <span class="section-tag subtle">SẮP KẾT THÚC</span>
+
+                        <h2 th:text="${soonPromo.promotionName}">
+                            TÊN KHUYẾN MÃI
+                        </h2>
+
+                        <a th:href="@{/promotions/{id}(id=${soonPromo.id})}"
+                           class="link-view-all">
+                            Xem tất cả →
+                        </a>
+                    </div>
+
                     <div class="product-grid">
                         <th:block th:each="product : ${soonPromoProducts}">
                             <div th:replace="~{fragments/components :: product_card(${product})}"></div>
                         </th:block>
                     </div>
-                    <a th:if="${soonPromo != null}"
-                       th:href="@{/promotions/{id}(id=${soonPromo.id})}"
-                       class="btn-view-all">
-                        Xem tất cả
-                    </a>
+
                 </div>
 
                 <div class="home-section">

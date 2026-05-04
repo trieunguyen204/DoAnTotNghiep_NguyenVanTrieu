@@ -1,6 +1,8 @@
 package com.adidos.product.controller;
 
+import com.adidos.product.dto.CategoryResponse;
 import com.adidos.product.dto.ProductResponse;
+import com.adidos.product.entity.Category;
 import com.adidos.product.service.CategoryService;
 import com.adidos.product.service.ProductService;
 import com.adidos.review.ReviewService;
@@ -50,6 +52,7 @@ public class ProductController {
     @GetMapping("/category/{id}")
     public String getProductsByCategory(
             @PathVariable Long id,
+            @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String brand,
@@ -58,12 +61,25 @@ public class ProductController {
             @RequestParam(defaultValue = "8") int size,
             Model model) {
 
+        CategoryResponse currentCategory = categoryService.getById(id);
+
         Page<ProductResponse> productPage =
                 productService.getProductsByCategoryIdPage(
-                        id, minPrice, maxPrice, brand, material, page, size
+                        id,
+                        categoryId,
+                        minPrice,
+                        maxPrice,
+                        brand,
+                        material,
+                        page,
+                        size
                 );
 
-        model.addAttribute("category", categoryService.getById(id));
+        Long parentId = currentCategory.getParentId() != null
+                ? currentCategory.getParentId()
+                : currentCategory.getId();
+
+        model.addAttribute("category", currentCategory);
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("productPage", productPage);
 
@@ -80,11 +96,11 @@ public class ProductController {
         model.addAttribute("selectedBrand", brand);
         model.addAttribute("selectedMaterial", material);
 
+        model.addAttribute("subCategories", categoryService.getSubCategories(parentId));
+        model.addAttribute("selectedCategoryId", categoryId);
+
         return "product/category";
     }
-
-
-
 
 
 

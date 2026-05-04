@@ -21,6 +21,8 @@ public class HomeController {
     private final ProductService productService;
     private final PromotionRepository promotionRepository;
 
+
+
     @GetMapping("/")
     public String homeUser(
             Model model,

@@ -9,9 +9,13 @@
         <title th:replace="~{::page_title ?: _}">Adidos</title>
 
         <!--css chung-->
-        <link rel="stylesheet" th:href="@{/css/user/style.css}">
+        <th:block >
+            <link rel="stylesheet" th:href="@{/css/user/header.css}">
+            <link rel="stylesheet" th:href="@{/css/user/footer.css}">
+            <link rel="stylesheet" th:href="@{/css/user/main.css}">
+        </th:block>
 
-        <!--css riêng-->
+        <!--css content-->
         <th:block th:insert="~{::page_user_css}"></th:block>
 
     </head>

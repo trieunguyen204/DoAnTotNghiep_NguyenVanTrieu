@@ -50,9 +50,8 @@ public class SecurityConfig {
                                 "/checkout",
                                 "/checkout/place",
                                 "/checkout/success/**",
-                                "/payment/qr/**",
-                                "/register-after-order",
-                                "/register-after-order/**"
+                                "/payment/qr/**"
+                                ,"/about"
                         )
                         .permitAll()
 
