@@ -4,7 +4,6 @@
 
 <head>
     <title>Quản lý đơn hàng</title>
-
     <th:block th:fragment="page_admin_css">
         <link rel="stylesheet" th:href="@{/css/admin/order-management.css}">
     </th:block>
@@ -12,213 +11,105 @@
 
 <body>
 <th:block th:fragment="content">
-    <div class="admin-order-page">
-
-        <div class="page-header">
-            <div>
-                <h1>Quản lý đơn hàng</h1>
-                <p>Duyệt, lọc và cập nhật trạng thái đơn hàng</p>
-            </div>
-        </div>
+    <div class="admin-page">
+        <h2>Quản lý đơn hàng</h2>
 
         <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
-        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
         <div class="order-toolbar">
-            <div class="status-tabs">
-                <a th:href="@{/admin/orders}"
-                   th:classappend="${currentStatus == 'ALL'} ? 'active' : ''">
-                    Tất cả
-                </a>
+            <form th:action="@{/admin/orders}" method="get">
+                <select name="status" onchange="this.form.submit()">
+                    <option value="ALL"
+                            th:selected="${currentStatus == null || currentStatus == 'ALL'}">
+                        Tất cả
+                    </option>
 
-                <a th:each="st : ${statuses}"
-                   th:href="@{/admin/orders(status=${st.name()})}"
-                   th:text="${st.name()}"
-                   th:classappend="${currentStatus == st.name()} ? 'active' : ''">
-                </a>
-            </div>
-
-            <div class="toolbar-actions">
-                <form th:action="@{/admin/orders/approve-all}" method="post"
-                      class="confirm-form"
-                      data-message="Bạn chắc chắn muốn duyệt tất cả đơn đang chờ trong trang trạng thái này?">
-                    <input type="hidden" name="currentStatus" th:value="${currentStatus}">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fa-solid fa-check-double"></i>
-                        Duyệt tất cả
-                    </button>
-                </form>
-
-                <button type="submit" form="bulkApproveForm" class="btn btn-dark">
-                    <i class="fa-solid fa-list-check"></i>
-                    Cập nhật bước tiếp theo
-                </button>
-            </div>
+                    <option th:each="s : ${statuses}"
+                            th:value="${s}"
+                            th:text="${s.name() == 'PENDING' ? 'Chờ xác nhận' :
+                             (s.name() == 'PROCESSING' ? 'Đang chuẩn bị' :
+                             (s.name() == 'SHIPPING' ? 'Đang giao hàng' :
+                             (s.name() == 'DELIVERED' ? 'Đã giao' :
+                             (s.name() == 'CANCELLED' ? 'Đã hủy' : s.name()))))}"
+                            th:selected="${currentStatus == s.name()}">
+                    </option>
+                </select>
+            </form>
         </div>
 
-        <form id="bulkApproveForm"
-              th:action="@{/admin/orders/approve-selected}"
-              method="post"
-              class="confirm-form"
-              data-message="Bạn chắc chắn muốn duyệt các đơn đã chọn?">
+        <input type="hidden" name="currentStatus" th:value="${currentStatus}">
 
-            <input type="hidden" name="currentStatus" th:value="${currentStatus}">
+        <table class="order-table">
+            <thead>
+            <tr>
+                <th>Mã đơn</th>
+                <th>Người nhận</th>
+                <th>SĐT</th>
+                <th>Tổng tiền</th>
+                <th>Thanh toán</th>
+                <th>Thao tác</th>
+            </tr>
+            </thead>
 
-            <div class="order-table-wrapper">
-                <table class="order-table">
-                    <thead>
-                    <tr>
-                        <th>
-                            <input type="checkbox" id="checkAllOrders">
-                        </th>
-                        <th>Mã đơn</th>
-                        <th>Người nhận</th>
-                        <th>Địa chỉ</th>
-                        <th>Tổng tiền</th>
-                        <th>Đơn hàng</th>
-                        <th>Thanh toán</th>
-                        <th>Thao tác</th>
-                    </tr>
-                    </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td th:text="${order.id}"></td>
+                <td th:text="${order.receiverName}"></td>
+                <td th:text="${order.receiverPhone}"></td>
 
-                    <tbody>
-                    <tr th:if="${#lists.isEmpty(orders)}">
-                        <td colspan="8" class="empty-row">
-                            Không có đơn hàng nào.
-                        </td>
-                    </tr>
+                <td th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT')} + 'đ'"></td>
 
-                    <tr th:each="order : ${orders}">
-                        <td>
-                            <input type="checkbox"
-                                   name="orderIds"
-                                   th:value="${order.id}"
-                                   class="order-checkbox"
-                                   th:disabled="${order.orderStatus.name() == 'DELIVERED'
-                                            or order.orderStatus.name() == 'CANCELLED'}">
-                        </td>
+                <td>
+                    <span th:text="${order.paymentMethod}"></span>
+                    -
+                    <strong th:text="${order.paymentStatus.name() == 'PAID' ? 'Đã thanh toán' :
+                     (order.paymentStatus.name() == 'UNPAID' ? 'Chưa thanh toán' :
+                     (order.paymentStatus.name() == 'FAILED' ? 'Thanh toán thất bại' :
+                     order.paymentStatus))}">
+                    </strong>
+                </td>
 
-                        <td>
-                            <strong th:text="${'#' + order.id}"></strong>
-                        </td>
 
-                        <td>
-                            <strong th:text="${order.receiverName}"></strong>
-                            <br>
-                            <span th:text="${order.receiverPhone}"></span>
-                        </td>
+                <td class="action-col">
+                    <a th:href="@{/admin/orders/detail/{id}(id=${order.id}, status=${currentStatus})}"
+                       class="btn-secondary">
+                        Chi tiết
+                    </a>
 
-                        <td class="address-cell" th:text="${order.shippingAddress}"></td>
+                    <form th:if="${order.orderStatus.name() != 'DELIVERED' && order.orderStatus.name() != 'CANCELLED'}"
+                          th:action="@{/admin/orders/next-status/{id}(id=${order.id})}"
+                          method="post">
+                        <input type="hidden" name="currentStatus" th:value="${currentStatus}">
 
-                        <td class="money-cell"
-                            th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT')} + 'đ'">
-                        </td>
+                        <button type="submit"
+                                class="btn-primary next-status-btn"
+                                th:text="'➜'"
+                                th:title="${order.orderStatus.name() == 'PENDING' ? 'Chuyển sang Đang chuẩn bị' :
+                                      (order.orderStatus.name() == 'PROCESSING' ? 'Chuyển sang Đang giao hàng' :
+                                      (order.orderStatus.name() == 'SHIPPING' ? 'Hoàn tất đơn hàng' :
+                                      'Chuyển trạng thái'))}">
+                        </button>
+                    </form>
 
-                        <td>
-                            <span class="status-badge"
-                                  th:classappend="${order.orderStatus.name().toLowerCase()}"
-                                  th:text="${order.orderStatus.name()}">
-                            </span>
-                        </td>
+                    <form th:if="${order.orderStatus.name() == 'PENDING'}"
+                          th:action="@{/admin/orders/cancel/{id}(id=${order.id})}"
+                          method="post">
+                        <input type="hidden" name="currentStatus" th:value="${currentStatus}">
+                        <button type="submit"
+                                class="btn-secondary"
+                                onclick="return confirm('Bạn chắc chắn muốn hủy đơn này?')">
+                            Hủy
+                        </button>
+                    </form>
+                </td>
+            </tr>
 
-                        <td>
-                            <span class="payment-badge"
-                                  th:classappend="${order.paymentStatus.name().toLowerCase()}"
-                                  th:text="${order.paymentStatus.name()}">
-                            </span>
-                        </td>
-
-                        <td>
-                            <div class="row-actions">
-
-                                <a th:href="@{/admin/orders/detail/{id}(id=${order.id}, status=${currentStatus})}"
-                                   class="btn-small btn-detail">
-                                    Chi tiết
-                                </a>
-
-                                <form th:if="${order.orderStatus.name() == 'PENDING'}"
-                                      th:action="@{/admin/orders/approve/{id}(id=${order.id})}"
-                                      method="post"
-                                      class="confirm-form"
-                                      data-message="Duyệt đơn hàng này?">
-
-                                    <input type="hidden" name="currentStatus" th:value="${currentStatus}">
-
-                                    <button type="submit" class="btn-small btn-approve">
-                                        Duyệt
-                                    </button>
-                                </form>
-
-                                <span th:unless="${order.orderStatus.name() == 'PENDING'}"
-                                      class="approve-placeholder"></span>
-
-                                <form th:if="${order.orderStatus.name() == 'PENDING'
-                                     and order.paymentStatus.name() == 'UNPAID'
-                                     and order.paymentMethod == 'QR_MANUAL'}"
-                                      th:action="@{/admin/orders/confirm-payment/{id}(id=${order.id})}"
-                                      method="post"
-                                      class="confirm-form"
-                                      data-message="Xác nhận đã nhận tiền chuyển khoản?">
-
-                                    <input type="hidden" name="currentStatus" th:value="${currentStatus}">
-
-                                    <button type="submit" class="btn-paid">
-                                        Đã nhận tiền
-                                    </button>
-                                </form>
-
-                                <span th:unless="${order.orderStatus.name() == 'PENDING'
-                                     and order.paymentStatus.name() == 'UNPAID'
-                                     and order.paymentMethod == 'QR_MANUAL'}"
-                                class="paid-placeholder"></span>
-
-                                <form th:if="${order.orderStatus.name() != 'DELIVERED'
-                                             and order.orderStatus.name() != 'CANCELLED'}"
-                                      th:action="@{/admin/orders/update-status/{id}(id=${order.id})}"
-                                      method="post"
-                                      class="status-update-form">
-
-                                    <input type="hidden" name="currentStatus" th:value="${currentStatus}">
-
-                                    <select name="orderStatus" class="status-select">
-                                        <option th:if="${order.orderStatus.name() == 'PENDING'}"
-                                                value="CANCELLED">
-                                            CANCELLED
-                                        </option>
-
-                                        <option th:if="${order.orderStatus.name() == 'PROCESSING'}"
-                                                value="SHIPPING">
-                                            SHIPPING
-                                        </option>
-
-                                        <option th:if="${order.orderStatus.name() == 'SHIPPING'}"
-                                                value="DELIVERED">
-                                            DELIVERED
-                                        </option>
-                                    </select>
-
-                                    <button type="submit" class="btn-small btn-update">
-                                        Lưu
-                                    </button>
-                                </form>
-
-                                <span th:if="${order.orderStatus.name() == 'DELIVERED'}"
-                                      class="status-done">
-                                    Hoàn tất
-                                </span>
-
-                                <span th:if="${order.orderStatus.name() == 'CANCELLED'}"
-                                      class="status-cancelled">
-                                    Đã hủy
-                                </span>
-
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </form>
+            <tr th:if="${#lists.isEmpty(orders)}">
+                <td colspan="6">Không có đơn hàng nào</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </th:block>
 

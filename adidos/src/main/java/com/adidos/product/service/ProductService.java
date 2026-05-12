@@ -20,7 +20,10 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort;import com.adidos.order.repository.OrderItemRepository;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Comparator;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,7 @@ public class ProductService {
     private final SizeRepository sizeRepository;
     private final ColorRepository colorRepository;
     private final PromotionService promotionService;
+    private final OrderItemRepository orderItemRepository;
 
 
     @Transactional(readOnly = true)
@@ -52,13 +56,9 @@ public class ProductService {
     }
 
 
-    /**
-     * Lấy CHI TIẾT sản phẩm kèm theo toàn bộ biến thể (Size, Color, Image)
-     * Dùng cho trang Chi tiết sản phẩm (Detail)
-     */
     @Transactional(readOnly = true)
     public ProductResponse getProductDetail(Long productId) {
-        // Sử dụng hàm findByIdWithVariants (đã viết @Query JOIN FETCH) để tránh N+1 Query
+        // Sử dụng hàm findByIdWithVariants
         Product product = productRepository.findByIdWithVariants(productId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm với ID: " + productId));
 
@@ -87,8 +87,6 @@ public class ProductService {
 
 
 
-
-    //================= admin==============
     @Transactional
     public void saveProduct(ProductRequest request) {
         Product product;
@@ -245,25 +243,54 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductResponse> getProductsByCategoryIdPage(Long rootId,
-         Long categoryId,
-         BigDecimal minPrice,
-         BigDecimal maxPrice,
-         String brand,
-         String material,
-         int page,
-         int size) {
-
-
-        Long finalCategoryId = categoryId != null ? categoryId : rootId;
+    public Page<ProductResponse> getProductsByCategoryIdPage(
+            Long rootId,
+            List<Long> categoryIds,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            List<String> brands,
+            List<String> materials,
+            String sort,
+            int page,
+            int size
+    ) {
+        List<Long> finalCategoryIds =
+                categoryIds != null && !categoryIds.isEmpty()
+                        ? categoryIds
+                        : List.of(rootId);
 
         List<ProductResponse> filteredProducts = getProductsByCategoryId(
-                finalCategoryId,
+                finalCategoryIds,
                 minPrice,
                 maxPrice,
-                brand,
-                material
+                brands,
+                materials
         );
+
+        if ("priceAsc".equals(sort)) {
+            filteredProducts.sort(
+                    Comparator.comparing(ProductResponse::getDiscountedPrice)
+            );
+        } else if ("priceDesc".equals(sort)) {
+            filteredProducts.sort(
+                    Comparator.comparing(ProductResponse::getDiscountedPrice).reversed()
+            );
+        } else if ("bestSeller".equals(sort)) {
+            Map<Long, Long> soldMap = new HashMap<>();
+
+            orderItemRepository.findBestSellerProductQuantity()
+                    .forEach(row -> {
+                        Long productId = ((Number) row[0]).longValue();
+                        Long soldQuantity = ((Number) row[1]).longValue();
+                        soldMap.put(productId, soldQuantity);
+                    });
+
+            filteredProducts.sort(
+                    Comparator.comparing(
+                            (ProductResponse p) -> soldMap.getOrDefault(p.getId(), 0L)
+                    ).reversed()
+            );
+        }
 
         int start = Math.min(page * size, filteredProducts.size());
         int end = Math.min(start + size, filteredProducts.size());
@@ -335,13 +362,6 @@ public class ProductService {
     }
 
 
-
-
-
-
-
-
-
     public List<Color> getAllColors() {
         return colorRepository.findAll();
     }
@@ -352,26 +372,58 @@ public class ProductService {
 
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getProductsByCategoryId(Long categoryId, BigDecimal minPrice, BigDecimal maxPrice, String brand, String material) {
-        List<Product> products = productRepository.findProductsByCategoryAndSub(categoryId);
+    public List<ProductResponse> getProductsByCategoryId(
+            List<Long> categoryIds,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            List<String> brands,
+            List<String> materials
+    ) {
+        List<Product> products;
+
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            return List.of();
+        }
+
+        products = categoryIds.stream()
+                .flatMap(catId -> productRepository.findProductsByCategoryAndSub(catId).stream())
+                .distinct()
+                .toList();
+
         return products.stream()
                 .filter(p -> "ACTIVE".equalsIgnoreCase(p.getStatus()))
-                // Lọc theo Brand (nếu có)
-                .filter(p -> brand == null || brand.isEmpty() || brand.equalsIgnoreCase(p.getBrand()))
-                // Lọc theo Material (nếu có)
-                .filter(p -> material == null || material.isEmpty() || material.equalsIgnoreCase(p.getMaterial()))
+
+                .filter(p ->
+                        brands == null ||
+                                brands.isEmpty() ||
+                                brands.stream().anyMatch(b ->
+                                        p.getBrand() != null &&
+                                                b.equalsIgnoreCase(p.getBrand())
+                                )
+                )
+
+                .filter(p ->
+                        materials == null ||
+                                materials.isEmpty() ||
+                                materials.stream().anyMatch(m ->
+                                        p.getMaterial() != null &&
+                                                m.equalsIgnoreCase(p.getMaterial())
+                                )
+                )
+
                 .map(p -> {
                     ProductResponse res = ProductMapper.toProductResponse(p);
                     applyPromotionData(res, p);
                     return res;
                 })
-                // Lọc theo khoảng giá (Lọc trên giá đã giảm)
+
                 .filter(res -> minPrice == null || res.getDiscountedPrice().compareTo(minPrice) >= 0)
                 .filter(res -> maxPrice == null || res.getDiscountedPrice().compareTo(maxPrice) <= 0)
+
                 .collect(Collectors.toList());
     }
 
-    // Lấy danh sách thương hiệu không trùng lặp (Viết hoa toàn bộ cho đẹp: NIKE, ADIDAS)
+    // Lấy danh sách thương hiệu không trùng lặp
     public List<String> getBrandsByCategory(Long categoryId) {
         return productRepository.findProductsByCategoryAndSub(categoryId).stream()
                 .filter(p -> "ACTIVE".equalsIgnoreCase(p.getStatus()) && p.getBrand() != null && !p.getBrand().trim().isEmpty())
@@ -380,7 +432,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    // Lấy danh sách chất liệu không trùng lặp (Viết hoa chữ cái đầu: Cotton, Polyester)
+    // Lấy danh sách chất liệu không trùng lặp
     public List<String> getMaterialsByCategory(Long categoryId) {
         return productRepository.findProductsByCategoryAndSub(categoryId).stream()
                 .filter(p -> "ACTIVE".equalsIgnoreCase(p.getStatus()) && p.getMaterial() != null && !p.getMaterial().trim().isEmpty())
@@ -466,13 +518,6 @@ public class ProductService {
                     return res;
                 }).toList();
     }
-
-
-
-
-
-
-
 
 
 

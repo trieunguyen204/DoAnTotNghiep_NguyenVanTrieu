@@ -79,8 +79,32 @@
                         </div>
 
                         <div class="form-group">
-                            <label>Địa chỉ nhận hàng</label>
-                            <textarea name="guestAddress" placeholder="Nhập địa chỉ chi tiết" required></textarea>
+                            <label>Tỉnh / Thành phố</label>
+                            <select name="guestProvince" id="guestProvince" required>
+                                <option value="">-- Chọn Tỉnh / Thành phố --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Quận / Huyện</label>
+                            <select name="guestDistrict" id="guestDistrict" required>
+                                <option value="">-- Chọn Quận / Huyện --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Phường / Xã</label>
+                            <select name="guestWard" id="guestWard" required>
+                                <option value="">-- Chọn Phường / Xã --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Địa chỉ cụ thể</label>
+                            <input type="text"
+                                   name="guestAddressDetail"
+                                   placeholder="Số nhà, tên đường..."
+                                   required>
                         </div>
                     </div>
 
@@ -90,24 +114,14 @@
                         <label class="payment-option">
                             <input type="radio" name="paymentMethod" value="COD" checked>
                             <div>
-                                <strong>Thanh toán khi nhận hàng</strong>
-                                <p>Trả tiền mặt khi nhận được hàng.</p>
-                            </div>
-                        </label>
-
-                        <label class="payment-option">
-                            <input type="radio" name="paymentMethod" value="QR_MANUAL">
-                            <div>
-                                <strong>Chuyển khoản QR thủ công</strong>
-                                <p>Đặt hàng xong hệ thống hiển thị mã QR để chuyển khoản.</p>
+                                <strong>COD</strong>
                             </div>
                         </label>
 
                         <label class="payment-option">
                             <input type="radio" name="paymentMethod" value="PAYOS">
                             <div>
-                                <strong>Thanh toán tự động qua PayOS</strong>
-                                <p>Tự động xác nhận sau khi thanh toán thành công.</p>
+                                <strong>QR Code</strong>
                             </div>
                         </label>
                     </div>
@@ -133,7 +147,7 @@
                             </div>
                         </div>
 
-                        <div class="voucher-box">
+                        <div class="voucher-box" th:if="${isLogged}">
                             <label>Mã giảm giá</label>
 
                             <div class="voucher-input-row">
@@ -145,12 +159,10 @@
                                 <button type="button" id="btnApplyVoucher">
                                     Áp dụng
                                 </button>
-                            </div>
 
-                            <div class="voucher-search-box">
-                                <input type="text"
-                                       id="voucherSearch"
-                                       placeholder="Tìm voucher...">
+                                <button type="button" id="btnCancelVoucher" style="display: none;">
+                                    Hủy dùng
+                                </button>
                             </div>
 
                             <div class="voucher-list" th:if="${!#lists.isEmpty(vouchers)}">

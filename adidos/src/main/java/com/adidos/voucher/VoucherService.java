@@ -24,6 +24,31 @@ public class VoucherService {
         return voucherRepository.saveAll(vouchers);
     }
 
+    public Voucher getValidVoucher(String code, BigDecimal orderTotal) {
+        if (code == null || code.isBlank()) {
+            return null;
+        }
+
+        Voucher voucher = voucherRepository.findByCode(code.trim().toUpperCase())
+                .orElseThrow(() -> new RuntimeException("Mã giảm giá không hợp lệ"));
+
+        refreshVoucherStatus(voucher);
+        voucherRepository.save(voucher);
+
+        if (!"ACTIVE".equalsIgnoreCase(voucher.getStatus())) {
+            throw new RuntimeException("Voucher không còn khả dụng");
+        }
+
+        if (voucher.getMinOrderValue() != null
+                && orderTotal.compareTo(voucher.getMinOrderValue()) < 0) {
+            throw new RuntimeException(
+                    "Đơn hàng phải từ " + voucher.getMinOrderValue() + "đ để dùng voucher"
+            );
+        }
+
+        return voucher;
+    }
+
     @Transactional
     public Voucher saveVoucher(Voucher voucher) {
         voucher.setCode(voucher.getCode().toUpperCase().trim());

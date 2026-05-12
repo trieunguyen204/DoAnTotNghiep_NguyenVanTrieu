@@ -20,6 +20,12 @@ public class CartMapper {
                 .findFirst()
                 .orElse(variant.getImages().isEmpty() ? null : variant.getImages().get(0).getImageUrl());
 
+        if (imageUrl == null || imageUrl.isBlank()) {
+            imageUrl = "/images/default.jpg";
+        } else if (!imageUrl.startsWith("http") && !imageUrl.startsWith("/")) {
+            imageUrl = "/uploads/" + imageUrl;
+        }
+
         BigDecimal originalPrice = variant.getPrice() != null ? variant.getPrice() : BigDecimal.ZERO;
         BigDecimal price = finalPrice != null ? finalPrice : originalPrice;
         BigDecimal quantity = BigDecimal.valueOf(cartItem.getQuantity());

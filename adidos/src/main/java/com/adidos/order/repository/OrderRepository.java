@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,15 +26,13 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o LEFT JOIN FETCH o.orderItems WHERE o.id = :orderId")
     Optional<Order> findByIdWithItems(@Param("orderId") Long orderId);
 
-
+    boolean existsByUserIdAndVoucherId(Long userId, Long voucherId);
 
     Page<Order> findByUserIdOrderByIdDesc(Long userId, Pageable pageable);
-
 
     // Đếm tổng số đơn hàng
     long count();
 
-    // Đếm đơn hàng theo trạng thái (VD: Để biết có bao nhiêu đơn đang PENDING cần xử lý)
     long countByOrderStatus(OrderStatus status);
 
     @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Order o WHERE o.orderStatus = 'DELIVERED'")
@@ -64,4 +63,39 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     ORDER BY o.id DESC
     """)
     List<Order> findByUserIdWithItems(@Param("userId") Long userId);
+
+    @Query("""
+    SELECT COALESCE(SUM(o.totalPrice + o.shippingFee - o.discountAmount), 0)
+    FROM Order o
+    WHERE o.orderStatus = com.adidos.order.enums.OrderStatus.DELIVERED
+    """)
+    BigDecimal calculateTotalRevenueAllTime();
+
+    @Query("""
+    SELECT MONTH(o.createdAt), COALESCE(SUM(o.totalPrice + o.shippingFee - o.discountAmount), 0)
+    FROM Order o
+    WHERE o.orderStatus = com.adidos.order.enums.OrderStatus.DELIVERED
+      AND YEAR(o.createdAt) = :year
+    GROUP BY MONTH(o.createdAt)
+    ORDER BY MONTH(o.createdAt)
+    """)
+    List<Object[]> getMonthlyRevenueByYear(@Param("year") int year);
+
+
+    @Query("""
+    SELECT 
+        oi.productVariant.product.id,
+        oi.productVariant.product.name,
+        COALESCE(SUM(oi.quantity), 0),
+        COALESCE((
+            SELECT SUM(v.stockQuantity)
+            FROM ProductVariant v
+            WHERE v.product.id = oi.productVariant.product.id
+        ), 0)
+    FROM OrderItem oi
+    WHERE oi.order.orderStatus <> com.adidos.order.enums.OrderStatus.CANCELLED
+      AND YEAR(oi.order.createdAt) = :year
+    GROUP BY oi.productVariant.product.id, oi.productVariant.product.name
+    """)
+    List<Object[]> getProductSalesStatsByYear(@Param("year") int year);
 }

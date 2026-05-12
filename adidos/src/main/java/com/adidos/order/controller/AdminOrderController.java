@@ -18,77 +18,50 @@ public class AdminOrderController {
 
     private final OrderService orderService;
 
+
+    @PostMapping("/next-status/{id}")
+    public String nextStatus(@PathVariable Long id,
+                             @RequestParam(value = "currentStatus", required = false) String currentStatus,
+                             RedirectAttributes redirectAttributes) {
+        try {
+            orderService.moveToNextStatus(id);
+            redirectAttributes.addFlashAttribute("success", "Đã chuyển trạng thái đơn hàng");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
+        return redirectByStatus(currentStatus);
+    }
+    @PostMapping("/cancel/{id}")
+    public String cancelOrder(@PathVariable Long id,
+                              @RequestParam(value = "currentStatus", required = false) String currentStatus,
+                              RedirectAttributes redirectAttributes) {
+        try {
+            orderService.cancelOrderByAdmin(id);
+            redirectAttributes.addFlashAttribute("success", "Đã hủy đơn hàng");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
+        return redirectByStatus(currentStatus);
+    }
+
     @GetMapping
-    public String listOrders(@RequestParam(value = "status", required = false) String status,
-                             Model model) {
-        List<OrderResponse> orders = orderService.getOrdersForAdminByStatus(status);
-
-        model.addAttribute("orders", orders);
-        model.addAttribute("currentStatus", status == null || status.isBlank() ? "ALL" : status);
+    public String listOrders(@RequestParam(value = "status", required = false) String status, Model model) {
+        model.addAttribute("orders", orderService.getAllOrders(status));
+        model.addAttribute("currentStatus", status == null ? "ALL" : status);
         model.addAttribute("statuses", OrderStatus.values());
-
         return "admin/order/order_management";
     }
 
-    @PostMapping("/approve/{id}")
-    public String approveOrder(@PathVariable Long id,
-                               @RequestParam(value = "currentStatus", required = false) String currentStatus,
-                               RedirectAttributes redirectAttributes) {
-        try {
-            orderService.approveOrder(id);
-            redirectAttributes.addFlashAttribute("success", "Duyệt đơn hàng thành công!");
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
-
-        return redirectByStatus(currentStatus);
-    }
-
-    @PostMapping("/approve-selected")
-    public String approveSelectedOrders(@RequestParam(value = "orderIds", required = false) List<Long> orderIds,
-                                        @RequestParam(value = "currentStatus", required = false) String currentStatus,
-                                        RedirectAttributes redirectAttributes) {
-        try {
-            if (orderIds == null || orderIds.isEmpty()) {
-                redirectAttributes.addFlashAttribute("error", "Vui lòng chọn ít nhất một đơn hàng.");
-                return redirectByStatus(currentStatus);
-            }
-
-            int count = orderService.advanceSelectedOrders(orderIds);
-            redirectAttributes.addFlashAttribute("success", "Đã cập nhật " + count + " đơn hàng.");
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
-
-        return redirectByStatus(currentStatus);
-    }
-
-    @PostMapping("/approve-all")
-    public String approveAllOrders(@RequestParam(value = "currentStatus", required = false) String currentStatus,
-                                   RedirectAttributes redirectAttributes) {
-        try {
-            int count = orderService.approveAllOrdersByStatus(currentStatus);
-            redirectAttributes.addFlashAttribute("success", "Đã duyệt " + count + " đơn hàng.");
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
-
-        return redirectByStatus(currentStatus);
-    }
-
-    @PostMapping("/update-status/{id}")
-    public String updateStatus(@PathVariable Long id,
-                               @RequestParam OrderStatus orderStatus,
-                               @RequestParam(value = "currentStatus", required = false) String currentStatus,
-                               RedirectAttributes redirectAttributes) {
-        try {
-            orderService.updateOrderStatus(id, orderStatus);
-            redirectAttributes.addFlashAttribute("success", "Cập nhật trạng thái đơn hàng thành công!");
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
-
-        return redirectByStatus(currentStatus);
+    @GetMapping("/detail/{id}")
+    public String orderDetail(@PathVariable Long id,
+                              @RequestParam(value = "status", required = false) String status,
+                              Model model) {
+        model.addAttribute("order", orderService.getAdminOrderDetail(id));
+        model.addAttribute("currentStatus", status);
+        model.addAttribute("statuses", OrderStatus.values());
+        return "admin/order/order_detail";
     }
 
     private String redirectByStatus(String currentStatus) {
@@ -96,43 +69,6 @@ public class AdminOrderController {
             return "redirect:/admin/orders";
         }
 
-        String cleanStatus = currentStatus.split(",")[0].trim().toUpperCase();
-
-        return "redirect:/admin/orders?status=" + cleanStatus;
-    }
-
-
-    @GetMapping("/detail/{id}")
-    public String orderDetail(@PathVariable Long id,
-                              @RequestParam(value = "status", required = false) String status,
-                              Model model) {
-        OrderResponse order = orderService.getOrderDetailForAdmin(id);
-
-        model.addAttribute("order", order);
-        model.addAttribute("currentStatus", status == null || status.isBlank() ? "ALL" : status);
-
-        return "admin/order/order_detail";
-    }
-
-    @PostMapping("/confirm-payment/{id}")
-    public String confirmPayment(@PathVariable Long id,
-                                 @RequestParam(value = "currentStatus", required = false) String currentStatus,
-                                 RedirectAttributes redirectAttributes) {
-        try {
-            orderService.adminConfirmManualPayment(id);
-
-            redirectAttributes.addFlashAttribute(
-                    "success",
-                    "Đã xác nhận thanh toán đơn hàng."
-            );
-
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute(
-                    "error",
-                    e.getMessage()
-            );
-        }
-
-        return redirectByStatus(currentStatus);
+        return "redirect:/admin/orders?status=" + currentStatus.split(",")[0].trim().toUpperCase();
     }
 }

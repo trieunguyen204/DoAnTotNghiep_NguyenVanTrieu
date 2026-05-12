@@ -37,9 +37,14 @@ public class OrderMapper {
                 .discountAmount(discount)
                 .finalAmount(finalAmount)
                 .orderStatus(order.getOrderStatus())
-                .paymentStatus(order.getPaymentStatus())
+                .paymentStatus(payment != null ? payment.getStatus() : null)
                 .paymentMethod(payment != null ? payment.getPaymentMethod() : null)
                 .items(toItemResponseList(order.getOrderItems()))
+                .voucherCode(
+                        order.getVoucher() != null
+                                ? order.getVoucher().getCode()
+                                : null
+                )
                 .build();
     }
 

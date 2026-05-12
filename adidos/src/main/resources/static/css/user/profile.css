@@ -609,3 +609,16 @@
     border-radius: 12px;
     font-weight: 600;
 }
+
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+    background: #fff;
+}
+
+.form-group select:focus {
+    border-color: black;
+}

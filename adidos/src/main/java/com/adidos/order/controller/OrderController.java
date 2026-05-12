@@ -34,14 +34,10 @@ public class OrderController {
 
     @GetMapping("/checkout")
     public String checkoutPage(Model model, Principal principal, HttpSession session) {
-
         boolean isLogged = principal != null;
         String identifier = isLogged ? principal.getName() : session.getId();
 
-        List<CartItemResponse> cartItems = isLogged
-                ? cartService.getCartByUser(principal.getName(), true)
-                : cartService.getCartByUser(session.getId(), false);
-
+        List<CartItemResponse> cartItems = cartService.getCartByUser(identifier, isLogged);
         if (cartItems.isEmpty()) {
             return "redirect:/cart";
         }
@@ -51,7 +47,6 @@ public class OrderController {
 
         if (isLogged) {
             List<AddressResponse> addresses = addressService.getMyAddresses(principal.getName());
-
             AddressResponse defaultAddress = addresses.stream()
                     .filter(a -> Boolean.TRUE.equals(a.getIsDefault()))
                     .findFirst()
@@ -59,8 +54,10 @@ public class OrderController {
 
             model.addAttribute("addresses", addresses);
             model.addAttribute("defaultAddress", defaultAddress);
+            model.addAttribute("vouchers", voucherService.getAvailableVouchers());
         } else {
             model.addAttribute("addresses", List.of());
+            model.addAttribute("vouchers", List.of());
         }
 
         BigDecimal totalPrice = cartItems.stream()
@@ -70,9 +67,7 @@ public class OrderController {
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("shippingFee", BigDecimal.ZERO);
         model.addAttribute("finalAmount", totalPrice);
-
         model.addAttribute("checkoutRequest", new CheckoutRequest());
-        model.addAttribute("vouchers", voucherService.getAvailableVouchers());
 
         return "order/checkout";
     }
@@ -82,25 +77,14 @@ public class OrderController {
                              Principal principal,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
-
         try {
-            Long orderId;
+            Long orderId = principal != null
+                    ? orderService.placeOrder(principal.getName(), request)
+                    : orderService.placeGuestOrder(session.getId(), request);
 
-            if (principal != null) {
-                orderId = orderService.placeOrder(principal.getName(), request);
-            } else {
-                orderId = orderService.placeGuestOrder(session.getId(), request);
-            }
+            String method = request.getPaymentMethod() == null ? "COD" : request.getPaymentMethod().trim().toUpperCase();
 
-            if ("COD".equals(request.getPaymentMethod())) {
-                return "redirect:/checkout/success/" + orderId;
-            }
-
-            if ("QR_MANUAL".equals(request.getPaymentMethod())) {
-                return "redirect:/payment/qr/" + orderId;
-            }
-
-            if ("PAYOS".equals(request.getPaymentMethod())) {
+            if ("PAYOS".equals(method)) {
                 String checkoutUrl = payOSService.createPaymentLink(orderId);
                 return "redirect:" + checkoutUrl;
             }
@@ -113,12 +97,8 @@ public class OrderController {
         }
     }
 
-
-
     @GetMapping("/checkout/success/{id}")
-    public String checkoutSuccess(@PathVariable Long id,
-                                  Model model,
-                                  Principal principal) {
+    public String checkoutSuccess(@PathVariable Long id, Model model, Principal principal) {
         boolean isLogged = principal != null;
 
         OrderResponse order = isLogged
@@ -132,32 +112,17 @@ public class OrderController {
     }
 
     @GetMapping("/payment/qr/{id}")
-    public String qrPayment(@PathVariable Long id,
-                            Model model,
-                            Principal principal) {
-
-        OrderResponse order;
-
-        if (principal != null) {
-            order = orderService.getOrderDetail(id, principal.getName());
-        } else {
-            order = orderService.getGuestOrderDetail(id);
-        }
+    public String qrPayment(@PathVariable Long id, Model model, Principal principal) {
+        OrderResponse order = principal != null
+                ? orderService.getOrderDetail(id, principal.getName())
+                : orderService.getGuestOrderDetail(id);
 
         model.addAttribute("order", order);
         return "order/qr_payment";
     }
 
-    @GetMapping("/payment/payos/{id}")
-    public String payosPayment(@PathVariable Long id,
-                               RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("error", "PayOS sẽ tích hợp ở bước tiếp theo.");
-        return "redirect:/checkout/success/" + id;
-    }
-
     @GetMapping("/payment/payos/return")
-    public String payosReturn(@RequestParam Long orderId,
-                              RedirectAttributes redirectAttributes) {
+    public String payosReturn(@RequestParam Long orderId, RedirectAttributes redirectAttributes) {
         try {
             payOSService.syncPaymentStatus(orderId);
             redirectAttributes.addFlashAttribute("success", "Thanh toán PayOS thành công!");
@@ -169,9 +134,14 @@ public class OrderController {
     }
 
     @GetMapping("/payment/payos/cancel")
-    public String payosCancel(@RequestParam Long orderId,
-                              RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("error", "Bạn đã hủy thanh toán PayOS.");
+    public String payosCancel(@RequestParam Long orderId, RedirectAttributes redirectAttributes) {
+        try {
+            payOSService.cancelPayOSOrder(orderId);
+            redirectAttributes.addFlashAttribute("error", "Bạn đã hủy thanh toán PayOS. Đơn hàng đã bị hủy và hoàn kho.");
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+
         return "redirect:/checkout/success/" + orderId;
     }
 
@@ -201,14 +171,16 @@ public class OrderController {
                                         Principal principal,
                                         RedirectAttributes redirectAttributes) {
         try {
+            if (principal == null) {
+                throw new RuntimeException("Vui lòng đăng nhập để xác nhận thanh toán");
+            }
+
             orderService.markManualTransferWaitingConfirm(id, principal.getName());
             redirectAttributes.addFlashAttribute("success", "Đã gửi yêu cầu xác nhận thanh toán. Vui lòng chờ admin kiểm tra.");
         } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
 
-        return "redirect:/profile/orders/" + id;
+        return principal != null ? "redirect:/profile/orders/" + id : "redirect:/checkout/success/" + id;
     }
-
-
 }

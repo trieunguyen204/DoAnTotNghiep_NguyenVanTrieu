@@ -1,168 +1,349 @@
-/* cart.css */
+/* =========================
+   CART PAGE
+========================= */
+
 .cart-page {
-    margin-top: 30px;
-    min-height: 50vh;
-    padding: 0 15px;
+    max-width: 1400px;
+    margin: 40px auto 80px;
+    padding: 0 32px;
+
+    font-family:
+            "Inter",
+            "Helvetica Neue",
+            Arial,
+            sans-serif;
 }
 
+/* TITLE */
+
 .cart-page .cart-title {
-    margin-bottom: 25px;
-    font-size: 24px;
+    margin-bottom: 42px;
+
+    font-size: 34px;
+    font-weight: 800;
+
+    letter-spacing: -1px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+
+    color: #111;
 }
+
+/* TABLE */
 
 .cart-page .cart-table {
     width: 100%;
     border-collapse: collapse;
-    text-align: left;
-    margin-bottom: 30px;
 }
 
 .cart-page .cart-table th {
-    padding: 15px 10px;
-    border-bottom: 2px solid #000;
+    padding: 0 0 18px;
+
+    border-bottom: 1px solid #111;
+
+    font-size: 13px;
+    font-weight: 700;
+
     text-transform: uppercase;
-    font-size: 14px;
-    color: #333;
+    letter-spacing: 0.4px;
+
+    color: #111;
+
+    text-align: left;
 }
 
 .cart-page .cart-table td {
-    padding: 15px 10px;
-    border-bottom: 1px solid #eee;
-    vertical-align: middle;
+    padding: 28px 0;
+
+    border-bottom: 1px solid #eceff1;
+
+    vertical-align: top;
 }
 
-.cart-page .cart-table td:first-child {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    font-weight: 500;
-}
+/* PRODUCT */
 
-.cart-page .btn-remove-item {
-    color: #d32f2f;
-    cursor: pointer;
-    border: none;
-    background: none;
-    font-weight: 600;
-}
-
-.cart-page .btn-remove-item:hover {
-    color: #b71c1c;
-    text-decoration: underline;
-}
-
-.cart-page .luxury-btn {
-    display: inline-block;
-    padding: 12px 30px;
-    background-color: #000;
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    border: 1px solid #000;
-    transition: all 0.3s ease;
-}
-
-.cart-page .luxury-btn:hover {
-    background-color: #fff;
-    color: #000;
-}
-
-.cart-page .empty-cart-link {
-    color: #000;
-    font-weight: 600;
-    text-decoration: underline;
-}
-
-.qty-control {
-    display: flex; align-items: center;
-    border: 1px solid #ccc; border-radius: 4px;
-    width: fit-content; overflow: hidden;
-}
-.qty-control button {
-    background: #f5f5f5; border: none;
-    padding: 5px 12px; cursor: pointer; font-weight: bold;
-}
-.qty-control input {
-    width: 40px; text-align: center; border: none;
-    border-left: 1px solid #ccc; border-right: 1px solid #ccc;
-    pointer-events: none; /* Khóa nhập tay */
-}
-
-/* --- CỘT SẢN PHẨM --- */
 .cart-page .product-col {
     display: flex;
-    align-items: center;
-    gap: 15px;
-}
-.cart-page .cart-item-img {
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-    border-radius: 4px;
-    border: 1px solid #eee;
-}
-.cart-page .product-name {
-    font-weight: 600;
-    font-size: 15px;
+    align-items: flex-start;
+    gap: 18px;
 }
 
-/* --- CỘT GIÁ --- */
-.cart-page .price-discount {
-    color: #d32f2f; /* Màu đỏ */
-    font-weight: bold;
-    font-size: 16px;
+/* IMAGE */
+
+.cart-page .cart-item-img {
+    width: 150px;
+    height: 190px;
+
+    object-fit: cover;
+    object-position: top;
+
+    background: #f5f5f5;
+
+    border: none;
+    border-radius: 0;
+
+    transition: transform 0.35s ease;
 }
+
+.cart-page .cart-item-img:hover {
+    transform: scale(1.03);
+}
+
+/* INFO */
+
+.cart-page .product-info {
+    max-width: 320px;
+    padding-top: 6px;
+}
+
+.cart-page .product-name {
+    display: block;
+
+    margin-bottom: 10px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    line-height: 1.5;
+
+    color: #111;
+}
+
+/* VARIANT */
+
+.cart-page td:nth-child(2) {
+    font-size: 14px;
+    color: #666;
+}
+
+/* PRICE */
+
+.cart-page .price-discount {
+    color: #d31334;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
 .cart-page .price-original {
-    color: #999;
+    display: inline-block;
+    margin-top: 5px;
+
+    color: #888;
+
     font-size: 13px;
 }
+
 .cart-page .price-regular {
-    font-weight: 500;
-    color: #333;
+    color: #111;
+
+    font-size: 15px;
+    font-weight: 600;
 }
 
-/* --- CỘT SỐ LƯỢNG (NÚT TĂNG GIẢM) --- */
+/* QUANTITY */
+
 .cart-page .qty-control {
     display: inline-flex;
     align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    overflow: hidden;
-}
-.cart-page .btn-qty {
-    background: #f5f5f5;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 16px;
-}
-.cart-page .btn-qty:hover {
-    background: #e0e0e0;
-}
-.cart-page .qty-input {
-    width: 45px;
-    text-align: center;
-    border: none;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    font-weight: 600;
-    pointer-events: none; /* Khóa không cho nhập tay */
-    padding: 8px 0;
+
+    border: 1px solid #d9d9d9;
+
+    height: 42px;
 }
 
-/* --- NÚT XÓA --- */
-.cart-page .btn-remove-item {
-    color: #d32f2f;
-    background: none;
+.cart-page .btn-qty {
+    width: 42px;
+    height: 42px;
+
     border: none;
+    background: #fff;
+
+    font-size: 18px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease;
+}
+
+.cart-page .btn-qty:hover {
+    background: #f5f5f5;
+}
+
+.cart-page .qty-input {
+    width: 46px;
+    height: 42px;
+
+    border: none;
+    border-left: 1px solid #e5e5e5;
+    border-right: 1px solid #e5e5e5;
+
+    text-align: center;
+
+    font-size: 14px;
     font-weight: 600;
+
+    background: #fff;
+
+    pointer-events: none;
+}
+
+/* REMOVE */
+
+.cart-page .btn-remove-item {
+    padding: 0;
+
+    border: none;
+    background: transparent;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    color: #111;
+
     cursor: pointer;
 }
+
 .cart-page .btn-remove-item:hover {
     text-decoration: underline;
+}
+
+/* CHECKOUT */
+
+.cart-page .luxury-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 320px;
+    height: 54px;
+
+    background: #111;
+    color: #fff;
+
+    border: 1px solid #111;
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    transition:
+            background 0.25s ease,
+            color 0.25s ease;
+}
+
+.cart-page .luxury-btn:hover {
+    background: #fff;
+    color: #111;
+}
+
+/* EMPTY */
+
+.cart-page .empty-cart-link {
+    color: #111;
+    font-weight: 600;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 992px) {
+
+    .cart-page .cart-item-img {
+        width: 110px;
+        height: 140px;
+    }
+
+    .cart-page .luxury-btn {
+        width: 100%;
+        min-width: unset;
+    }
+}
+
+
+.cart-page .variant-text {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+}
+
+.cart-page .stock-text {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #767677;
+}
+
+.cart-page .stock-text span {
+    color: #111;
+    font-weight: 700;
+}
+
+.cart-page .stock-text.low-stock {
+    color: #d31334;
+}
+
+.cart-page .qty-input {
+    width: 54px;
+    height: 42px;
+
+    border: none;
+    border-left: 1px solid #e5e5e5;
+    border-right: 1px solid #e5e5e5;
+
+    text-align: center;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    background: #fff;
+
+    pointer-events: auto;
+    outline: none;
+}
+
+.cart-page .qty-input::-webkit-inner-spin-button,
+.cart-page .qty-input::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+}
+
+
+.cart-page .btn-qty:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    background: #f3f3f3;
+}
+
+.cart-page .subtotal-col {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111;
+}
+
+.cart-summary {
+    width: 360px;
+    margin-left: auto;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #111;
+}
+
+.summary-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+}
+
+.summary-note {
+    margin: 12px 0 22px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #767677;
 }

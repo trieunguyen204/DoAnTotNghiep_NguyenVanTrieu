@@ -1,5 +1,6 @@
 package com.adidos.order.entity;
 
+import com.adidos.order.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,12 +15,12 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false,unique = true)
     private Order order;
 
     @Column(name = "payment_method")
-    private String paymentMethod; // VD: COD, VNPAY, MOMO
+    private String paymentMethod;
 
     @Column(name = "transaction_code")
     private String transactionCode;
@@ -27,7 +28,9 @@ public class Payment {
     @Column(precision = 12, scale = 2)
     private BigDecimal amount;
 
-    private String status; // SUCCESS, FAILED, PENDING
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private PaymentStatus status;
 
     @Column(name = "checkout_url", columnDefinition = "TEXT")
     private String checkoutUrl;

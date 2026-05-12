@@ -8,63 +8,76 @@
     <link rel="stylesheet" th:href="@{/css/user/auth.css}">
 </head>
 <body>
-<div th:fragment="content" class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <div class="auth-card">
-                <div class="text-center mb-4">
-                    <h2 class="brand-adidos text-dark">ĐĂNG NHẬP</h2>
-                    <p class="text-muted small">Chào mừng trở lại với Adidos</p>
+
+
+
+<div class="auth-page">
+
+    <section class="auth-visual">
+        <div class="auth-visual-content">
+            <span>LINEN COLLECTION</span>
+            <h1>Thoáng nhẹ cho mùa hè</h1>
+            <p>Bộ sưu tập Linen mới – nhẹ, mát, tối giản.</p>
+        </div>
+    </section>
+
+    <section class="auth-panel">
+        <div class="auth-card">
+            <div class="text-center mb-4">
+                <h2 class="brand-adidos text-dark">ĐĂNG NHẬP</h2>
+                <p class="text-muted small">Chào mừng trở lại với Adidos</p>
+            </div>
+
+            <div th:if="${param.error}" class="alert alert-dark text-center small py-2">
+                Sai thông tin đăng nhập!
+            </div>
+
+            <form th:action="@{/login}" method="post" class="needs-validation" novalidate>
+                <div class="form-floating mb-3">
+                    <input type="email" name="username" class="form-control" id="emailInput"
+                           placeholder="name@example.com" th:value="${lastEmail}" required>
+                    <label for="emailInput">Email</label>
                 </div>
 
-                <div th:if="${param.error}" class="alert alert-dark text-center small py-2">Sai thông tin đăng nhập!</div>
-
-                <form th:action="@{/login}" method="post" class="needs-validation" novalidate>
-                    <div class="form-floating mb-3">
-                        <input type="email" name="username" class="form-control" id="emailInput"
-                               placeholder="name@example.com" th:value="${lastEmail}" required>
-                        <label for="emailInput">Email</label>
-                    </div>
-
-                    <div class="form-floating mb-4">
-                        <input type="password" name="password" class="form-control" id="passInput"
-                               placeholder="Password" required>
-                        <label for="passInput">Mật khẩu</label>
-                    </div>
-
-                    <button type="submit" class="btn btn-adidos w-100 mb-3">Đăng nhập</button>
-                </form>
-
-                <div class="text-end mb-3">
-                    <a th:href="@{/forgot-password}" class="forgot-link">
-                        Quên mật khẩu?
-                    </a>
+                <div class="form-floating mb-4">
+                    <input type="password" name="password" class="form-control" id="passInput"
+                           placeholder="Password" required>
+                    <label for="passInput">Mật khẩu</label>
                 </div>
 
-                <div class="divider"><span>HOẶC</span></div>
+                <button type="submit" class="btn btn-adidos w-100 mb-3">Đăng nhập</button>
+            </form>
 
-                <div class="social-login">
-                    <a th:href="@{/oauth2/authorization/facebook}" class="btn btn-social btn-facebook w-100 mb-2">
-                        <span class="fb-icon-wrapper">
-                            <i class="fab fa-facebook-f"></i>
-                        </span>
-                        Tiếp tục với Facebook
+            <div class="text-end mb-3">
+                <a th:href="@{/forgot-password}" class="forgot-link">Quên mật khẩu?</a>
+            </div>
 
-                    </a>
+            <div class="divider"><span>HOẶC</span></div>
 
-                    <a th:href="@{/oauth2/authorization/google}" class="btn btn-social btn-google-dark w-100">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google" class="gg-icon">
-                        Tiếp tục với Google
-                    </a>
-                </div>
+            <div class="social-login">
+                <a th:href="@{/oauth2/authorization/facebook}" class="btn btn-social btn-facebook w-100 mb-2">
+                    <span class="fb-icon-wrapper">
+                        <i class="fab fa-facebook-f"></i>
+                    </span>
+                    Tiếp tục với Facebook
+                </a>
 
-                <div class="text-center mt-4 small">
-                    Chưa có tài khoản? <a th:href="@{/register}" class="text-dark fw-bold">Tạo ngay</a>
-                </div>
+                <a th:href="@{/oauth2/authorization/google}" class="btn btn-social btn-google-dark w-100">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"
+                         alt="Google" class="gg-icon">
+                    Tiếp tục với Google
+                </a>
+            </div>
+
+            <div class="text-center mt-4 small">
+                Chưa có tài khoản?
+                <a th:href="@{/register}" class="text-dark fw-bold">Tạo ngay</a>
             </div>
         </div>
-    </div>
+    </section>
+
 </div>
+
 <script th:src="@{/js/user/auth.js}"></script>
 </body>
 </html>

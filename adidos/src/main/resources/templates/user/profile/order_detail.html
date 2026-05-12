@@ -50,12 +50,23 @@
 
                 <p>
                     <strong>Trạng thái đơn:</strong>
-                    <span th:text="${order.orderStatus}"></span>
+                    <span th:text="${order.orderStatus.name() == 'PENDING' ? 'Chờ xác nhận' :
+                       (order.orderStatus.name() == 'PROCESSING' ? 'Đang chuẩn bị' :
+                       (order.orderStatus.name() == 'SHIPPING' ? 'Đang giao hàng' :
+                       (order.orderStatus.name() == 'DELIVERED' ? 'Đã giao' :
+                       (order.orderStatus.name() == 'CANCELLED' ? 'Đã hủy' :
+                       order.orderStatus))))}">
+                    </span>
                 </p>
 
                 <p>
                     <strong>Trạng thái thanh toán:</strong>
-                    <span th:text="${order.paymentStatus}"></span>
+                    <span th:text="${order.paymentStatus == null ? '---' :
+                       (order.paymentStatus.name() == 'PAID' ? 'Đã thanh toán' :
+                       (order.paymentStatus.name() == 'UNPAID' ? 'Chưa thanh toán' :
+                       (order.paymentStatus.name() == 'FAILED' ? 'Thanh toán thất bại' :
+                       order.paymentStatus)))}">
+                    </span>
                 </p>
             </div>
 

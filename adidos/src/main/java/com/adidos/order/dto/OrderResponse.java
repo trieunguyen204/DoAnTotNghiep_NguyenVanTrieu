@@ -13,7 +13,7 @@ public class OrderResponse {
     private String receiverName;
     private String shippingAddress;
 
-    // Các loại tiền
+
     private BigDecimal totalPrice; // Tổng tiền hàng
     private BigDecimal shippingFee;
     private BigDecimal discountAmount;
@@ -26,4 +26,5 @@ public class OrderResponse {
 
     private List<OrderItemResponse> items;
     private String paymentMethod;
+    private String voucherCode;
 }

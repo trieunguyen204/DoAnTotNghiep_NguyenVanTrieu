@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 @Transactional
 public class CartService {
 
-    private final CartItemRepository cartRepository;
     private final ProductVariantRepository variantRepository;
     private final UserRepository userRepository;
     private final PromotionService promotionService;
@@ -35,11 +34,11 @@ public class CartService {
         if (isLogged) {
             User user = userRepository.findByEmail(identifier)
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            return cartRepository.findByUserId(user.getId()).stream()
+            return cartItemRepository.findByUserId(user.getId()).stream()
                     .map(this::toCartItemResponse)
                     .collect(Collectors.toList());
         } else {
-            return cartRepository.findBySessionId(identifier).stream()
+            return cartItemRepository.findBySessionId(identifier).stream()
                     .map(this::toCartItemResponse)
                     .collect(Collectors.toList());
         }
@@ -60,74 +59,159 @@ public class CartService {
 
 
     @Transactional
-    public void removeCartItem(Long cartItemId) {
-        cartRepository.deleteById(cartItemId);
+    public void removeCartItem(Long cartItemId, String identifier, boolean isLogged) {
+        CartItem item = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm trong giỏ hàng"));
+
+        validateCartItemOwner(item, identifier, isLogged);
+
+        cartItemRepository.delete(item);
     }
 
 
     @Transactional
     public void addToCart(String identifier, boolean isLogged, CartItemRequest request) {
         ProductVariant variant = variantRepository.findById(request.getProductVariantId())
-                .orElseThrow(() -> new RuntimeException("Variant not found"));
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy biến thể sản phẩm"));
+
+        if (request.getQuantity() == null || request.getQuantity() <= 0) {
+            throw new RuntimeException("Số lượng không hợp lệ");
+        }
 
         if (variant.getStockQuantity() < request.getQuantity()) {
             throw new RuntimeException("Số lượng tồn kho không đủ!");
         }
 
-        User user = isLogged ? userRepository.findByEmail(identifier).orElse(null) : null;
-        String sessionId = isLogged ? null : identifier;
+        User user = null;
+        String sessionId = null;
+
+        if (isLogged) {
+            user = userRepository.findByEmail(identifier)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy user"));
+        } else {
+            sessionId = identifier;
+        }
 
         Optional<CartItem> existingItem = isLogged
-                ? cartRepository.findByUserIdAndProductVariantId(user.getId(), variant.getId())
-                : cartRepository.findBySessionIdAndProductVariantId(sessionId, variant.getId());
+                ? cartItemRepository.findByUserIdAndProductVariantId(user.getId(), variant.getId())
+                : cartItemRepository.findBySessionIdAndProductVariantId(sessionId, variant.getId());
 
-        existingItem.ifPresentOrElse(
-                item -> {
-                    int newQty = item.getQuantity() + request.getQuantity();
-                    if (newQty > variant.getStockQuantity()) throw new RuntimeException("Vượt quá số lượng tồn kho!");
-                    item.setQuantity(newQty);
-                    cartRepository.save(item);
-                },
-                () -> {
-                    CartItem newItem = CartItem.builder()
-                            .user(user)
-                            .sessionId(sessionId)
-                            .productVariant(variant)
-                            .quantity(request.getQuantity())
-                            .build();
-                    cartRepository.save(newItem);
-                }
-        );
+        if (existingItem.isPresent()) {
+            CartItem item = existingItem.get();
+
+            int newQty = item.getQuantity() + request.getQuantity();
+
+            if (newQty > variant.getStockQuantity()) {
+                throw new RuntimeException("Vượt quá số lượng tồn kho!");
+            }
+
+            item.setQuantity(newQty);
+            cartItemRepository.save(item);
+        } else {
+            CartItem newItem = CartItem.builder()
+                    .user(user)
+                    .sessionId(sessionId)
+                    .productVariant(variant)
+                    .quantity(request.getQuantity())
+                    .build();
+
+            cartItemRepository.save(newItem);
+        }
     }
 
     @Transactional(readOnly = true)
     public int getCartItemCount(String identifier, boolean isLogged) {
         if (isLogged) {
             return userRepository.findByEmail(identifier)
-                    .map(user -> cartRepository.findByUserId(user.getId()).stream()
+                    .map(user -> cartItemRepository.findByUserId(user.getId()).stream()
                             .mapToInt(CartItem::getQuantity).sum())
                     .orElse(0);
         } else {
 
-            return cartRepository.findBySessionId(identifier).stream()
+            return cartItemRepository.findBySessionId(identifier).stream()
                     .mapToInt(CartItem::getQuantity).sum();
         }
     }
 
 
     @Transactional
-    public void updateQuantity(Long cartItemId, Integer quantity) {
-        CartItem item = cartRepository.findById(cartItemId)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm"));
+    public void updateQuantity(Long cartItemId,
+                               Integer quantity,
+                               String identifier,
+                               boolean isLogged) {
+        CartItem item = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm trong giỏ hàng"));
+
+        validateCartItemOwner(item, identifier, isLogged);
+
+        if (quantity == null) {
+            throw new RuntimeException("Số lượng không hợp lệ");
+        }
+
+        if (quantity <= 0) {
+            cartItemRepository.delete(item);
+            return;
+        }
 
         if (quantity > item.getProductVariant().getStockQuantity()) {
             throw new RuntimeException("Vượt quá số lượng tồn kho!");
         }
-        if (quantity <= 0) {
-            cartRepository.delete(item);
+
+        item.setQuantity(quantity);
+        cartItemRepository.save(item);
+    }
+
+    @Transactional
+    public void mergeGuestCartToUser(String sessionId, String userEmail) {
+        if (sessionId == null || userEmail == null) {
+            return;
+        }
+
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy user"));
+
+        List<CartItem> guestItems = cartItemRepository.findBySessionId(sessionId);
+
+        if (guestItems.isEmpty()) {
+            return;
+        }
+
+        for (CartItem guestItem : guestItems) {
+            ProductVariant variant = guestItem.getProductVariant();
+
+            Optional<CartItem> existingUserItem =
+                    cartItemRepository.findByUserIdAndProductVariantId(user.getId(), variant.getId());
+
+            if (existingUserItem.isPresent()) {
+                CartItem userItem = existingUserItem.get();
+
+                int mergedQty = userItem.getQuantity() + guestItem.getQuantity();
+                int maxStock = variant.getStockQuantity();
+
+                userItem.setQuantity(Math.min(mergedQty, maxStock));
+
+                cartItemRepository.save(userItem);
+                cartItemRepository.delete(guestItem);
+            } else {
+                guestItem.setUser(user);
+                guestItem.setSessionId(null);
+                cartItemRepository.save(guestItem);
+            }
+        }
+    }
+
+    private void validateCartItemOwner(CartItem item, String identifier, boolean isLogged) {
+        if (isLogged) {
+            User user = userRepository.findByEmail(identifier)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy user"));
+
+            if (item.getUser() == null || !item.getUser().getId().equals(user.getId())) {
+                throw new RuntimeException("Bạn không có quyền thao tác sản phẩm này");
+            }
         } else {
-            item.setQuantity(quantity);
-            cartRepository.save(item);
+            if (item.getSessionId() == null || !item.getSessionId().equals(identifier)) {
+                throw new RuntimeException("Bạn không có quyền thao tác sản phẩm này");
+            }
         }
     }
 

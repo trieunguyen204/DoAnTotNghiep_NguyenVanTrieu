@@ -19,9 +19,14 @@ public class CartApiController {
 
     // Xóa sản phẩm khỏi giỏ hàng
     @DeleteMapping("/remove/{id}")
-    public ResponseEntity<?> removeCartItem(@PathVariable Long id) {
+    public ResponseEntity<?> removeCartItem(@PathVariable Long id,
+                                            Principal principal,
+                                            HttpSession session) {
         try {
-            cartService.removeCartItem(id);
+            String identifier = (principal != null) ? principal.getName() : session.getId();
+            boolean isLogged = (principal != null);
+
+            cartService.removeCartItem(id, identifier, isLogged);
             return ResponseEntity.ok("Đã xóa sản phẩm khỏi giỏ hàng");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -38,11 +43,17 @@ public class CartApiController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addToCart(@RequestBody CartItemRequest request, Principal principal, HttpSession session) {
+    public ResponseEntity<?> addToCart(@RequestBody CartItemRequest request,
+                                       Principal principal,
+                                       HttpSession session) {
         try {
-            session.setAttribute("GUEST_CART", true);
+            if (principal == null) {
+                session.setAttribute("GUEST_CART", true);
+            }
+
             String identifier = (principal != null) ? principal.getName() : session.getId();
             boolean isLogged = (principal != null);
+
             cartService.addToCart(identifier, isLogged, request);
             return ResponseEntity.ok("Đã thêm vào giỏ hàng thành công!");
         } catch (Exception e) {
@@ -51,12 +62,20 @@ public class CartApiController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateQuantity(@PathVariable Long id, @RequestParam Integer quantity) {
+    public ResponseEntity<?> updateQuantity(@PathVariable Long id,
+                                            @RequestParam Integer quantity,
+                                            Principal principal,
+                                            HttpSession session) {
         try {
-            cartService.updateQuantity(id, quantity);
+            String identifier = (principal != null) ? principal.getName() : session.getId();
+            boolean isLogged = (principal != null);
+
+            cartService.updateQuantity(id, quantity, identifier, isLogged);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
 }

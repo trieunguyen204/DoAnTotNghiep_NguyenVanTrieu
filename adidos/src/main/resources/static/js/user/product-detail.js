@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
+
+
+
     // 1. Xử lý hiển thị duy nhất 1 nút cho mỗi màu sắc
     const colorBtns = document.querySelectorAll('.color-btn');
     const uniqueColors = new Set();
@@ -19,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const stockDisplay = document.querySelector('#product-stock span');
 
     // THẺ HIỂN THỊ TÊN MÀU
+
     const selectedColorDisplay = document.getElementById('selected-color-name');
 
     // Hàm định dạng tiền tệ
@@ -38,30 +42,76 @@ document.addEventListener("DOMContentLoaded", function() {
                 selectedColorDisplay.innerText = selectedColor;
             }
 
-            // 2. Xử lý hiển thị Ảnh (Tối đa 4 ảnh đầu)
-            const allWrappers = document.querySelectorAll('.img-wrapper');
-            let colorImageCount = 0;
+
+            // ===== HIỂN THỊ ẢNH THEO MÀU =====
+            const allWrappers = document.querySelectorAll(".img-wrapper");
+
+            // Ẩn toàn bộ trước
+            allWrappers.forEach(wrapper => {
+                wrapper.style.display = "none";
+            });
+
+            // Map unique ảnh
+            const uniqueMap = new Map();
 
             allWrappers.forEach(wrapper => {
-                if(wrapper.getAttribute('data-color-name') === selectedColor) {
-                    colorImageCount++;
-                    wrapper.style.display = (colorImageCount <= 4) ? 'block' : 'none';
-                } else {
-                    wrapper.style.display = 'none';
+
+                const color =
+                    wrapper.getAttribute("data-color-name");
+
+                const img =
+                    wrapper.querySelector("img");
+
+                const src =
+                    img?.getAttribute("src");
+
+                if (
+                    color === selectedColor &&
+                    src &&
+                    !uniqueMap.has(src)
+                ) {
+                    uniqueMap.set(src, wrapper);
                 }
             });
 
-            if(colorImageCount > 4) {
-                btnShowMore.style.display = 'block';
+            // Chỉ lấy ảnh unique
+            const currentImages = Array.from(uniqueMap.values());
+
+            const DEFAULT_VISIBLE = 4;
+
+            // Hiện 4 ảnh đầu
+            currentImages.forEach((wrapper, index) => {
+
+                if (index < DEFAULT_VISIBLE) {
+                    wrapper.style.display = "";
+                }
+
+            });
+
+            // SHOW MORE
+            btnShowMore.style.display =
+                currentImages.length > DEFAULT_VISIBLE
+                    ? "block"
+                    : "none";
+
+            btnShowMore.onclick = null;
+
+            if (currentImages.length > DEFAULT_VISIBLE) {
+
                 btnShowMore.onclick = () => {
-                    allWrappers.forEach(w => {
-                        if(w.getAttribute('data-color-name') === selectedColor) w.style.display = 'block';
-                    });
-                    btnShowMore.style.display = 'none';
+
+                    currentImages
+                        .slice(DEFAULT_VISIBLE)
+                        .forEach(wrapper => {
+                            wrapper.style.display = "";
+                        });
+
+                    btnShowMore.style.display = "none";
                 };
-            } else {
-                btnShowMore.style.display = 'none';
             }
+
+
+
 
             // 3. Lọc kích cỡ theo màu và tự động chọn size đầu tiên
             let firstVisibleSize = null;
@@ -133,6 +183,185 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Tự động kích hoạt màu đầu tiên khi load trang
     if(finalColorBtns.length > 0) finalColorBtns[0].click();
+
+
+    /* ===== HOVER ZOOM THEO CHUỘT ===== */
+    document.addEventListener("mousemove", function (e) {
+
+        const wrapper = e.target.closest(".img-wrapper");
+
+        if (!wrapper) return;
+
+        const img = wrapper.querySelector(".gallery-img");
+
+        if (!img) return;
+
+        const rect = wrapper.getBoundingClientRect();
+
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+        img.style.transformOrigin = `${x}% ${y}%`;
+    });
+
+
+    /* ===== MODAL ZOOM ===== */
+
+    const zoomModal =
+        document.getElementById("imageZoomModal");
+
+    const zoomMainImg =
+        document.getElementById("zoomMainImg");
+
+
+    /* ===== ZOOM THEO CHUỘT TRONG MODAL ===== */
+    zoomMainImg?.addEventListener("mousemove", function (e) {
+
+        const rect = this.getBoundingClientRect();
+
+        const x =
+            ((e.clientX - rect.left) / rect.width) * 100;
+
+        const y =
+            ((e.clientY - rect.top) / rect.height) * 100;
+
+        this.style.transformOrigin = `${x}% ${y}%`;
+    });
+
+    zoomMainImg?.addEventListener("mouseleave", function () {
+
+        this.style.transformOrigin = "center center";
+    });
+
+    const zoomThumbnails =
+        document.getElementById("zoomThumbnails");
+
+    const zoomClose =
+        document.getElementById("zoomClose");
+
+    document.addEventListener("keydown", function (e) {
+
+            if (
+                e.key === "Escape" &&
+                zoomModal?.classList.contains("show")
+            ) {
+
+                zoomModal.classList.remove("show");
+
+                document.body.style.overflow = "";
+            }
+        });
+
+
+    function openImageZoom(clickedImg) {
+
+        if (!zoomModal) return;
+
+        const clickedWrapper =
+            clickedImg.closest(".img-wrapper");
+
+        const currentColor =
+            clickedWrapper?.getAttribute("data-color-name");
+
+        const visibleImages =
+            Array.from(document.querySelectorAll(".img-wrapper"))
+                .filter(wrapper =>
+                    wrapper.getAttribute("data-color-name") === currentColor &&
+                    wrapper.style.display !== "none"
+                )
+                .map(wrapper =>
+                    wrapper.querySelector(".gallery-img")
+                )
+                .filter(Boolean);
+
+        const unique = new Set();
+
+        const images = visibleImages.filter(img => {
+
+            const src = img.getAttribute("src");
+
+            if (!src || unique.has(src)) {
+                return false;
+            }
+
+            unique.add(src);
+
+            return true;
+        });
+
+        zoomMainImg.src =
+            clickedImg.getAttribute("src");
+
+        zoomThumbnails.innerHTML = "";
+
+        images.forEach(img => {
+
+            const src = img.getAttribute("src");
+
+            const thumb =
+                document.createElement("button");
+
+            thumb.type = "button";
+
+            thumb.className = "zoom-thumb";
+
+            if (src === zoomMainImg.src) {
+                thumb.classList.add("active");
+            }
+
+            thumb.innerHTML =
+                `<img src="${src}" alt="">`;
+
+            thumb.addEventListener("click", () => {
+
+                zoomMainImg.src = src;
+
+                document
+                    .querySelectorAll(".zoom-thumb")
+                    .forEach(t =>
+                        t.classList.remove("active")
+                    );
+
+                thumb.classList.add("active");
+            });
+
+            zoomThumbnails.appendChild(thumb);
+        });
+
+        zoomModal.classList.add("show");
+
+        document.body.style.overflow = "hidden";
+    }
+
+
+    document.addEventListener("click", function (e) {
+
+        const img =
+            e.target.closest(".gallery-grid .gallery-img");
+
+        if (!img) return;
+
+        openImageZoom(img);
+    });
+
+
+    zoomClose?.addEventListener("click", () => {
+
+        zoomModal.classList.remove("show");
+
+        document.body.style.overflow = "";
+    });
+
+
+    zoomModal?.addEventListener("click", function (e) {
+
+        if (e.target === zoomModal) {
+
+            zoomModal.classList.remove("show");
+
+            document.body.style.overflow = "";
+        }
+    });
 
     // ==========================================
     // Xử lý bật/tắt popup Hướng dẫn chọn size
@@ -214,4 +443,13 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     }
+
+    document.querySelectorAll(".product-accordion-toggle").forEach(button => {
+        button.addEventListener("click", function () {
+            const accordion = this.closest(".product-accordion");
+            accordion.classList.toggle("open");
+        });
+    });
+
+
 });

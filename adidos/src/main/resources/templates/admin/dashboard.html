@@ -14,51 +14,12 @@
 <th:block th:fragment="content">
     <div class="dashboard-page">
 
-        <div class="dashboard-header">
-            <div>
-                <h1>Dashboard</h1>
-                <p>Tổng quan hoạt động bán hàng của Adidos</p>
-            </div>
-        </div>
+        <h2>Tổng quan hệ thống </h2>
 
-        <form th:action="@{/admin}" method="get" class="dashboard-filter">
-            <select name="mode">
-                <option value="month" th:selected="${mode == 'month'}">
-                    Doanh thu theo tháng
-                </option>
-                <option value="year" th:selected="${mode == 'year'}">
-                    Doanh thu theo năm
-                </option>
-            </select>
-
-            <input type="number"
-                   name="year"
-                   th:value="${selectedYear}"
-                   min="2020"
-                   max="2100">
-
-            <button type="submit">Xem</button>
-        </form>
-
-        <div class="stats-grid">
+        <div class="dashboard-stats">
             <div class="stat-card">
                 <span>Tổng doanh thu</span>
                 <strong th:text="${#numbers.formatDecimal(stats.totalRevenue, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
-            </div>
-
-            <div class="stat-card">
-                <span>Doanh thu hôm nay</span>
-                <strong th:text="${#numbers.formatDecimal(stats.todayRevenue, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
-            </div>
-
-            <div class="stat-card">
-                <span>Doanh thu tháng này</span>
-                <strong th:text="${#numbers.formatDecimal(stats.monthRevenue, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
-            </div>
-
-            <div class="stat-card">
-                <span>Doanh thu năm</span>
-                <strong th:text="${#numbers.formatDecimal(stats.yearRevenue, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong>
             </div>
 
             <div class="stat-card">
@@ -67,93 +28,183 @@
             </div>
 
             <div class="stat-card">
-                <span>Người dùng</span>
+                <span>Tổng user</span>
                 <strong th:text="${stats.totalUsers}"></strong>
             </div>
 
             <div class="stat-card">
-                <span>Sản phẩm</span>
+                <span>Tổng sản phẩm</span>
                 <strong th:text="${stats.totalProducts}"></strong>
             </div>
-
-            <div class="stat-card">
-                <span>Đánh giá</span>
-                <strong th:text="${stats.totalReviews}"></strong>
-            </div>
         </div>
+
+        <hr class="dashboard-divider">
+
+        <h2>Báo cáo theo bộ lọc</h2>
+
+        <form method="get" th:action="@{/admin/dashboard}" class="dashboard-filter">
+            <input type="number"
+                   name="year"
+                   min="2000"
+                   max="2100"
+                   th:value="${selectedYear}"
+                   placeholder="Nhập năm">
+
+            <button type="submit">Lọc</button>
+            <a th:href="@{/admin/dashboard}">Làm mới</a>
+        </form>
 
         <div class="dashboard-grid">
-            <div class="dashboard-box">
-                <h3 th:text="${mode == 'year' ? 'Doanh thu theo năm' : 'Doanh thu theo tháng'}">
-                    Doanh thu
-                </h3>
-                <canvas id="monthlyRevenueChart"></canvas>
-            </div>
 
-            <div class="dashboard-box">
-                <h3>Trạng thái đơn hàng</h3>
+            <!-- LEFT -->
+            <div class="dashboard-section chart-section">
+                <h3>Biểu đồ doanh thu</h3>
 
-                <div class="status-list">
-                    <div>
-                        <span>Chờ duyệt</span>
-                        <strong th:text="${stats.pendingOrders}"></strong>
-                    </div>
-
-                    <div>
-                        <span>Đang xử lý</span>
-                        <strong th:text="${stats.processingOrders}"></strong>
-                    </div>
-
-                    <div>
-                        <span>Đang giao</span>
-                        <strong th:text="${stats.shippingOrders}"></strong>
-                    </div>
-
-                    <div>
-                        <span>Đã giao</span>
-                        <strong th:text="${stats.deliveredOrders}"></strong>
-                    </div>
-
-                    <div>
-                        <span>Đã hủy</span>
-                        <strong th:text="${stats.cancelledOrders}"></strong>
-                    </div>
+                <div class="chart-wrapper">
+                    <canvas id="revenueChart"></canvas>
                 </div>
             </div>
-        </div>
 
-        <div class="dashboard-grid bottom-grid">
-            <div class="dashboard-box product-analysis-box">
-                <h3>Phân tích sản phẩm</h3>
-                <p>Xem sản phẩm bán chạy, sản phẩm sắp hết hàng và sản phẩm bán ế.</p>
+            <!-- RIGHT -->
+            <div class="dashboard-side">
 
-                <a th:href="@{/admin/product-analytics(type='best-selling')}"
-                   class="dashboard-main-btn">
-                    Xem phân tích sản phẩm
-                </a>
+                <!-- BEST -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3>Top sản phẩm bán chạy</h3>
+
+                        <a th:href="@{/admin/dashboard/best-products}"
+                           class="btn-secondary">
+                            Xem tất cả
+                        </a>
+                    </div>
+
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Đã bán</th>
+                            <th>Tồn</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="p, stat : ${bestProducts}"
+                            th:if="${stat.index < 4}">
+                            <td th:text="${p.productName}"></td>
+                            <td th:text="${p.soldQuantity}"></td>
+                            <td th:text="${p.stockQuantity}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- SLOW -->
+                <div class="dashboard-section">
+                    <div class="section-header">
+                        <h3>Top sản phẩm bán ế</h3>
+
+                        <a th:href="@{/admin/dashboard/slow-products}"
+                           class="btn-secondary">
+                            Xem tất cả
+                        </a>
+                    </div>
+
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Đã bán</th>
+                            <th>Tồn</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="p, stat : ${slowProducts}"
+                            th:if="${stat.index < 4}">
+                            <td th:text="${p.productName}"></td>
+                            <td th:text="${p.soldQuantity}"></td>
+                            <td th:text="${p.stockQuantity}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
-
-            <div class="dashboard-box">
-                <h3>Phương thức thanh toán</h3>
-                <canvas id="paymentMethodChart"></canvas>
-            </div>
         </div>
-
-        <script th:inline="javascript">
-            window.dashboardData = {
-                chartLabels: [[${stats.chartLabels}]],
-                chartRevenue: [[${stats.chartRevenue}]],
-                paymentLabels: [[${stats.paymentMethodStats.![paymentMethod]}]],
-                paymentData: [[${stats.paymentMethodStats.![total]}]]
-            };
-        </script>
-
     </div>
+
+
+
 </th:block>
 
 <th:block th:fragment="page_js">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script th:src="@{/js/admin/dashboard.js}"></script>
+    <script th:inline="javascript">
+        const revenueData = [[${revenueChart}]];
+
+        const labels = [
+            "T1", "T2", "T3", "T4",
+            "T5", "T6", "T7", "T8",
+            "T9", "T10", "T11", "T12"
+        ];
+
+        const values = Array(12).fill(0);
+
+        revenueData.forEach(item => {
+            const month = Number(item[0]);
+            const revenue = Math.max(Number(item[1]), 0);
+
+            if (month >= 1 && month <= 12) {
+                values[month - 1] = revenue;
+            }
+        });
+
+        const maxValue = Math.max(...values);
+        const suggestedMax = maxValue === 0 ? 1000000 : maxValue * 1.2;
+
+        new Chart(document.getElementById('revenueChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Doanh thu theo tháng',
+                    data: values,
+                    tension: 0.35,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    borderWidth: 2,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        min: 0,
+                        suggestedMax: suggestedMax,
+                        ticks: {
+                            callback: function(value) {
+                                return new Intl.NumberFormat('vi-VN').format(value) + 'đ';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return 'Doanh thu: ' +
+                                    new Intl.NumberFormat('vi-VN').format(context.raw) + 'đ';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 </th:block>
 </body>
 </html>

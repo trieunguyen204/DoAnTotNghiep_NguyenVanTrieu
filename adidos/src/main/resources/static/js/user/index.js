@@ -27,32 +27,15 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    /* ===== FORMAT BADGE DISCOUNT FIXED AMOUNT ===== */
-    document.querySelectorAll(".badge.sale[data-discount]").forEach(el => {
-        const rawValue = el.dataset.discount;
 
-        if (!rawValue) return;
 
-        const value = Number(
-            rawValue
-                .toString()
-                .replace(/[^\d.-]/g, "")
-        );
+    document.querySelectorAll(".filter-toggle").forEach(button => {
+            button.addEventListener("click", function () {
+                const dropdown = this.closest(".filter-dropdown");
+                dropdown.classList.toggle("open");
+            });
+        });
 
-        if (Number.isNaN(value) || value <= 0) return;
 
-        let text;
-
-        if (value >= 1000000) {
-            const million = value / 1000000;
-            text = "-" + (Number.isInteger(million) ? million : million.toFixed(1)) + "tr";
-        } else if (value >= 1000) {
-            text = "-" + Math.floor(value / 1000) + "k";
-        } else {
-            text = "-" + value.toLocaleString("vi-VN") + "đ";
-        }
-
-        el.textContent = text;
-    });
 
 });

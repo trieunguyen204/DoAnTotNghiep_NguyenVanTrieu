@@ -1,9 +1,6 @@
 /* ===============================
    INDEX PAGE - ADIDOS HOME
 ================================ */
-
-
-
 /* SECTION */
 .home-section {
     max-width: 1320px;
@@ -50,133 +47,12 @@
     white-space: nowrap;
 }
 
-/* PRODUCT GRID */
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 26px 20px;
-}
-
-/* PRODUCT CARD */
-.product-card-premium {
-    position: relative;
-    background: #fff;
-    border: 1px solid transparent;
-    transition: border-color 0.25s ease;
-}
-
-.product-card-premium > a {
-    display: block;
-    color: inherit;
-    text-decoration: none;
-}
-
-.product-card-premium > a:hover {
-    color: inherit;
-    text-decoration: none;
-}
-
-
-.product-card-premium:hover {
-    border-color: #111;
-}
-
-.img-wrapper {
-    position: relative;
-    width: 100%;
-    height: 380px;
-    background: #f5f5f5;
-    overflow: hidden;
-}
-
-.img-wrapper img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top center;
-    transition: transform 0.35s ease;
-}
-
-.product-card-premium:hover .img-wrapper img {
-    transform: scale(1.04);
-}
-
-/* BADGES */
-.badge-group {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-}
-.badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: fit-content;
-    padding: 5px 8px;
-    font-size: 11px;
-    font-weight: 600;
-    line-height: 1;
-    text-transform: uppercase;
-}
-
-.badge.new {
-    background: #111;
-    color: #fff;
-}
-
-.badge.sale {
-    background: #d0021b;
-    color: #fff;
-}
-
-/* PRODUCT INFO */
-.info {
-    padding: 14px 0 4px;
-}
-.info h3 {
-    margin: 0 0 6px;
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 1.35;
-    color: #111;
-    text-transform: uppercase;
-}
-
-.info .category {
-    margin: 0 0 10px;
-    font-size: 14px;
-    color: #777;
-}
-
-/* PRICE */
-.price-box {
-    margin: 0;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-.regular-price,
+/*.regular-price,*/
 .discount-price {
     font-size: 16px;
     font-weight: 500;
 }
 
-.discount-price {
-    color: #d0021b;
-}
-
-.original-price-strike {
-    font-size: 14px;
-    color: #999;
-    text-decoration: line-through;
-}
 
 /* VIEW ALL */
 .btn-view-all {
@@ -246,16 +122,6 @@
     font-weight: 500;
 }
 
-/* RESPONSIVE */
-@media (max-width: 1100px) {
-    .product-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .img-wrapper {
-        height: 350px;
-    }
-}
 
 @media (max-width: 768px) {
     .hero-light {
@@ -277,20 +143,7 @@
     }
 }
 
-@media (max-width: 480px) {
-    .home-section {
-        margin: 52px auto;
-        padding: 0 16px;
-    }
 
-    .product-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .img-wrapper {
-        height: 420px;
-    }
-}
 
 
 /* PREMIUM SECTION HEADING */
@@ -521,7 +374,7 @@
 /* TAG */
 .uniqlo-tag {
     font-size: 12px;
-    font-weight: 800;
+    font-weight: 600;
     letter-spacing: 2px;
     margin-bottom: 14px;
 
@@ -552,7 +405,7 @@
 .uniqlo-btn {
     display: inline-block;
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 500;
     color: #111;
     text-decoration: none;
     position: relative;
@@ -587,4 +440,216 @@
     height: 100vh;
     scroll-snap-align: start;
     transition: opacity 0.8s ease;
+}
+
+/*card-product*/
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px 16px;
+}
+
+.adidas-wishlist {
+    position: absolute;
+    top: 22px;
+    right: 20px;
+    border: none;
+    border: none;
+    background: transparent;
+    color: #000;
+    font-size: 32px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+}
+
+/*==== product-card ====*/
+
+/* PRODUCT GRID */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 28px 16px;
+}
+
+/* CARD */
+.adidas-card {
+    position: relative;
+    background: #fff;
+    border: 1px solid transparent;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.adidas-card:hover {
+    border-color: #111;
+}
+
+.adidas-card-link {
+    display: block;
+    color: #000;
+    text-decoration: none;
+}
+
+/* IMAGE AREA - FIX CỨNG */
+.adidas-card-image {
+    position: relative;
+    width: 100%;
+    height: 396px;
+    background: #eceff1;
+    overflow: hidden;
+}
+
+.adidas-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    /* ưu tiên giữ phần trên ảnh */
+    object-position: top center;
+
+    display: block;
+    transition: transform 0.35s ease;
+}
+
+/* HOVER PHÓNG TO GIỐNG ADIDAS */
+.adidas-card:hover .adidas-card-image img {
+    transform: scale(1.2);
+}
+
+/* HEART - FIX CỨNG */
+.adidas-wishlist {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 3;
+
+    width: 28px;
+    height: 28px;
+
+    border: none;
+    background: transparent;
+    color: #000;
+
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+/* INFO AREA - FIX CỨNG */
+.adidas-card-info {
+    position: relative;
+    height: 150px;
+    padding: 10px 8px 18px;
+    background: #fff;
+}
+
+/* GIÁ SALE */
+.adidas-price-line {
+    height: 20px;
+    margin-bottom: 4px;
+    line-height: 20px;
+}
+
+
+
+.adidas-price-sale {
+    color: #e60012;
+    font-size: 14px;
+    font-weight: 700;
+}
+.adidas-price-sale .currency {
+    font-size: 11px;
+    font-weight: 500;
+    margin-left: -3px;
+    position: relative;
+    top: -2px;
+
+}
+
+.adidas-price-normal {
+    font-size:14px;
+    font-weight:700px;
+    color: #000;
+}
+
+/* GIÁ GỐC + DISCOUNT */
+.adidas-original-line {
+    height: 20px;
+    margin-bottom: 14px;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 13px;
+    color: #767677;
+    line-height: 20px;
+}
+
+.adidas-discount-percent {
+    color: #e60012;
+}
+
+/* TÊN SẢN PHẨM - FIX VỊ TRÍ */
+.adidas-product-name {
+
+    margin: 0 0 12px;
+
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.45;
+    color: #000;
+
+    text-transform: none;
+    letter-spacing: 0;
+
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* CATEGORY - FIX DƯỚI */
+.adidas-product-category {
+    position: absolute;
+    left: 8px;
+    bottom: 18px;
+
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+    color: #767677;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+    .product-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .adidas-card-image {
+        height: 360px;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .adidas-card-image {
+        height: 300px;
+    }
+}
+
+
+.adidas-price-normal .currency,
+.adidas-price-old .currency,
+.adidas-discount-percent .currency {
+    font-size: 10px;
+    font-weight: 500;
+    margin-left: -3px;
+    position: relative;
+    top: -3px;
 }

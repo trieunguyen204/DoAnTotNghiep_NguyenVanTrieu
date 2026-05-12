@@ -27,10 +27,10 @@
                 <form th:action="@{/category/{id}(id=${category.id})}" method="GET">
                     <input type="hidden" name="page" value="0">
                     <input type="hidden" name="size" th:value="${size}">
-                    <h3>LỌC SẢN PHẨM</h3>
+                    <h3>Lọc sản phẩm</h3>
 
                     <div class="filter-group">
-                        <label>KHOẢNG GIÁ (VNĐ)</label>
+                        <label>Khoảng giá</label>
                         <div class="price-range">
                             <input type="number" name="minPrice" th:value="${minPrice}" placeholder="Từ"
                                    min="0" oninput="validity.valid||(value='');">
@@ -40,32 +40,95 @@
                         </div>
                     </div>
 
-                    <div class="filter-group">
-                        <label>THƯƠNG HIỆU</label>
-                        <select name="brand">
-                            <option value="">TẤT CẢ THƯƠNG HIỆU</option>
-                            <option th:each="b : ${brands}" th:value="${b}" th:text="${b}" th:selected="${b == selectedBrand}"></option>
-                        </select>
+                    <div class="filter-group filter-dropdown open">
+                        <button type="button" class="filter-toggle">
+                            <span>Thương hiệu</span>
+                            <span class="filter-arrow">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path d="M6 9L12 15L18 9"
+                                          stroke="currentColor"
+                                          stroke-width="1.8"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                        </button>
+
+                        <div class="filter-content">
+                            <label class="checkbox-item" th:each="b : ${brands}">
+                                <input type="checkbox"
+                                       name="brands"
+                                       th:value="${b}"
+                                       th:checked="${selectedBrands != null and selectedBrands.contains(b)}">
+                                <span th:text="${b}"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group filter-dropdown">
+                        <button type="button" class="filter-toggle">
+                            <span>Chất liệu</span>
+                            <span class="filter-arrow">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path d="M6 9L12 15L18 9"
+                                          stroke="currentColor"
+                                          stroke-width="1.8"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                        </button>
+
+                        <div class="filter-content">
+                            <label class="checkbox-item" th:each="m : ${materials}">
+                                <input type="checkbox"
+                                       name="materials"
+                                       th:value="${m}"
+                                       th:checked="${selectedMaterials != null and selectedMaterials.contains(m)}">
+                                <span th:text="${m}"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group filter-dropdown">
+                        <button type="button" class="filter-toggle">
+                            <span>Danh mục</span>
+                            <span class="filter-arrow">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path d="M6 9L12 15L18 9"
+                                          stroke="currentColor"
+                                          stroke-width="1.8"
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                        </button>
+
+                        <div class="filter-content">
+                            <label class="checkbox-item" th:each="cat : ${subCategories}">
+                                <input type="checkbox"
+                                       name="categoryIds"
+                                       th:value="${cat.id}"
+                                       th:checked="${selectedCategoryIds != null and selectedCategoryIds.contains(cat.id)}">
+                                <span th:text="${cat.name}"></span>
+                            </label>
+                        </div>
                     </div>
 
                     <div class="filter-group">
-                        <label>CHẤT LIỆU</label>
-                        <select name="material">
-                            <option value="">TẤT CẢ CHẤT LIỆU</option>
-                            <option th:each="m : ${materials}" th:value="${m}" th:text="${m}" th:selected="${m == selectedMaterial}"></option>
-                        </select>
-                    </div>
-
-                    <div class="filter-group">
-                        <label>DANH MỤC</label>
-
-                        <select name="categoryId" id="filterCategory" class="select-search">
-                            <option value="">TẤT CẢ DANH MỤC</option>
-
-                            <option th:each="cat : ${subCategories}"
-                                    th:value="${cat.id}"
-                                    th:text="${cat.name}"
-                                    th:selected="${cat.id == selectedCategoryId}">
+                        <label>Sắp xếp</label>
+                        <select name="sort">
+                            <option value="" th:selected="${selectedSort == null or selectedSort == ''}">
+                               Mặc định
+                            </option>
+                            <option value="priceAsc" th:selected="${selectedSort == 'priceAsc'}">
+                                Giá(thấp-cao)
+                            </option>
+                            <option value="priceDesc" th:selected="${selectedSort == 'priceDesc'}">
+                                Giá(cao-thấp)
+                            </option>
+                            <option value="bestSeller" th:selected="${selectedSort == 'bestSeller'}">
+                                Bán chạy nhất
                             </option>
                         </select>
                     </div>

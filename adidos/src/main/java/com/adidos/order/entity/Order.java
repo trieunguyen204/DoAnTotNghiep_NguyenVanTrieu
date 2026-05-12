@@ -3,6 +3,7 @@ package com.adidos.order.entity;
 import com.adidos.order.enums.OrderStatus;
 import com.adidos.order.enums.PaymentStatus;
 import com.adidos.user.entity.User;
+import com.adidos.voucher.Voucher;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "`order`")
+@Table(name = "orders")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Order {
 
@@ -46,16 +47,14 @@ public class Order {
     @Column(name = "order_status")
     private OrderStatus orderStatus;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_status")
-    private PaymentStatus paymentStatus;
-
     @Column(name = "order_code", unique = true)
     private Long orderCode;
 
 
-    @Column(name = "voucher_id")
-    private Long voucherId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "voucher_id")
+    private Voucher voucher;
+
 
     @Column(name = "guest_name")
     private String guestName;
@@ -69,18 +68,30 @@ public class Order {
     @Column(name = "guest_address", columnDefinition = "TEXT")
     private String guestAddress;
 
-
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Payment payment;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    @Column(name = "created_at")
+    @Column(name = "created_at",updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
     public void prePersist() {
+        if (orderStatus == null) orderStatus = OrderStatus.PENDING;
         this.createdAt = LocalDateTime.now();
+    }
+
+    public void addOrderItem(OrderItem item) {
+        orderItems.add(item);
+        item.setOrder(this);
+    }
+
+    public void removeOrderItem(OrderItem item) {
+        orderItems.remove(item);
+        item.setOrder(null);
     }
 
 

@@ -4,7 +4,6 @@
 
 <head>
     <title>Chi tiết đơn hàng</title>
-
     <th:block th:fragment="page_admin_css">
         <link rel="stylesheet" th:href="@{/css/admin/order-management.css}">
     </th:block>
@@ -12,112 +11,76 @@
 
 <body>
 <th:block th:fragment="content">
-    <div class="admin-order-page">
+    <div class="admin-page">
+        <h2>Chi tiết đơn hàng #<span th:text="${order.id}"></span></h2>
 
-        <div class="page-header">
-            <div>
-                <h1>
-                    Chi tiết đơn #
-                    <span th:text="${order.id}"></span>
-                </h1>
-                <p>Thông tin chi tiết đơn hàng</p>
-            </div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-            <a th:href="${currentStatus == 'ALL'} ? @{/admin/orders} : @{/admin/orders(status=${currentStatus})}"
-               class="btn btn-dark">
-                Quay lại
-            </a>
-        </div>
+        <div class="detail-card">
+            <p><strong>Người nhận:</strong> <span th:text="${order.receiverName}"></span></p>
+            <p><strong>SĐT:</strong> <span th:text="${order.receiverPhone}"></span></p>
+            <p><strong>Địa chỉ:</strong> <span th:text="${order.shippingAddress}"></span></p>
 
-        <div class="order-detail-grid">
-
-            <div class="order-detail-box">
-                <h3>Thông tin người nhận</h3>
-
-                <p>
-                    <strong>Người nhận:</strong>
-                    <span th:text="${order.receiverName}"></span>
-                </p>
-
-                <p>
-                    <strong>Số điện thoại:</strong>
-                    <span th:text="${order.receiverPhone}"></span>
-                </p>
-
-                <p>
-                    <strong>Địa chỉ:</strong>
-                    <span th:text="${order.shippingAddress}"></span>
-                </p>
-            </div>
-
-            <div class="order-detail-box">
-                <h3>Trạng thái</h3>
-
-                <p>
-                    <strong>Đơn hàng:</strong>
-                    <span th:text="${order.orderStatus}"></span>
-                </p>
-
-
-                <p>
-                    <strong>Thanh toán:</strong>
-                    <span th:text="${order.paymentStatus}"></span>
-                </p>
-
-                <p>
-                    <strong>Phương thức thanh toán:</strong>
-                    <span th:text="${order.paymentMethod != null ? order.paymentMethod : 'Không xác định'}"></span>
-                </p>
-            </div>
-
-        </div>
-
-        <div class="order-table-wrapper">
-            <table class="order-table">
-                <thead>
-                <tr>
-                    <th>Sản phẩm</th>
-                    <th>Phân loại</th>
-                    <th>Giá</th>
-                    <th>Số lượng</th>
-                    <th>Thành tiền</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                <tr th:each="item : ${order.items}">
-                    <td th:text="${item.productName}"></td>
-                    <td th:text="${item.color + ' - ' + item.size}"></td>
-                    <td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT') + 'đ'}"></td>
-                    <td th:text="${item.quantity}"></td>
-                    <td th:text="${#numbers.formatDecimal(item.subTotal, 0, 'COMMA', 0, 'POINT') + 'đ'}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="admin-order-total">
             <p>
-                <span>Tạm tính:</span>
-                <strong th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+                <strong>Thanh toán:</strong>
+                <span th:text="${order.paymentMethod}"></span>
+                -
+                <strong th:text="${order.paymentStatus == null ? '---' :
+                 (order.paymentStatus.name() == 'PAID' ? 'Đã thanh toán' :
+                 (order.paymentStatus.name() == 'UNPAID' ? 'Chưa thanh toán' :
+                 (order.paymentStatus.name() == 'FAILED' ? 'Thanh toán thất bại' :
+                 order.paymentStatus)))}">
+                </strong>
             </p>
 
             <p>
-                <span>Phí vận chuyển:</span>
-                <strong th:text="${#numbers.formatDecimal(order.shippingFee, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+                <strong>Trạng thái đơn:</strong>
+
+                <span class="status-badge"
+                      th:text="${order.orderStatus.name() == 'PENDING' ? 'Chờ xác nhận' :
+                   (order.orderStatus.name() == 'PROCESSING' ? 'Đang chuẩn bị' :
+                   (order.orderStatus.name() == 'SHIPPING' ? 'Đang giao hàng' :
+                   (order.orderStatus.name() == 'DELIVERED' ? 'Đã giao' :
+                   (order.orderStatus.name() == 'CANCELLED' ? 'Đã hủy' :
+                   order.orderStatus))))}">
+                </span>
             </p>
 
-            <p>
-                <span>Giảm giá:</span>
-                <strong th:text="${#numbers.formatDecimal(order.discountAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
-            </p>
-
-            <p class="final-total">
-                <span>Tổng thanh toán:</span>
-                <strong th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
-            </p>
         </div>
 
+        <table class="order-table">
+            <thead>
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Màu</th>
+                <th>Size</th>
+                <th>Đơn giá</th>
+                <th>SL</th>
+                <th>Tạm tính</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="item : ${order.items}">
+                <td th:text="${item.productName}"></td>
+                <td th:text="${item.color}"></td>
+                <td th:text="${item.size}"></td>
+                <td th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + 'đ'"></td>
+                <td th:text="${item.quantity}"></td>
+                <td th:text="${#numbers.formatDecimal(item.subTotal, 0, 'COMMA', 0, 'POINT')} + 'đ'"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="detail-total">
+            <p>Tổng hàng: <strong th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong></p>
+            <p>Phí ship: <strong th:text="${#numbers.formatDecimal(order.shippingFee, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong></p>
+            <p>Giảm giá: <strong th:text="${#numbers.formatDecimal(order.discountAmount, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong></p>
+            <p>Thành tiền: <strong th:text="${#numbers.formatDecimal(order.finalAmount, 0, 'COMMA', 0, 'POINT')} + 'đ'"></strong></p>
+        </div>
+
+        <a th:href="@{/admin/orders(status=${currentStatus})}" class="btn-secondary">Quay lại</a>
     </div>
 </th:block>
 

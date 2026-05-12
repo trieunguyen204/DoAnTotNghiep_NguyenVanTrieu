@@ -23,6 +23,7 @@ public class PayOSService {
     private final OrderRepository orderRepository;
     private final PaymentRepository paymentRepository;
     private final OrderService orderService;
+
     @Value("${app.base-url}")
     private String baseUrl;
 
@@ -36,7 +37,6 @@ public class PayOSService {
                 .subtract(order.getDiscountAmount());
 
         Long orderCode = order.getOrderCode();
-
         if (orderCode == null) {
             orderCode = System.currentTimeMillis();
             order.setOrderCode(orderCode);
@@ -59,20 +59,22 @@ public class PayOSService {
                             .order(order)
                             .paymentMethod("PAYOS")
                             .amount(finalAmount)
-                            .status("PENDING")
+                            .status(PaymentStatus.UNPAID)
                             .build());
 
             payment.setPaymentMethod("PAYOS");
             payment.setTransactionCode(String.valueOf(orderCode));
             payment.setAmount(finalAmount);
-            payment.setStatus("PENDING");
+            payment.setStatus(PaymentStatus.UNPAID);
             payment.setCheckoutUrl(paymentLink.getCheckoutUrl());
 
             paymentRepository.save(payment);
+            orderRepository.save(order);
 
             return paymentLink.getCheckoutUrl();
 
         } catch (Exception e) {
+            orderService.markPaymentFailedAndCancel(orderId);
             throw new RuntimeException("Lỗi tạo link thanh toán PayOS: " + e.getMessage());
         }
     }
@@ -81,33 +83,28 @@ public class PayOSService {
     public void handleWebhook(Map<String, Object> body) {
         Map<String, Object> data = (Map<String, Object>) body.get("data");
 
-        if (data == null) {
+        if (data == null || data.get("orderCode") == null) {
             return;
         }
 
-        String code = String.valueOf(body.get("code"));
         Long orderCode = ((Number) data.get("orderCode")).longValue();
 
         Payment payment = paymentRepository.findByTransactionCode(String.valueOf(orderCode))
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy payment"));
 
-        Order order = payment.getOrder();
+        String code = String.valueOf(body.get("code"));
 
         if ("00".equals(code)) {
-            payment.setStatus("SUCCESS");
+            payment.setStatus(PaymentStatus.PAID);
             paymentRepository.save(payment);
 
-            orderService.markPayOSPaid(order.getId());
-
+            orderService.markPayOSPaid(payment.getOrder().getId());
         } else {
-            payment.setStatus("FAILED");
+            payment.setStatus(PaymentStatus.FAILED);
             paymentRepository.save(payment);
 
-            orderService.markPaymentFailedAndCancel(order.getId());
+            orderService.markPaymentFailedAndCancel(payment.getOrder().getId());
         }
-
-        paymentRepository.save(payment);
-        orderRepository.save(order);
     }
 
     @Transactional
@@ -115,33 +112,45 @@ public class PayOSService {
         Payment payment = paymentRepository.findByOrderId(orderId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy payment"));
 
-        Order order = payment.getOrder();
-
         try {
             Long orderCode = Long.valueOf(payment.getTransactionCode());
-
             var info = payOS.paymentRequests().get(orderCode);
 
-            if ("PAID".equalsIgnoreCase(info.getStatus().name())) {
-                payment.setStatus("SUCCESS");
-                order.setPaymentStatus(PaymentStatus.PAID);
+            String status = info.getStatus().name();
 
+            if ("PAID".equalsIgnoreCase(status)) {
+                payment.setStatus(PaymentStatus.PAID);
                 paymentRepository.save(payment);
-                orderRepository.save(order);
+
+                orderService.markPayOSPaid(orderId);
+
+            } else if ("CANCELLED".equalsIgnoreCase(status)) {
+                payment.setStatus(PaymentStatus.FAILED);
+                paymentRepository.save(payment);
+
+                orderService.markPaymentFailedAndCancel(orderId);
 
             } else {
-                throw new RuntimeException(
-                        "PayOS chưa xác nhận thanh toán. Trạng thái hiện tại: "
-                                + info.getStatus().name()
-                );
+                payment.setStatus(PaymentStatus.UNPAID);
+                paymentRepository.save(payment);
+
+                throw new RuntimeException("PayOS chưa xác nhận thanh toán. Trạng thái hiện tại: " + status);
             }
 
+        } catch (NumberFormatException e) {
+            throw new RuntimeException("Mã giao dịch PayOS không hợp lệ");
         } catch (Exception e) {
-            throw new RuntimeException(
-                    "Không thể kiểm tra trạng thái PayOS: " + e.getMessage()
-            );
+            throw new RuntimeException("Không thể kiểm tra trạng thái PayOS: " + e.getMessage());
         }
     }
 
+    @Transactional
+    public void cancelPayOSOrder(Long orderId) {
+        paymentRepository.findByOrderId(orderId).ifPresent(payment -> {
+            payment.setStatus(PaymentStatus.FAILED);
+            paymentRepository.save(payment);
+        });
 
+        orderService.markPaymentFailedAndCancel(orderId);
+    }
 }

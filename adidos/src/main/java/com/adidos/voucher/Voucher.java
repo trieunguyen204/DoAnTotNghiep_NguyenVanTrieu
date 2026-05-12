@@ -19,7 +19,7 @@ public class Voucher {
     private String code;
 
     @Column(name = "discount_type", length = 20)
-    private String discountType; // FIXED hoặc PERCENT
+    private String discountType;
 
     @Column(name = "discount_value", precision = 10, scale = 2)
     private BigDecimal discountValue;
@@ -43,5 +43,5 @@ public class Voucher {
     private LocalDateTime endDate;
 
     @Column(length = 50)
-    private String status; // ACTIVE, INACTIVE, EXPIRED
+    private String status;
 }
