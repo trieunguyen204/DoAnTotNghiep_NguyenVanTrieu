@@ -21,7 +21,7 @@ public class OrderItem {
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_variant_id", nullable = false)
+    @JoinColumn(name = "product_variant_id")
     private ProductVariant productVariant;
 
 

@@ -71,6 +71,7 @@ public class OrderService {
                 .shippingFee(SHIPPING_FEE)
                 .discountAmount(BigDecimal.ZERO)
                 .totalPrice(BigDecimal.ZERO)
+                .orderCode(generateOrderCode())
                 .build();
 
         buildItemsAndDecreaseStock(order, cartItems);
@@ -112,6 +113,7 @@ public class OrderService {
                 .shippingFee(SHIPPING_FEE)
                 .discountAmount(BigDecimal.ZERO)
                 .totalPrice(BigDecimal.ZERO)
+                .orderCode(generateOrderCode())
                 .build();
 
         buildItemsAndDecreaseStock(order, cartItems);
@@ -653,5 +655,9 @@ public class OrderService {
         );
 
         return response;
+    }
+
+    private Long generateOrderCode() {
+        return System.currentTimeMillis() + (long) (Math.random() * 1000);
     }
 }

@@ -6,73 +6,19 @@
   <component name="ChangeListManager">
     <list default="true" id="2b79baec-7ac5-4b1e-89ed-cb7232adc94b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/controller/AdminDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/controller/AdminDashboardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/controller/ProductAnalyticsController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/dto/ProductAnalyticsResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/dto/VariantSalesResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/entity/DashboardStats.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/entity/LowStockProduct.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/entity/PaymentMethodStat.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/entity/TopSellingProduct.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/service/DashboardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/service/DashboardService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/service/ProductAnalyticsService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/cart/controller/CartApiController.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/cart/controller/CartApiController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/cart/mapper/CartMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/cart/mapper/CartMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/cart/service/CartService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/cart/service/CartService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/controller/AdminOrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/controller/AdminOrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/controller/OrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/dto/CheckoutRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/dto/CheckoutRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/dto/OrderResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/dto/OrderResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/entity/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/entity/Order.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/entity/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/entity/Payment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/enums/OrderStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/enums/OrderStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/enums/PaymentStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/enums/PaymentStatus.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/mapper/OrderMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/mapper/OrderMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/entity/OrderItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/entity/OrderItem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/OrderItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/OrderItemRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/OrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/OrderRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/PaymentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/PaymentRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/service/OrderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/service/PayOSService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/service/PayOSService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/controller/ProductController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/repository/ProductVariantRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/repository/ProductVariantRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/service/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/service/ProductService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/user/dto/RegisterAfterOrderRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/user/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/user/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/voucher/Voucher.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/voucher/Voucher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/voucher/VoucherService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/voucher/VoucherService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/review/ReviewRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/review/ReviewRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/admin.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/admin.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/dashboard.css" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/order-management.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/order-management.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/auth.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/auth.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/cart.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/cart.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/category.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/category.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/checkout.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/checkout.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/header.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/header.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/product-detail.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/product-detail.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/profile.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/profile.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/js/admin/order-management.js" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/js/admin/order-management.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/js/user/cart.js" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/js/user/cart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/js/user/checkout.js" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/js/user/checkout.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/js/user/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/js/user/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/js/user/product-detail.js" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/js/user/product-detail.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/js/user/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/js/user/profile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/order/order_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/order/order_detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/order/order_management.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/order/order_management.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/product/product_analytics.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/auth/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/auth/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/auth/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/auth/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/cart/cart.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/cart/cart.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/fragments/components.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/fragments/components.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/fragments/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/fragments/header.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/fragments/sidebar.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/fragments/sidebar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/home/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/home/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/order/checkout.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/order/checkout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/order/qr_payment.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/product/category.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/product/category.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/product/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/product/detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/user/profile/addresses.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/user/profile/addresses.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/user/profile/order_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/user/profile/order_detail.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/user/profile/orders.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/user/profile/orders.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,23 +46,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.AdidosApplication.executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/DoAnTotNghiep_NguyenVanTrieu&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.AdidosApplication.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/DoAnTotNghiep_NguyenVanTrieu",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.adidos.order.archive.dto" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\DoAnTotNghiep_NguyenVanTrieu\adidos\src\main\resources\static\css\admin" />
+      <recent name="D:\DoAnTotNghiep_NguyenVanTrieu\adidos\src\main\resources\static\css" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="AdidosApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.adidos.AdidosApplication" />

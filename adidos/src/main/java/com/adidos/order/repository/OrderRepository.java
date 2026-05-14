@@ -3,6 +3,7 @@ package com.adidos.order.repository;
 import com.adidos.order.entity.Order;
 import com.adidos.order.enums.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -67,14 +68,16 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("""
     SELECT COALESCE(SUM(o.totalPrice + o.shippingFee - o.discountAmount), 0)
     FROM Order o
-    WHERE o.orderStatus = com.adidos.order.enums.OrderStatus.DELIVERED
+            WHERE o.orderStatus = com.adidos.order.enums.OrderStatus.DELIVERED
+            AND (o.restoredFromArchive = false OR o.restoredFromArchive IS NULL)
     """)
     BigDecimal calculateTotalRevenueAllTime();
 
     @Query("""
     SELECT MONTH(o.createdAt), COALESCE(SUM(o.totalPrice + o.shippingFee - o.discountAmount), 0)
     FROM Order o
-    WHERE o.orderStatus = com.adidos.order.enums.OrderStatus.DELIVERED
+            WHERE o.orderStatus = com.adidos.order.enums.OrderStatus.DELIVERED
+            AND (o.restoredFromArchive = false OR o.restoredFromArchive IS NULL)
       AND YEAR(o.createdAt) = :year
     GROUP BY MONTH(o.createdAt)
     ORDER BY MONTH(o.createdAt)
@@ -98,4 +101,26 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     GROUP BY oi.productVariant.product.id, oi.productVariant.product.name
     """)
     List<Object[]> getProductSalesStatsByYear(@Param("year") int year);
+
+
+    @Query("""
+        SELECT DISTINCT o FROM Order o
+        LEFT JOIN FETCH o.orderItems i
+        LEFT JOIN FETCH i.productVariant v
+        LEFT JOIN FETCH v.product p
+        LEFT JOIN FETCH o.user u
+        LEFT JOIN FETCH o.voucher vc
+        WHERE o.orderStatus = com.adidos.order.enums.OrderStatus.DELIVERED
+        AND o.createdAt <= :archivedUntil
+        ORDER BY o.id ASC
+        """)
+    List<Order> findDeliveredOrdersForArchive(@Param("archivedUntil") LocalDateTime archivedUntil);
+
+
+    @Modifying
+    @Query("DELETE FROM Order o WHERE o.id IN :orderIds")
+    void deleteByIdInBatchCustom(@Param("orderIds") List<Long> orderIds);
+
+
+    boolean existsByOrderCode(Long orderCode);
 }

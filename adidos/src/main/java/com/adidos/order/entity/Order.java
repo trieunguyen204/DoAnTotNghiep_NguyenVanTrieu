@@ -50,7 +50,6 @@ public class Order {
     @Column(name = "order_code", unique = true)
     private Long orderCode;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "voucher_id")
     private Voucher voucher;
@@ -77,6 +76,12 @@ public class Order {
 
     @Column(name = "created_at",updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "restored_from_archive")
+    private Boolean restoredFromArchive = false;
+
+    @Column(name = "restored_at")
+    private LocalDateTime restoredAt;
 
     @PrePersist
     public void prePersist() {

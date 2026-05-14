@@ -14,6 +14,25 @@
     <div class="admin-page">
         <h2>Quản lý đơn hàng</h2>
 
+        <div class="archive-box">
+            <h3>Lưu trữ đơn hàng cũ</h3>
+
+            <form th:action="@{/admin/orders/archive}" method="post"
+                  onsubmit="return confirm('Chỉ các đơn ĐÃ GIAO trước ngày đã chọn sẽ được export ra ZIP và xóa khỏi DB chính. Tiếp tục?')">
+
+                <label> Xóa các đơn hàng cũ đến thời điểm :</label>
+                <input type="date" name="archivedUntil" required>
+
+                <button type="submit" class="btn-primary">
+                    Lưu trữ & xóa
+                </button>
+
+                <a th:href="@{/admin/orders/archive/logs}" class="btn-secondary">
+                    Lịch sử lưu trữ
+                </a>
+            </form>
+        </div>
+
         <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
         <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 

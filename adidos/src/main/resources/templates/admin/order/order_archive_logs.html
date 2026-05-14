@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/admin :: layout}">
+
+<head>
+    <title>Lịch sử lưu trữ đơn hàng</title>
+    <th:block th:fragment="page_admin_css">
+        <link rel="stylesheet" th:href="@{/css/admin/order-management.css}">
+    </th:block>
+</head>
+
+<body>
+<th:block th:fragment="content">
+    <div class="admin-page">
+        <h2>Lịch sử lưu trữ đơn hàng</h2>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <a th:href="@{/admin/orders}" class="btn-secondary">Quay lại</a>
+
+        <div class="archive-box">
+            <h3>Nhập dữ liệu đơn cũ</h3>
+
+            <form th:action="@{/admin/orders/archive/import}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  onsubmit="return confirm('nhập lại các đơn trong file archive? Các đơn trùng orderCode sẽ được bỏ qua.')">
+
+                <input type="file" name="file" accept=".zip,.json" required>
+
+                <button type="submit" class="btn-primary">
+                    Import archive
+                </button>
+            </form>
+        </div>
+
+
+
+
+        <table class="order-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>File</th>
+                <th>Đến ngày</th>
+                <th>Số đơn</th>
+                <th>Trạng thái</th>
+                <th>Người tạo</th>
+                <th>Thời gian</th>
+                <th>Ghi chú</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="log : ${logs}">
+                <td th:text="${log.id}"></td>
+                <td th:text="${log.fileName}"></td>
+                <td th:text="${#temporals.format(log.archivedUntil, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${log.totalOrders}"></td>
+                <td th:text="${log.status}"></td>
+                <td th:text="${log.createdBy}"></td>
+                <td th:text="${#temporals.format(log.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${log.message}"></td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(logs)}">
+                <td colspan="8">Chưa có lịch sử lưu trữ</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>
+
+<th:block th:fragment="page_js">
+    <script th:src="@{/js/admin/order-management.js}"></script>
+</th:block>
+</body>
+</html>
