@@ -6,7 +6,9 @@
 
             <li>
 
-                <a th:href="@{/admin}" class="menu-item">
+                <a th:href="@{/admin}" class="menu-item"
+
+                   th:classappend="${currentUri == '/admin' || currentUri.startsWith('/admin/dashboard')} ? ' active'">
 
                     <i class="fas fa-th-large"></i>
 
@@ -18,7 +20,8 @@
 
             <li>
 
-                <a th:href="@{/admin/users}" class="menu-item">
+                <a th:href="@{/admin/users}" class="menu-item"
+                   th:classappend="${currentUri.startsWith('/admin/users')} ? ' active'">
 
                     <i class="fas fa-user-shield"></i>
 
@@ -28,35 +31,40 @@
 
             </li>
             <li>
-                <a th:href="@{/admin/products}" class="menu-item">
+                <a th:href="@{/admin/products}" class="menu-item"
+                   th:classappend="${currentUri.startsWith('/admin/products')} ? ' active'">
                     <i class="fas fa-box"></i>
                     <span>Quản lý sản phẩm</span>
                 </a>
             </li>
 
             <li>
-                <a th:href="@{/admin/categories}" class="menu-item">
+                <a th:href="@{/admin/categories}" class="menu-item"
+                   th:classappend="${currentUri.startsWith('/admin/categories')} ? ' active'">
                     <i class="fas fa-tags"></i>
                     <span>Quản lý danh mục</span>
                 </a>
             </li>
 
             <li>
-                <a th:href="@{/admin/attributes}" class="menu-item">
+                <a th:href="@{/admin/attributes}" class="menu-item"
+                   th:classappend="${currentUri.startsWith('/admin/attributes')} ? ' active'">
                     <i class="fas fa-palette"></i>
                     <span>Quản lý size và màu</span>
                 </a>
             </li>
 
             <li>
-                <a th:href="@{/admin/vouchers}" class="menu-item">
+                <a th:href="@{/admin/vouchers}" class="menu-item"
+                   th:classappend="${currentUri.startsWith('/admin/vouchers')} ? ' active'">
                     <i class="fas fa-ticket-alt"></i>
                     <span>Quản lý ưu đãi đơn hàng</span>
                 </a>
             </li>
 
             <li>
-                <a th:href="@{/admin/promotions}" class="menu-item">
+                <a th:href="@{/admin/promotions}" class="menu-item"
+                   th:classappend="${currentUri.startsWith('/admin/promotions')} ? ' active'">
                     <i class="fas fa-percent"></i>
                     <span>Quản lý ưu đãi sản phẩm</span>
                 </a>
@@ -64,7 +72,8 @@
 
             <li>
 
-                <a th:href="@{/admin/orders}" class="menu-item">
+                <a th:href="@{/admin/orders}" class="menu-item"
+                   th:classappend="${currentUri.startsWith('/admin/orders')} ? ' active'">
 
                     <i class="fas fa-file-invoice-dollar"></i>
 
@@ -77,9 +86,12 @@
 
             <li>
 
-                <a th:href="@{/admin/reviews}" class="menu-item">
+                <a th:href="@{/admin/reviews}"
+                   class="menu-item"
+                   th:classappend="${currentUri.startsWith('/admin/reviews')} ? ' active'">
 
-                    <i class="fas fa-gem"></i> <span> Bình luận</span>
+                    <i class="fas fa-gem"></i>
+                    <span> Bình luận</span>
                 </a>
 
             </li>

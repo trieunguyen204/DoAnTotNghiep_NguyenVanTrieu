@@ -241,4 +241,15 @@ main {
 
     border-color: transparent;
 }
+
+.menu-item.active {
+    background: var(--sidebar-active);
+    color: var(--primary);
+}
+
+.menu-item.active i:first-child {
+    background: var(--primary);
+    color: #fff;
+    border-color: transparent;
+}
 /*================== Dashboard ============= */
