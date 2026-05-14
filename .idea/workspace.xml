@@ -6,14 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="2b79baec-7ac5-4b1e-89ed-cb7232adc94b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/controller/AdminDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/dashboard/controller/AdminDashboardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/dto/DashboardStats.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/dashboard/dto/DashboardStats.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/dto/ProductSalesStats.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/dashboard/dto/ProductSalesStats.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/admin/service/DashboardService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/dashboard/service/DashboardService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/OrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/OrderRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/repository/ProductRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/repository/ProductRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/dashboard.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/user.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/user.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/user/user_management.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/user/user_management.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

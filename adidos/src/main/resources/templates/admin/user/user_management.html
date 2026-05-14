@@ -18,15 +18,31 @@
 
                 <div class="user-header-flex">
                     <div>
-                        <h1 class="page-title">User Identification</h1>
-                        <p class="page-subtitle">Quản lý định danh và trạng thái hệ thống</p>
+                        <h1 class="page-title"> Quản lý tài khoản </h1>
                     </div>
 
-                    <form th:action="@{/admin/users}" method="get">
-                        <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm user...">
+                    <form th:action="@{/admin/users}" method="get" class="search-form">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+
+                            <input type="text"
+                                   name="keyword"
+                                   th:value="${keyword}"
+                                   placeholder="Tìm user..."
+                                   class="search-input">
+                        </div>
+
                         <input type="hidden" name="page" value="0">
                         <input type="hidden" name="size" th:value="${size}">
-                        <button type="submit">Tìm kiếm</button>
+
+                        <button type="submit" class="btn-search">
+                            Tìm kiếm
+                        </button>
+
+                        <a th:href="@{/admin/users}" class="btn-clear-search"
+                           th:if="${keyword != null && !keyword.isBlank()}">
+                            Xóa lọc
+                        </a>
                     </form>
                 </div>
 
