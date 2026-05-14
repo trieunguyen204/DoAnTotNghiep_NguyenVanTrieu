@@ -6,19 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="2b79baec-7ac5-4b1e-89ed-cb7232adc94b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/controller/AdminOrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/controller/AdminOrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/entity/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/entity/Order.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/entity/OrderItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/entity/OrderItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/OrderItemRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/OrderItemRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/OrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/OrderRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/PaymentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/repository/PaymentRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/order/service/OrderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/review/ReviewRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/review/ReviewRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/admin.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/admin.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/dashboard.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/order-management.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/order-management.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/order/order_management.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/order/order_management.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/fragments/sidebar.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/fragments/sidebar.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
