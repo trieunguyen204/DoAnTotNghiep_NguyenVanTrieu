@@ -69,19 +69,10 @@ h3 {
 
 .dashboard-filter {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.dashboard-filter input[type="number"] {
-    width: 130px;
-    height: 36px;
-    padding: 7px 10px;
-    border: 1px solid #ddd;
-    border-radius: 9px;
-    background: #fff;
-    font-size: 14px;
+    align-items: end;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-bottom:15px;
 }
 
 .dashboard-filter button,
@@ -255,4 +246,27 @@ h3 {
     .dashboard-filter {
         flex-wrap: wrap;
     }
+}
+
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filter-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+}
+
+.dashboard-filter input[type="date"] {
+    width: 170px;
+    height: 38px;
+    padding: 7px 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 14px;
 }

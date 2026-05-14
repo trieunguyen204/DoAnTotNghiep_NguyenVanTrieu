@@ -1,7 +1,7 @@
-package com.adidos.admin.service;
+package com.adidos.dashboard.service;
 
-import com.adidos.admin.dto.DashboardStats;
-import com.adidos.admin.dto.ProductSalesStats;
+import com.adidos.dashboard.dto.DashboardStats;
+import com.adidos.dashboard.dto.ProductSalesStats;
 import com.adidos.order.repository.OrderRepository;
 import com.adidos.product.repository.ProductRepository;
 import com.adidos.user.repository.UserRepository;
@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,25 +30,38 @@ public class DashboardService {
                 .build();
     }
 
-    public List<Object[]> getRevenueChartByYear(int year) {
-        return orderRepository.getMonthlyRevenueByYear(year);
+    public List<Object[]> getRevenueChart(LocalDateTime start,
+                                          LocalDateTime end) {
+        return orderRepository.getRevenueChart(start, end);
     }
 
-    public List<ProductSalesStats> getBestSellingProductsByYear(int year) {
-        return orderRepository.getProductSalesStatsByYear(year)
+    public List<ProductSalesStats> getBestSellingProducts(LocalDateTime start, LocalDateTime end) {
+        return orderRepository.getSoldProductSalesStats(start, end)
                 .stream()
                 .map(this::mapProductSales)
-                .filter(p -> p.getSoldQuantity() > p.getStockQuantity() * 0.1)
+                .sorted((a, b) -> Long.compare(b.getSoldQuantity(), a.getSoldQuantity()))
+                .limit(5)
                 .toList();
     }
 
-    public List<ProductSalesStats> getSlowSellingProductsByYear(int year) {
-        return orderRepository.getProductSalesStatsByYear(year)
+    public List<ProductSalesStats> getSlowSellingProducts(LocalDateTime start, LocalDateTime end) {
+        List<ProductSalesStats> all = productRepository.getAllProductSalesStats(start, end)
                 .stream()
                 .map(this::mapProductSales)
-                .filter(p -> p.getSoldQuantity() <= p.getStockQuantity() * 0.1)
+                .toList();
+
+        List<Long> bestIds = getBestSellingProducts(start, end)
+                .stream()
+                .map(ProductSalesStats::getProductId)
+                .toList();
+
+        return all.stream()
+                .filter(p -> !bestIds.contains(p.getProductId()))
+                .sorted((a, b) -> Long.compare(a.getSoldQuantity(), b.getSoldQuantity()))
+                .limit(5)
                 .toList();
     }
+
 
     private ProductSalesStats mapProductSales(Object[] row) {
         return ProductSalesStats.builder()

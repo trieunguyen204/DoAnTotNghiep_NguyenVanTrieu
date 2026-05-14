@@ -20,8 +20,6 @@ import org.springframework.data.domain.Pageable;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
 
-    List<Order> findByUserIdOrderByIdDesc(Long userId);
-
     List<Order> findByOrderStatus(OrderStatus orderStatus);
 
     @Query("SELECT o FROM Order o LEFT JOIN FETCH o.orderItems WHERE o.id = :orderId")
@@ -33,13 +31,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     // Đếm tổng số đơn hàng
     long count();
-
-    long countByOrderStatus(OrderStatus status);
-
-    @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Order o WHERE o.orderStatus = 'DELIVERED'")
-    BigDecimal calculateTotalRevenue();
-
-    List<Order> findByGuestEmailIgnoreCaseOrderByIdDesc(String guestEmail);
 
     @Query("""
     SELECT DISTINCT o FROM Order o
@@ -74,36 +65,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     BigDecimal calculateTotalRevenueAllTime();
 
     @Query("""
-    SELECT MONTH(o.createdAt), COALESCE(SUM(o.totalPrice + o.shippingFee - o.discountAmount), 0)
-    FROM Order o
-            WHERE o.orderStatus = com.adidos.order.enums.OrderStatus.DELIVERED
-            AND (o.restoredFromArchive = false OR o.restoredFromArchive IS NULL)
-      AND YEAR(o.createdAt) = :year
-    GROUP BY MONTH(o.createdAt)
-    ORDER BY MONTH(o.createdAt)
-    """)
-    List<Object[]> getMonthlyRevenueByYear(@Param("year") int year);
-
-
-    @Query("""
-    SELECT 
-        oi.productVariant.product.id,
-        oi.productVariant.product.name,
-        COALESCE(SUM(oi.quantity), 0),
-        COALESCE((
-            SELECT SUM(v.stockQuantity)
-            FROM ProductVariant v
-            WHERE v.product.id = oi.productVariant.product.id
-        ), 0)
-    FROM OrderItem oi
-    WHERE oi.order.orderStatus <> com.adidos.order.enums.OrderStatus.CANCELLED
-      AND YEAR(oi.order.createdAt) = :year
-    GROUP BY oi.productVariant.product.id, oi.productVariant.product.name
-    """)
-    List<Object[]> getProductSalesStatsByYear(@Param("year") int year);
-
-
-    @Query("""
         SELECT DISTINCT o FROM Order o
         LEFT JOIN FETCH o.orderItems i
         LEFT JOIN FETCH i.productVariant v
@@ -123,4 +84,41 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 
     boolean existsByOrderCode(Long orderCode);
+
+
+    @Query("""
+    SELECT MONTH(o.createdAt),
+           COALESCE(SUM(o.totalPrice + o.shippingFee - o.discountAmount), 0)
+    FROM Order o
+    WHERE o.orderStatus = com.adidos.order.enums.OrderStatus.DELIVERED
+    AND (o.restoredFromArchive = false OR o.restoredFromArchive IS NULL)
+    AND o.createdAt BETWEEN :start AND :end
+    GROUP BY MONTH(o.createdAt)
+    ORDER BY MONTH(o.createdAt)
+    """)
+    List<Object[]> getRevenueChart(@Param("start") LocalDateTime start,
+                                   @Param("end") LocalDateTime end);
+
+
+    @Query("""
+    SELECT 
+        oi.productVariant.product.id,
+        oi.productVariant.product.name,
+        COALESCE(SUM(oi.quantity), 0),
+        COALESCE((
+            SELECT SUM(v.stockQuantity)
+            FROM ProductVariant v
+            WHERE v.product.id = oi.productVariant.product.id
+        ), 0)
+    FROM OrderItem oi
+    WHERE oi.order.orderStatus <> com.adidos.order.enums.OrderStatus.CANCELLED
+      AND (oi.order.restoredFromArchive = false OR oi.order.restoredFromArchive IS NULL)
+      AND oi.order.createdAt BETWEEN :start AND :end
+    GROUP BY oi.productVariant.product.id, oi.productVariant.product.name
+    HAVING COALESCE(SUM(oi.quantity), 0) >= 1
+    """)
+    List<Object[]> getSoldProductSalesStats(@Param("start") LocalDateTime start,
+                                            @Param("end") LocalDateTime end);
+
+
 }

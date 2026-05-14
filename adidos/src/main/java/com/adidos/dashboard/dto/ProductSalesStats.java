@@ -1,4 +1,4 @@
-package com.adidos.admin.dto;
+package com.adidos.dashboard.dto;
 
 import lombok.*;
 
