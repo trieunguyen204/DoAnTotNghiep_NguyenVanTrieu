@@ -9,6 +9,7 @@
             <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
                   rel="stylesheet">
             <link rel="stylesheet" th:href="@{/css/user/product-detail.css}">
+            <link rel="stylesheet" th:href="@{/css/user/virtual-try-on.css}">
             <link rel="stylesheet" th:href="@{/css/user/index.css}">
 
 
@@ -205,8 +206,68 @@
                         <span>THÊM VÀO GIỎ HÀNG</span>
                         <span class="arrow">→</span>
                     </button>
+
+                    <button type="button"
+                            class="btn-try-on"
+                            id="open-try-on-modal"
+                            th:data-product-id="${product.id}">
+                        👕 THỬ ĐỒ VỚI ẢNH CỦA BẠN
+                    </button>
+
+                    <button type="button"
+                            class="btn-try-on-history"
+                            id="open-try-on-history"
+                            th:data-product-id="${product.id}">
+                        🕘 Xem lịch sử thử đồ
+                    </button>
                 </div>
 
+
+            </div>
+        </div>
+
+
+        <div class="try-on-modal" id="try-on-modal">
+            <div class="try-on-modal-content">
+                <button type="button" class="try-on-close" id="close-try-on-modal">&times;</button>
+
+                <div class="try-on-title">Thử đồ AI</div>
+
+
+                <div class="try-on-subtitle" id="try-on-variant-info">
+                    Chọn ảnh toàn thân rõ người để thử sản phẩm đang chọn.
+                </div>
+
+                <form id="try-on-form">
+                    <div class="try-on-upload">
+                        <strong>Ảnh của bạn</strong>
+                        <p>Khuyến nghị: ảnh toàn thân, 1 người, đủ sáng, không che cơ thể.</p>
+                        <input type="file" id="try-on-person-image" accept="image/jpeg,image/png,image/webp">
+                        <br>
+                        <img id="try-on-preview-img" class="try-on-preview-img" style="display:none" alt="Preview ảnh người dùng">
+                    </div>
+
+                    <button type="submit" class="try-on-submit">Bắt đầu thử đồ</button>
+                    <div id="try-on-message" class="try-on-message"></div>
+                </form>
+
+                <div id="try-on-result-box" class="try-on-result-box" style="display:none">
+                    <div class="try-on-result-header">
+                        <h4>Kết quả thử đồ theo từng màu</h4>
+                        <p>Chọn màu bạn thấy phù hợp nhất để tự động áp dụng vào sản phẩm.</p>
+                    </div>
+
+                    <div id="try-on-results-grid" class="try-on-results-grid"></div>
+                </div>
+
+                <div id="try-on-history-box" class="try-on-history-box" style="display:none">
+                    <div class="try-on-result-header">
+                        <h4>Lịch sử thử đồ gần đây</h4>
+                        <p>Các kết quả bạn đã thử với sản phẩm này.</p>
+                    </div>
+
+                    <div id="try-on-history-grid" class="try-on-results-grid"></div>
+                </div>
             </div>
         </div>
 
@@ -284,6 +345,7 @@
 
     <th:block th:fragment="page_user_js">
         <script th:src="@{/js/user/product-detail.js}"></script>
+        <script th:src="@{/js/user/virtual-try-on.js}"></script>
     </th:block>
 </body>
 </html>

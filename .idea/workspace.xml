@@ -6,9 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="2b79baec-7ac5-4b1e-89ed-cb7232adc94b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/admin.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/admin.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/fragments/sidebar.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/fragments/sidebar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/entity/ProductImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/java/com/adidos/product/entity/ProductImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/order-management.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/admin/order-management.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/product-detail.css" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/css/user/product-detail.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/static/js/user/product-detail.js" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/static/js/user/product-detail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/order/order_management.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/order/order_management.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/product/attribute_management.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/admin/product/attribute_management.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adidos/src/main/resources/templates/product/detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/adidos/src/main/resources/templates/product/detail.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,25 +42,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.AdidosApplication.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/DoAnTotNghiep_NguyenVanTrieu",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.AdidosApplication.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/DoAnTotNghiep_NguyenVanTrieu&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.adidos.tryon.dto" />
       <recent name="com.adidos.order.archive.dto" />
     </key>
     <key name="MoveFile.RECENT_KEYS">

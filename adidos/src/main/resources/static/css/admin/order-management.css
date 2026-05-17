@@ -25,21 +25,9 @@
     color: #b42318;
 }
 
-.order-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 20px;
-}
 
-.order-toolbar select,
-.status-form select {
-    padding: 9px 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: #fff;
-}
+
+
 
 .order-table {
     width: 100%;
@@ -315,4 +303,50 @@
     background: #fee2e2;
     color: #991b1b;
     border: 1px solid #fca5a5;
+}
+
+
+.order-toolbar {
+    margin: 18px 0;
+}
+
+.order-status-tabs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.status-tab {
+    height: 38px;
+    padding: 0 16px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 999px;
+    border: 1px solid #e2e8f0;
+
+    background: #ffffff;
+    color: #475569;
+
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+
+    transition: 0.2s ease;
+}
+
+.status-tab:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+    transform: translateY(-1px);
+}
+
+.status-tab.active {
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
 }

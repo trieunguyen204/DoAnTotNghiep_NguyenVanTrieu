@@ -26,4 +26,8 @@ public class ProductImage {
     @Column(name = "sort_order", columnDefinition = "INT DEFAULT 0")
     @Builder.Default
     private Integer sortOrder = 0;
+
+    @Column(name = "image_type", length = 30)
+    @Builder.Default
+    private String imageType = "GALLERY";
 }

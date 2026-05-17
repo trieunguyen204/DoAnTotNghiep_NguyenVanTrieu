@@ -223,21 +223,21 @@
 
 /* CỘT PHẢI - STICKY */
 .product-info-sidebar {
-    width: 35%;
-    min-width: 350px;
-    padding: 20px 40px;
+    width: 31%;
+    min-width: 300px;
+    padding: 10px 24px;
 }
 
 .sticky-inner {
     position: sticky;
-    top: 100px; /* Cách header 20px */
+    top: 80px;
 }
 
-.brand-label { font-size: 0.8rem; letter-spacing: 2px; text-decoration: underline; }
-.pro-title { font-size: 2rem; font-weight: 900; font-style: italic; margin: 10px 0; }
-.pro-price { font-size: 1.1rem; font-weight: 600; margin-bottom: 30px; }
+.brand-label { font-size: 0.72rem; letter-spacing: 1.5px; text-decoration: underline; }
+.pro-title { font-size: 1.45rem; font-weight: 600; font-style: italic; margin: 8px 0 10px;line-height: 1.15; }
+.pro-price { font-size: 1rem; font-weight: 500; margin-bottom: 30px; }
 
-.variant-label { font-size: 0.9rem; font-weight: 700; margin-bottom: 15px; padding-top:5px; }
+.variant-label { font-size: 0.82rem; font-weight: 500; margin-bottom: 10px; padding-top:2px; }
 
 /* Nút Màu Sắc */
 
@@ -248,10 +248,10 @@
     gap: 8px; /* Khoảng cách giữa ảnh và chữ */
     width: 65px; /* Chiều rộng cố định để căn lề đều */
 }
-.color-options { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 30px; }
+.color-options { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
 .img-color-btn {
-    width: 55px;
-    height: 70px;
+    width: 48px;
+    height: 60px;
     border: 1px solid #ddd;
     padding: 0;
     cursor: pointer;
@@ -277,10 +277,11 @@
 }
 
 /* Nút Size */
-.size-options { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+.size-options { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
 .size-btn {
-    min-width: 70px;
-    padding: 12px;
+    min-width: 58px;
+    padding: 10px;
+    font-size: 13px;
     border: 1px solid #ebedee;
     background: #fff;
     cursor: pointer;
@@ -289,28 +290,47 @@
 .size-btn.active { background: #000; color: #fff; border-color: #000; }
 .size-btn.hidden { display: none; }
 
-/* Nút Mua Hàng */
 .btn-add-to-cart {
     width: 100%;
+
     background: #000;
     color: #fff;
-    padding: 18px 25px;
+
+    padding: 15px 18px;
+
     border: none;
-    font-weight: 700;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    letter-spacing: .05em;
+    text-transform: uppercase;
+
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
     cursor: pointer;
-    transition: 0.2s;
+
+    transition: .2s ease;
 }
-.btn-add-to-cart:hover { opacity: 0.8; }
+
+.btn-add-to-cart:hover {
+    opacity: .88;
+}
+
+.btn-add-to-cart .arrow {
+    font-size: 15px;
+}
 
 /* --- Hướng dẫn chọn size --- */
 .size-guide-trigger {
-    margin-top: 15px;
-    margin-bottom: 30px;
+    margin-top: 8px;
+    margin-bottom: 22px;
     cursor: pointer;
-    font-size: 0.95rem;
+    font-size: 0.82rem;
     font-weight: 500;
     display: inline-block;
 }
@@ -372,7 +392,7 @@
 }
 
 .pro-stock {
-    font-size: 0.9rem;
+    font-size: 0.82rem;
     color: #666;
     font-weight: 500;
 }

@@ -1,0 +1,423 @@
+:root {
+    --tryon-primary: #5f7594;
+    --tryon-primary-hover: #4e637f;
+
+    --tryon-secondary: #8ca7c0;
+    --tryon-soft: #9bb4cd;
+
+    --tryon-bg: #b9cedf;
+    --tryon-bg-light: #cbd9e9;
+
+    --tryon-text: #1f2937;
+    --tryon-muted: #64748b;
+
+    --tryon-border: #d7e2ec;
+
+    --tryon-danger: #dc2626;
+}
+
+.btn-try-on,
+.btn-try-on-history {
+    width: 100%;
+
+    margin-top: 10px;
+
+    font-size: 12px;
+    padding: 13px 16px;
+
+    border: 1px solid transparent;
+
+    border-radius: 0;
+
+    font-weight: 600;
+
+    letter-spacing: .08em;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    transition: .25s ease;
+}
+
+.btn-try-on {
+    background: #fff;
+    color: #111;
+    border-color: #111;
+}
+
+.btn-try-on:hover {
+    background: #111;
+    color: #fff;
+}
+
+.btn-try-on-history {
+    background: #e5e7eb;
+    color: #111;
+    border-color: #d1d5db;
+}
+
+.btn-try-on-history:hover {
+    background: #d1d5db;
+}
+
+.try-on-modal {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(31, 41, 55, .62);
+
+    backdrop-filter: blur(5px);
+
+    padding: 20px;
+}
+
+.try-on-modal.show {
+    display: flex;
+}
+
+.try-on-modal-content {
+    width: min(1140px, 96vw);
+
+    max-height: 92vh;
+
+    overflow-y: auto;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #f8fbff 0%,
+                    var(--tryon-bg-light) 100%
+            );
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+    position: relative;
+
+    box-shadow:
+            0 30px 80px rgba(0,0,0,.18);
+}
+
+.try-on-close {
+    position: absolute;
+
+    top: 16px;
+    right: 18px;
+
+    width: 42px;
+    height: 42px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--tryon-text);
+
+    font-size: 30px;
+
+    cursor: pointer;
+}
+
+.try-on-close:hover {
+    color: var(--tryon-primary);
+}
+
+.try-on-title {
+    font-size: 30px;
+
+    font-weight: 900;
+
+    letter-spacing: -.03em;
+
+    color: var(--tryon-text);
+
+    margin-bottom: 6px;
+}
+
+.try-on-subtitle {
+    font-size: 14px;
+
+    color: var(--tryon-muted);
+
+    margin-bottom: 24px;
+
+    line-height: 1.6;
+}
+
+.try-on-upload {
+    border: 1px solid var(--tryon-border);
+
+    padding: 20px;
+
+    background: #fff;
+}
+
+.try-on-upload strong {
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 13px;
+
+    font-weight: 900;
+
+    text-transform: uppercase;
+
+    color: var(--tryon-text);
+}
+
+.try-on-upload p {
+    margin: 0 0 12px;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+    color: var(--tryon-muted);
+}
+
+.try-on-upload input {
+    width: 100%;
+}
+
+.try-on-preview-img {
+    max-width: 220px;
+    max-height: 300px;
+
+    object-fit: cover;
+
+    margin-top: 14px;
+
+    border: 1px solid var(--tryon-border);
+
+    background: #fff;
+}
+
+.try-on-submit {
+    width: 100%;
+
+    margin-top: 18px;
+
+    padding: 16px;
+
+    border: 0;
+
+    background: var(--tryon-primary);
+
+    color: #fff;
+
+    font-size: 13px;
+    font-weight: 900;
+
+    letter-spacing: .08em;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    transition: .25s ease;
+}
+
+.try-on-submit:hover:not(:disabled) {
+    background: var(--tryon-primary-hover);
+}
+
+.try-on-submit:disabled,
+.btn-try-on-history:disabled {
+    opacity: .7;
+    cursor: not-allowed;
+}
+
+.try-on-message {
+    margin-top: 12px;
+
+    min-height: 22px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    color: var(--tryon-primary);
+}
+
+.try-on-message.error {
+    color: var(--tryon-danger);
+}
+
+.try-on-result-box,
+.try-on-history-box {
+    margin-top: 30px;
+}
+
+.try-on-result-header {
+    margin-bottom: 20px;
+}
+
+.try-on-result-header h4 {
+    margin: 0 0 4px;
+
+    font-size: 20px;
+
+    font-weight: 900;
+
+    color: var(--tryon-text);
+}
+
+.try-on-result-header p {
+    margin: 0;
+
+    font-size: 13px;
+
+    color: var(--tryon-muted);
+
+    line-height: 1.6;
+}
+
+.try-on-results-grid {
+    display: grid;
+
+    grid-template-columns:
+            repeat(auto-fit, minmax(240px, 1fr));
+
+    gap: 22px;
+}
+
+.try-on-result-item {
+    background: #fff;
+
+    border: 1px solid var(--tryon-border);
+
+    overflow: hidden;
+
+    transition: .25s ease;
+}
+
+.try-on-result-item:hover {
+    transform: translateY(-4px);
+
+    border-color: var(--tryon-primary);
+
+    box-shadow:
+            0 18px 40px rgba(95, 117, 148, .18);
+}
+
+.try-on-color-name {
+    padding: 14px;
+
+    text-align: center;
+
+    font-size: 13px;
+    font-weight: 900;
+
+    color: var(--tryon-text);
+
+    background: #fff;
+}
+
+.try-on-color-name span {
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    color: var(--tryon-muted);
+}
+
+.try-on-result-item img {
+    width: 100%;
+
+    aspect-ratio: 3 / 4;
+
+    object-fit: cover;
+
+    display: block;
+
+    background: #fff;
+}
+
+.try-this-color-btn {
+    width: 100%;
+
+    padding: 15px;
+
+    border: 0;
+
+    background: var(--tryon-primary);
+
+    color: #fff;
+
+    font-size: 12px;
+    font-weight: 900;
+
+    letter-spacing: .08em;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    transition: .25s ease;
+}
+
+.try-this-color-btn:hover {
+    background: var(--tryon-primary-hover);
+}
+
+.try-on-result-item.failed {
+    opacity: .78;
+}
+
+.try-on-result-failed,
+.try-on-empty-history {
+    padding: 40px 20px;
+
+    text-align: center;
+
+    color: var(--tryon-muted);
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.try-on-result-error {
+    margin: 0;
+
+    padding: 10px 12px;
+
+    background: #fff5f5;
+
+    color: var(--tryon-danger);
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .try-on-modal {
+        padding: 10px;
+    }
+
+    .try-on-modal-content {
+        width: 100%;
+
+        max-height: 100%;
+
+        padding: 22px 16px;
+    }
+
+    .try-on-title {
+        font-size: 24px;
+    }
+
+    .try-on-results-grid {
+        grid-template-columns: 1fr;
+    }
+}
+

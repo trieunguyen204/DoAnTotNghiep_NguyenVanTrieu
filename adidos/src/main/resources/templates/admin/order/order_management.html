@@ -37,24 +37,26 @@
         <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
         <div class="order-toolbar">
-            <form th:action="@{/admin/orders}" method="get">
-                <select name="status" onchange="this.form.submit()">
-                    <option value="ALL"
-                            th:selected="${currentStatus == null || currentStatus == 'ALL'}">
-                        Tất cả
-                    </option>
+            <div class="order-status-tabs">
 
-                    <option th:each="s : ${statuses}"
-                            th:value="${s}"
-                            th:text="${s.name() == 'PENDING' ? 'Chờ xác nhận' :
-                             (s.name() == 'PROCESSING' ? 'Đang chuẩn bị' :
-                             (s.name() == 'SHIPPING' ? 'Đang giao hàng' :
-                             (s.name() == 'DELIVERED' ? 'Đã giao' :
-                             (s.name() == 'CANCELLED' ? 'Đã hủy' : s.name()))))}"
-                            th:selected="${currentStatus == s.name()}">
-                    </option>
-                </select>
-            </form>
+                <a th:href="@{/admin/orders(status='ALL')}"
+                   class="status-tab"
+                   th:classappend="${currentStatus == null || currentStatus == 'ALL'} ? ' active'">
+                    Tất cả
+                </a>
+
+                <a th:each="s : ${statuses}"
+                   th:href="@{/admin/orders(status=${s})}"
+                   class="status-tab"
+                   th:classappend="${currentStatus == s.name()} ? ' active'"
+                   th:text="${s.name() == 'PENDING' ? 'Chờ xác nhận' :
+                    (s.name() == 'PROCESSING' ? 'Đang chuẩn bị' :
+                    (s.name() == 'SHIPPING' ? 'Đang giao hàng' :
+                    (s.name() == 'DELIVERED' ? 'Đã giao' :
+                    (s.name() == 'CANCELLED' ? 'Đã hủy' : s.name()))))}">
+                </a>
+
+            </div>
         </div>
 
         <input type="hidden" name="currentStatus" th:value="${currentStatus}">
@@ -81,12 +83,7 @@
 
                 <td>
                     <span th:text="${order.paymentMethod}"></span>
-                    -
-                    <strong th:text="${order.paymentStatus.name() == 'PAID' ? 'Đã thanh toán' :
-                     (order.paymentStatus.name() == 'UNPAID' ? 'Chưa thanh toán' :
-                     (order.paymentStatus.name() == 'FAILED' ? 'Thanh toán thất bại' :
-                     order.paymentStatus))}">
-                    </strong>
+
                 </td>
 
 

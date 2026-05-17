@@ -52,6 +52,7 @@ public class SecurityConfig {
                                 "/checkout/success/**",
                                 "/payment/qr/**"
                                 ,"/about"
+                                ,"/api/try-on/**"
                         )
                         .permitAll()
 
